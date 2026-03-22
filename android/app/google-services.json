@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "316155377702",
+    "project_id": "ihk-ap1-prep",
+    "storage_bucket": "ihk-ap1-prep.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:316155377702:android:0e0b88dbdc0d80b1ce0ee7",
+        "android_client_info": {
+          "package_name": "com.example.ihk_ap1_prep"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8mx6TqkESkBAjiUV7fRAF3bBwj2L42p8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
