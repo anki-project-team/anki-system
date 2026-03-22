@@ -13,9 +13,9 @@ class IHKApp extends StatelessWidget {
       title: 'IHK AP1 Prep',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.dark(
-          primary: const Color(0xFFE8813A),
-          surface: const Color(0xFF162447),
+        colorScheme: const ColorScheme.dark(
+          primary: Color(0xFFE8813A),
+          surface: Color(0xFF162447),
         ),
         scaffoldBackgroundColor: const Color(0xFF162447),
         useMaterial3: true,
