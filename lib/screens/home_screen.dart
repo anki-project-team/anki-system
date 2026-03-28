@@ -7,90 +7,72 @@ class HomeDashboardScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SafeArea(
-        top: false,
-        child: CustomScrollView(
-          slivers: [
-            // ── 1. APP BAR ──
-            SliverAppBar(
-              pinned: true,
-              backgroundColor: const Color(0xFF162447),
-              leading: IconButton(
-                icon: const Icon(Icons.menu, color: Colors.white),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF162447),
+        leading: IconButton(
+          icon: const Icon(Icons.menu, color: Colors.white),
+          onPressed: () {},
+        ),
+        title: const Text(
+          'IHK AP1 Prep',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 8),
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.white.withValues(alpha: 0.12),
+              ),
+              child: IconButton(
+                icon: const Icon(Icons.notifications_outlined,
+                    color: Colors.white, size: 22),
                 onPressed: () {},
               ),
-              title: const Text(
-                'IHK AP1 Prep',
+            ),
+          ),
+        ],
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // ── 2. BEGRÜSSUNG ──
+            const Padding(
+              padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
+              child: Text(
+                'GUTEN MORGEN, KAI',
                 style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF9E9E9E),
+                  fontSize: 11,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 1.8,
                 ),
               ),
-              centerTitle: true,
-              actions: [
-                Padding(
-                  padding: const EdgeInsets.only(right: 8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.white.withValues(alpha: 0.12),
-                    ),
-                    child: IconButton(
-                      icon: const Icon(Icons.notifications_outlined,
-                          color: Colors.white, size: 22),
-                      onPressed: () {},
-                    ),
-                  ),
-                ),
-              ],
             ),
 
-            // ── SCROLLABLE CONTENT ──
-            SliverToBoxAdapter(
+            // ── 3. HERO CARD ──
+            _buildHeroCard(),
+
+            const SizedBox(height: 8),
+
+            // ── 4. MODUL CARD ──
+            _buildModulCard(),
+
+            // ── 5–7. PADDED CONTENT ──
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── 2. BEGRÜSSUNG ──
-                  const Padding(
-                    padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
-                    child: Text(
-                      'GUTEN MORGEN, KAI',
-                      style: TextStyle(
-                        color: Color(0xFF9E9E9E),
-                        fontSize: 11,
-                        fontWeight: FontWeight.w600,
-                        letterSpacing: 1.8,
-                      ),
-                    ),
-                  ),
-
-                  // ── 3. HERO CARD ──
-                  _buildHeroCard(),
-
-                  const SizedBox(height: 8),
-
-                  // ── 4. MODUL CARD ──
-                  _buildModulCard(),
-
-                  // ── 5. FORTSCHRITTS-CARD ──
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: _buildFortschrittCard(),
-                  ),
-
-                  // ── 6. ZULETZT GELERNTE DECKS ──
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: _buildDecksSection(),
-                  ),
-
-                  // ── 7. FOOTER LINKS ──
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    child: _buildFooter(),
-                  ),
-
+                  _buildFortschrittCard(),
+                  _buildDecksSection(),
+                  _buildFooter(),
                   const SizedBox(height: 16),
                 ],
               ),
@@ -106,9 +88,8 @@ class HomeDashboardScreen extends StatelessWidget {
   // ════════════════════════════════════════════════════════════
   Widget _buildHeroCard() {
     return Container(
-      width: double.infinity,
       color: const Color(0xFF162447),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -161,9 +142,8 @@ class HomeDashboardScreen extends StatelessWidget {
   // ════════════════════════════════════════════════════════════
   Widget _buildModulCard() {
     return Container(
-      width: double.infinity,
       color: const Color(0xFF1e3a5f),
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+      padding: const EdgeInsets.all(16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
