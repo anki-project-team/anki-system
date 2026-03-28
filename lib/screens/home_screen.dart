@@ -68,17 +68,28 @@ class HomeDashboardScreen extends StatelessWidget {
                   // ── 3. HERO CARD ──
                   _buildHeroCard(),
 
+                  const SizedBox(height: 8),
+
                   // ── 4. MODUL CARD ──
                   _buildModulCard(),
 
                   // ── 5. FORTSCHRITTS-CARD ──
-                  _buildFortschrittCard(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _buildFortschrittCard(),
+                  ),
 
                   // ── 6. ZULETZT GELERNTE DECKS ──
-                  _buildDecksSection(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _buildDecksSection(),
+                  ),
 
                   // ── 7. FOOTER LINKS ──
-                  _buildFooter(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: _buildFooter(),
+                  ),
 
                   const SizedBox(height: 16),
                 ],
@@ -154,7 +165,8 @@ class HomeDashboardScreen extends StatelessWidget {
   // ════════════════════════════════════════════════════════════
   Widget _buildModulCard() {
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 12),
+      width: double.infinity,
+      margin: EdgeInsets.zero,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: const Color(0xFF1e3a5f),
@@ -249,7 +261,7 @@ class HomeDashboardScreen extends StatelessWidget {
   // ════════════════════════════════════════════════════════════
   Widget _buildFortschrittCard() {
     return Container(
-      margin: const EdgeInsets.all(12),
+      margin: const EdgeInsets.only(top: 12),
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
         color: Colors.white,
@@ -344,9 +356,7 @@ class HomeDashboardScreen extends StatelessWidget {
       _DeckItem('\uD83D\uDEE1', const Color(0xFFFEF3C7), 'IT-Sicherheit', 41),
     ];
 
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Column(
+    return Column(
         children: [
           // Header
           Padding(
@@ -451,8 +461,7 @@ class HomeDashboardScreen extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
+      );
   }
 
   // ════════════════════════════════════════════════════════════
