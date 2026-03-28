@@ -100,13 +100,13 @@ class HomeDashboardScreen extends StatelessWidget {
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         color: Color(0xFF162447),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Meistere deine\nPrüfungen,\nKarte für Karte.',
+            'Meistere deine\nAP1 Prüfung,\nKarte für Karte.',
             style: TextStyle(
               color: Colors.white,
               fontSize: 24,
@@ -142,14 +142,6 @@ class HomeDashboardScreen extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-          ),
-          const SizedBox(height: 8),
-          Text(
-            'Top 8% der Lernende diese Woche',
-            style: TextStyle(
-              color: Colors.white.withValues(alpha: 0.45),
-              fontSize: 11,
             ),
           ),
         ],
