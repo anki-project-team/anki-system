@@ -4,6 +4,7 @@ import 'firebase_options.dart';
 import 'models/card_model.dart';
 import 'screens/flashcard_question_screen.dart';
 import 'screens/calendar_screen.dart';
+import 'screens/home_screen.dart';
 import 'services/notification_service.dart';
 import 'services/firestore_service.dart';
 
@@ -79,19 +80,21 @@ class _HomeScreenState extends State<HomeScreen> {
         body: IndexedStack(
           index: _currentIndex,
           children: [
-            _buildTabNavigator(0, const DashboardScreen()),
+            _buildTabNavigator(0, const HomeDashboardScreen()),
             _buildTabNavigator(1, const LernenScreen()),
             _buildTabNavigator(2, const CalendarScreen()),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: const Color(0xFF162447),
-          selectedItemColor: const Color(0xFFE8813A),
-          unselectedItemColor: Colors.white38,
+          backgroundColor: Colors.white,
+          selectedItemColor: const Color(0xFF162447),
+          unselectedItemColor: const Color(0xFFB0B0B0),
+          selectedLabelStyle: const TextStyle(
+            fontWeight: FontWeight.bold, fontSize: 11),
+          unselectedLabelStyle: const TextStyle(fontSize: 11),
           currentIndex: _currentIndex,
           onTap: (index) {
             if (index == _currentIndex) {
-              // Gleicher Tab getippt: zur\u00fcck zum Root des Tabs
               _navigatorKeys[index].currentState?.popUntil(
                 (route) => route.isFirst,
               );
@@ -100,13 +103,12 @@ class _HomeScreenState extends State<HomeScreen> {
             }
           },
           items: const [
-            BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.school), label: 'Lernen'),
+                icon: Icon(Icons.home), label: 'Home'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_today),
-              label: 'Kalender',
-            ),
+                icon: Icon(Icons.person), label: 'Lernen'),
+            BottomNavigationBarItem(
+                icon: Icon(Icons.trending_up), label: 'Statistik'),
           ],
         ),
       ),
@@ -123,36 +125,6 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 }
 
-class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(Icons.school, color: Color(0xFFE8813A), size: 80),
-          SizedBox(height: 24),
-          Text(
-            'Meistere deine Pr\u00fcfung\nmit System.',
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          SizedBox(height: 16),
-          Text(
-            'FSRS 4.5 \u00b7 Push-Notifications \u00b7 6-Monats-Plan',
-            style: TextStyle(color: Colors.white54, fontSize: 14),
-          ),
-        ],
-      ),
-    );
-  }
-}
 
 class LernenScreen extends StatelessWidget {
   const LernenScreen({super.key});
