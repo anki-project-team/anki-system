@@ -44,15 +44,14 @@ class HomeDashboardScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // ── 2. BEGRÜSSUNG ──
-            const Padding(
-              padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
               child: Text(
                 'GUTEN MORGEN, KAI',
                 style: TextStyle(
-                  color: Color(0xFF9E9E9E),
                   fontSize: 11,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 1.8,
+                  color: Colors.grey[500],
+                  letterSpacing: 0.8,
                 ),
               ),
             ),
