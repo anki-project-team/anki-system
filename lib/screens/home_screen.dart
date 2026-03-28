@@ -95,11 +95,10 @@ class HomeDashboardScreen extends StatelessWidget {
   // ════════════════════════════════════════════════════════════
   Widget _buildHeroCard() {
     return Container(
-      margin: const EdgeInsets.all(12),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF162447),
-        borderRadius: BorderRadius.circular(12),
+      decoration: const BoxDecoration(
+        color: Color(0xFF162447),
+        borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -181,7 +180,7 @@ class HomeDashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'Systemintegration',
+            'AP1 Vorbereitung',
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
@@ -190,7 +189,7 @@ class HomeDashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: 4),
           Text(
-            'Netzwerkprotokolle & OSI-Sicherheitsmodell',
+            'Netzwerke \u00B7 Betriebssysteme \u00B7 IT-Sicherheit \u00B7 Datenschutz',
             style: TextStyle(
               color: Colors.white.withValues(alpha: 0.65),
               fontSize: 12,
