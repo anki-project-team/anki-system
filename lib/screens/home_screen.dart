@@ -53,7 +53,7 @@ class HomeDashboardScreen extends StatelessWidget {
                 children: [
                   // ── 2. BEGRÜSSUNG ──
                   const Padding(
-                    padding: EdgeInsets.fromLTRB(16, 20, 16, 0),
+                    padding: EdgeInsets.fromLTRB(16, 8, 16, 4),
                     child: Text(
                       'GUTEN MORGEN, KAI',
                       style: TextStyle(
@@ -107,12 +107,8 @@ class HomeDashboardScreen extends StatelessWidget {
   Widget _buildHeroCard() {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.zero,
-      padding: const EdgeInsets.all(20),
-      decoration: const BoxDecoration(
-        color: Color(0xFF162447),
-        borderRadius: BorderRadius.vertical(bottom: Radius.circular(16)),
-      ),
+      color: const Color(0xFF162447),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -166,12 +162,8 @@ class HomeDashboardScreen extends StatelessWidget {
   Widget _buildModulCard() {
     return Container(
       width: double.infinity,
-      margin: EdgeInsets.zero,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1e3a5f),
-        borderRadius: BorderRadius.circular(12),
-      ),
+      color: const Color(0xFF1e3a5f),
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
