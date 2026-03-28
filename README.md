@@ -1,129 +1,144 @@
-# 🎓 IHK AP1 Prep — Anki Lernsystem (PWA)
+# IHK AP1 Prep
 
-> Webbasierte Lernplattform mit adaptivem Spaced-Repetition-Algorithmus (FSRS 4.5) zur optimalen Vorbereitung auf die IHK AP1-Prüfung.
+![Flutter](https://img.shields.io/badge/Flutter-3.8-02569B?logo=flutter&logoColor=white)
+![Firebase](https://img.shields.io/badge/Firebase-Firestore-FFCA28?logo=firebase&logoColor=black)
+![Dart](https://img.shields.io/badge/Dart-3.8-0175C2?logo=dart&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-green)
 
-## 📋 Projektübersicht
+Progressive Web App zur IHK AP1-Prüfungsvorbereitung mit wissenschaftlich fundiertem Spaced-Repetition-Algorithmus (FSRS 4.5). Entwickelt als IHK-Abschlussprojekt bei BBQ Düsseldorf, 2026.
 
-| Feld | Inhalt |
-|------|--------|
-| **Projekttitel** | Entwicklung einer webbasierten Lernplattform mit adaptivem Spaced-Repetition-Algorithmus |
-| **Ausbildungsberuf** | Fachinformatiker Anwendungsentwicklung (FIAE) |
-| **IHK** | Düsseldorf |
-| **Gesamtstunden** | 80h |
-| **Vorgehensmodell** | Erweitertes Wasserfallmodell |
-| **Lizenz** | MIT |
+---
 
-## 🚀 Tech-Stack
+## Screenshots
 
-| Komponente | Technologie | Begründung |
-|------------|-------------|------------|
-| **Frontend** | Flutter (Web/PWA) | Cross-Plattform, eine Codebase für Web, Android, iOS |
-| **Backend/DB** | Firebase Firestore | NoSQL, Echtzeit-Sync, Offline-Cache |
-| **Auth** | Firebase Auth | Sichere Authentifizierung mit JWT |
-| **Hosting** | Firebase Hosting | HTTPS, globales CDN, kostenloser Spark-Tarif |
-| **Algorithmus** | FSRS 4.5 | 20–40% genauer als SM-2, adaptiv |
-| **Versionsverwaltung** | GitHub | Kanban-Board + Commit-Verlauf |
+> *Screenshots werden nach dem finalen UI-Review hier eingefügt.*
 
-## 🧠 Kernfeatures
+| Frage-Screen | Antwort-Screen | Kalender |
+|:---:|:---:|:---:|
+| *Platzhalter* | *Platzhalter* | *Platzhalter* |
 
-- **FSRS 4.5 Algorithmus** — Wissenschaftlich fundiertes Spaced Repetition mit drei Variablen: Difficulty (D), Stability (S), Retrievability (R)
-- **5-Feld-Kartenformat** — Frage (K1), Kurzantwort (K2), Ausführliche Erklärung (K3), Weiterführender Link (K4), Hashtags (K5)
-- **Push-Notifications** — Tägliche Erinnerung via Firebase Cloud Messaging
-- **DSGVO-konform** — EU-Region (europe-west3, Frankfurt), Cookie-Banner nach TDDDG, Datenschutzerklärung
-- **Offline-fähig** — Firestore Offline-Cache für Lernen ohne Internetverbindung
+---
 
-## 📁 Projektstruktur
+## Tech-Stack
 
-```
-ihk_ap1_prep/
-├── lib/
-│   ├── main.dart                 # App-Einstiegspunkt + Navigation
-│   ├── firebase_options.dart     # Firebase-Konfiguration
-│   ├── models/
-│   │   └── card_model.dart       # Datenmodell mit FSRS-Feldern
-│   └── services/
-│       └── firestore_service.dart # CRUD-Operationen für Firestore
-├── backend/                      # Backend-Logik
-├── database/                     # Datenbankschema & Regeln
-├── docs/                         # Dokumentation
-│   ├── algorithm.md              # FSRS 4.5 Algorithmus-Dokumentation
-│   ├── fsrs.md                   # Spaced Repetition Theorie
-│   └── README.md                 # Zusätzliche Docs
-├── frontend/                     # Web-Frontend Assets
-├── web/                          # Flutter Web Build
-├── android/                      # Android-spezifisch
-├── ios/                          # iOS-spezifisch
-├── pubspec.yaml                  # Flutter Dependencies
-└── firebase.json                 # Firebase-Konfiguration
-```
+| Komponente | Technologie | Version |
+|------------|-------------|---------|
+| Frontend | Flutter (Web/PWA) | 3.8+ |
+| Sprache | Dart | 3.8+ |
+| Datenbank | Cloud Firestore (NoSQL) | 5.0 |
+| Backend | Firebase (Spark-Tarif) | — |
+| Algorithmus | FSRS 4.5 | Custom |
+| Notifications | flutter_local_notifications | 17.0 |
+| Zeitzonen | timezone | 0.9 |
+| Hosting | Firebase Hosting | — |
 
-## 🗄️ Firestore Datenmodell
+---
+
+## Features
+
+- **FSRS 4.5** — Adaptiver Spaced-Repetition-Algorithmus mit 4 Bewertungsstufen
+- **5-Feld-Lernkarten** — Frage, Kurzantwort, Erklärung, Link, Hashtags
+- **Kalenderansicht** — Monatskalender mit Farbkodierung (grün/orange/rot)
+- **Push-Notifications** — Tägliche Erinnerung mit Anzahl fälliger Karten
+- **Firestore-Sync** — Echtzeit-Synchronisation, geräteübergreifend
+- **PWA** — Installierbar auf Desktop und Mobilgeräten
+
+---
+
+## Projektstruktur
 
 ```
-users/
-  {userId}/
-    decks/
-      {deckId}/
-        cards/
-          {cardId}/
-            question: String       // K1: Frage
-            shortAnswer: String    // K2: Kurze Antwort
-            longAnswer: String     // K3: Ausführliche Erklärung
-            url: String            // K4: Weiterführender Link
-            hashtags: Array        // K5: Hashtags zur Filterung
-            difficulty: Double     // FSRS: Schwierigkeit (1.0–10.0)
-            stability: Double      // FSRS: Stabilität in Tagen
-            dueDate: Timestamp     // Nächster Wiederholungstermin
-            reviewCount: Int       // Anzahl Wiederholungen
+lib/
+├── main.dart                          # App-Einstiegspunkt + Navigation
+├── firebase_options.dart              # Firebase-Konfiguration (generiert)
+├── models/
+│   └── card_model.dart                # 5-Feld-Kartenmodell + FSRS-Felder
+├── services/
+│   ├── firestore_service.dart         # Firestore CRUD + Queries
+│   ├── fsrs_service.dart              # FSRS 4.5 Algorithmus
+│   └── notification_service.dart      # Push-Notification Scheduling
+└── screens/
+    ├── flashcard_question_screen.dart  # Frage-Ansicht
+    ├── flashcard_answer_screen.dart    # Antwort + 4 Bewertungsbuttons
+    ├── calendar_screen.dart           # Monatskalender + Stats
+    └── splash_screen.dart             # Ladebildschirm
+
+test/
+└── app_validation_test.dart           # 10 Validierungstests (T1–T10)
+
+docs/
+├── projektbericht.md                  # IHK-Projektbericht (Phase 5)
+└── testprotokoll_phase4.md            # Testprotokoll (Phase 4)
 ```
 
-## 🏗️ Phasen (Wasserfallmodell)
+---
 
-| Phase | Stunden | Status |
-|-------|---------|--------|
-| 🔍 Phase 1 — Analyse | 10h | ✅ Abgeschlossen |
-| 📐 Phase 2 — Konzeption | 15h | 🟡 In Arbeit |
-| 💻 Phase 3 — Realisierung | 35h | 🔴 Offen |
-| ✅ Phase 4 — Validierung | 10h | 🔴 Offen |
-| 📝 Phase 5 — Dokumentation | 10h | 🔴 Offen |
-| **Gesamt** | **80h** | |
+## Setup
 
-## 🛠️ Lokales Setup
+### Voraussetzungen
+
+- [Flutter SDK](https://flutter.dev/docs/get-started/install) >= 3.8.0
+- [Git](https://git-scm.com/)
+- Firebase-Projekt (Spark-Tarif, kostenlos)
+
+### Installation
 
 ```bash
 # Repository klonen
 git clone https://github.com/anki-project-team/anki-system.git
 cd anki-system
 
-# Flutter Web aktivieren
-flutter config --enable-web
-
 # Dependencies installieren
 flutter pub get
+
+# Firebase konfigurieren (optional, für eigenes Projekt)
+flutterfire configure
 
 # Im Browser starten
 flutter run -d chrome
 ```
 
-### Voraussetzungen
+### Tests ausführen
 
-- [Flutter SDK](https://flutter.dev/docs/get-started/install) (≥ 3.8.0)
-- [VS Code](https://code.visualstudio.com/) mit Flutter & Dart Extensions
-- [Git](https://git-scm.com/)
-- Firebase-Projekt (Spark-Tarif, kostenlos)
+```bash
+flutter test test/app_validation_test.dart --reporter expanded
+```
 
-## 📊 IHK AP1 Themenabdeckung
+---
 
-| Prüfungsthema | Punkte AP1 | Abdeckung durch Projekt |
-|----------------|-----------|------------------------|
-| IT-Sicherheit | 15–20 | ✅ HTTPS, Auth, Security Rules, DSGVO |
-| KI / Machine Learning | bis 25 | ✅ FSRS-Algorithmus, adaptives Lernen |
-| Netzwerktechnik | 8–12 | ✅ HTTP/S, FCM, WebPush |
-| Softwareentwicklung (OOP) | 10–15 | ✅ Dart Klassen, Vererbung, Entwurfsmuster |
-| Datenbanken (NoSQL) | 8–10 | ✅ Firestore Collections, CRUD |
-| Projektmanagement | 5–8 | ✅ Wasserfall, Pflichtenheft |
-| Cloud-Computing | 5–8 | ✅ Firebase PaaS, CDN |
+## Firestore-Datenmodell
 
-## 📄 Lizenz
+```
+users/{userId}/decks/{deckId}/cards/{cardId}
+  ├── question      (String)     // Frage
+  ├── shortAnswer   (String)     // Kurzantwort
+  ├── longAnswer    (String)     // Ausführliche Erklärung
+  ├── url           (String)     // Weiterführender Link
+  ├── hashtags      (Array)      // Hashtags zur Filterung
+  ├── difficulty    (Double)     // FSRS: 1.0–10.0
+  ├── stability     (Double)     // FSRS: Stabilität in Tagen
+  ├── dueDate       (Timestamp)  // Nächste Wiederholung
+  ├── reviewCount   (Integer)    // Anzahl Reviews
+  └── state         (String)     // new|learning|review|relearning
+```
 
-Dieses Projekt ist unter der [MIT-Lizenz](LICENSE) lizenziert.
+---
+
+## IHK-Projekt
+
+Entstanden als IHK-Abschlussprojekt (AP1), Fachinformatiker Anwendungsentwicklung, BBQ Düsseldorf 2026.
+
+| Phase | Stunden | Status |
+|-------|---------|--------|
+| Phase 1 — Analyse | 10h | Abgeschlossen |
+| Phase 2 — Konzeption | 15h | Abgeschlossen |
+| Phase 3 — Realisierung | 35h | Abgeschlossen |
+| Phase 4 — Validierung | 10h | Abgeschlossen |
+| Phase 5 — Dokumentation | 10h | Abgeschlossen |
+| **Gesamt** | **80h** | |
+
+---
+
+## Lizenz
+
+[MIT](LICENSE)
