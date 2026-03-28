@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import '../models/card_model.dart';
+import '../services/fsrs_service.dart';
 
 class FlashcardAnswerScreen extends StatefulWidget {
   final CardModel card;
-  final Function(int rating) onRating;
+  final Function(int rating, CardModel updatedCard) onRating;
   final int currentCard;
   final int totalCards;
   final bool isNew;
@@ -24,6 +25,7 @@ class FlashcardAnswerScreen extends StatefulWidget {
 class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
   bool _showExplanation = false;
   bool _showResources = false;
+  final FSRSService _fsrs = FSRSService();
 
   @override
   Widget build(BuildContext context) {
@@ -455,13 +457,13 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
         const SizedBox(height: 14),
         Row(
           children: [
-            _buildRatingBtn('Nochmal', '<1 Min', 1, const Color(0xFFE57373)),
+            _buildRatingBtn('Nochmal', _fsrs.getIntervalLabel(widget.card, 1), 1, const Color(0xFFE57373)),
             const SizedBox(width: 8),
-            _buildRatingBtn('Schwer', '<10 Min', 2, const Color(0xFFFFB74D)),
+            _buildRatingBtn('Schwer', _fsrs.getIntervalLabel(widget.card, 2), 2, const Color(0xFFFFB74D)),
             const SizedBox(width: 8),
-            _buildRatingBtn('Gut', '4 Tage', 3, const Color(0xFF81C784)),
+            _buildRatingBtn('Gut', _fsrs.getIntervalLabel(widget.card, 3), 3, const Color(0xFF81C784)),
             const SizedBox(width: 8),
-            _buildRatingBtn('Einfach', '14 Tage', 4, const Color(0xFFE8813A)),
+            _buildRatingBtn('Einfach', _fsrs.getIntervalLabel(widget.card, 4), 4, const Color(0xFFE8813A)),
           ],
         ),
       ],
@@ -472,7 +474,10 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
       String label, String time, int rating, Color color) {
     return Expanded(
       child: GestureDetector(
-        onTap: () => widget.onRating(rating),
+        onTap: () {
+          final updatedCard = _fsrs.updateCard(widget.card, rating, DateTime.now());
+          widget.onRating(rating, updatedCard);
+        },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(

@@ -4,7 +4,7 @@ import 'flashcard_answer_screen.dart';
 
 class FlashcardQuestionScreen extends StatelessWidget {
   final CardModel card;
-  final Function(int rating) onRating;
+  final Function(int rating, CardModel updatedCard) onRating;
   final int currentCard;
   final int totalCards;
   final bool isNew;

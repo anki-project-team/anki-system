@@ -181,12 +181,13 @@ class LernenScreen extends StatelessWidget {
                 ),
                 currentCard: 3,
                 totalCards: 5,
-                onRating: (rating) {
+                onRating: (rating, updatedCard) {
                   Navigator.pop(context);
+                  final days = updatedCard.dueDate.difference(DateTime.now()).inDays;
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
-                          'Bewertung: $rating \u2014 N\u00e4chste Wiederholung geplant'),
+                          'Bewertung: $rating \u2014 N\u00e4chste Wiederholung in $days Tagen'),
                       backgroundColor: const Color(0xFFE8813A),
                     ),
                   );
