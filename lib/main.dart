@@ -3,11 +3,26 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'models/card_model.dart';
 import 'screens/flashcard_question_screen.dart';
+import 'screens/calendar_screen.dart';
+import 'services/notification_service.dart';
+import 'services/firestore_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await NotificationService.init();
+  _scheduleDailyNotification();
   runApp(const IHKApp());
+}
+
+void _scheduleDailyNotification() async {
+  final firestore = FirestoreService();
+  final dueCards = await firestore.getDueCards('demo-user', 'default');
+  await NotificationService.scheduleDailyReminder(
+    hour: 18,
+    minute: 0,
+    dueCardCount: dueCards.length,
+  );
 }
 
 class IHKApp extends StatelessWidget {
@@ -66,7 +81,7 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             _buildTabNavigator(0, const DashboardScreen()),
             _buildTabNavigator(1, const LernenScreen()),
-            _buildTabNavigator(2, const StatistikScreen()),
+            _buildTabNavigator(2, const CalendarScreen()),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
@@ -89,8 +104,8 @@ class _HomeScreenState extends State<HomeScreen> {
             BottomNavigationBarItem(
                 icon: Icon(Icons.school), label: 'Lernen'),
             BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart),
-              label: 'Statistik',
+              icon: Icon(Icons.calendar_today),
+              label: 'Kalender',
             ),
           ],
         ),
@@ -216,16 +231,3 @@ class LernenScreen extends StatelessWidget {
   }
 }
 
-class StatistikScreen extends StatelessWidget {
-  const StatistikScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Center(
-      child: Text(
-        '\ud83d\udcca Statistik',
-        style: TextStyle(color: Colors.white, fontSize: 24),
-      ),
-    );
-  }
-}

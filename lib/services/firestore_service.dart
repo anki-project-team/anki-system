@@ -49,6 +49,21 @@ class FirestoreService {
         .toList();
   }
 
+  // Alle Karten eines Decks laden
+  Future<List<CardModel>> getAllCards(String userId, String deckId) async {
+    final snapshot = await _db
+        .collection('users')
+        .doc(userId)
+        .collection('decks')
+        .doc(deckId)
+        .collection('cards')
+        .get();
+
+    return snapshot.docs
+        .map((doc) => CardModel.fromFirestore(doc.data(), doc.id))
+        .toList();
+  }
+
   // Nur FSRS-Felder nach Review aktualisieren
   Future<void> updateCardAfterReview(
       String userId, String deckId, CardModel updatedCard) async {
