@@ -2,6 +2,13 @@ import 'package:flutter/material.dart';
 import '../models/card_model.dart';
 import '../services/firestore_service.dart';
 
+/// Farbkodierung für Kalender-Tage basierend auf fälligen Karten
+Color borderColorForCount(int count) {
+  if (count <= 5) return const Color(0xFF81C784); // grün
+  if (count <= 15) return const Color(0xFFE8813A); // orange
+  return const Color(0xFFE57373); // rot
+}
+
 class CalendarScreen extends StatefulWidget {
   const CalendarScreen({super.key});
 
@@ -178,7 +185,7 @@ class _CalendarScreenState extends State<CalendarScreen> {
                             : const Color(0xFF1e3a5f),
                     border: dueCount > 0 && !isToday
                         ? Border.all(
-                            color: _borderColorForCount(dueCount),
+                            color: borderColorForCount(dueCount),
                             width: 2,
                           )
                         : null,
@@ -203,11 +210,6 @@ class _CalendarScreenState extends State<CalendarScreen> {
     );
   }
 
-  Color _borderColorForCount(int count) {
-    if (count <= 5) return const Color(0xFF81C784); // grün
-    if (count <= 15) return const Color(0xFFE8813A); // orange
-    return const Color(0xFFE57373); // rot
-  }
 
   Widget _buildLegend() {
     return Row(

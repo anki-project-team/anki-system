@@ -36,7 +36,7 @@ class NotificationService {
     await _plugin.zonedSchedule(
       0,
       'IHK AP1 Prep',
-      'Heute $dueCardCount Karten fällig — Jetzt lernen 🎯',
+      getNotificationBody(dueCardCount),
       _nextInstanceOfTime(hour, minute),
       details,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
@@ -55,6 +55,11 @@ class NotificationService {
       scheduled = scheduled.add(const Duration(days: 1));
     }
     return scheduled;
+  }
+
+  /// Notification-Body generieren
+  static String getNotificationBody(int dueCardCount) {
+    return 'Heute $dueCardCount Karten fällig — Jetzt lernen 🎯';
   }
 
   /// Alle Notifications löschen
