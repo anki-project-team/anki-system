@@ -95,6 +95,8 @@ class HomeDashboardScreen extends StatelessWidget {
   // ════════════════════════════════════════════════════════════
   Widget _buildHeroCard() {
     return Container(
+      width: double.infinity,
+      margin: EdgeInsets.zero,
       padding: const EdgeInsets.all(20),
       decoration: const BoxDecoration(
         color: Color(0xFF162447),
@@ -201,7 +203,7 @@ class HomeDashboardScreen extends StatelessWidget {
           ),
           const SizedBox(height: 8),
           const Text(
-            'AP1 Vorbereitung',
+            'Tägliche Wiederholung',
             style: TextStyle(
               color: Colors.white,
               fontSize: 17,
