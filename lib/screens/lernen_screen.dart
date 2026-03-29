@@ -1,51 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/screens/flashcard_question_screen.dart';
-
-final List<CardModel> hardwareDeckkarten = [
-  CardModel(
-    id: 'hw-001',
-    question: 'Was ist die Funktion von DHCP?',
-    shortAnswer:
-        'DHCP weist Geräten automatisch IP-Adressen, Subnetzmasken, Gateway und DNS-Server zu.',
-    longAnswer:
-        'DHCP (Dynamic Host Configuration Protocol) läuft nach dem DORA-Prinzip ab:\n\n'
-        '1. Discover – Client sendet Broadcast\n'
-        '2. Offer – Server bietet IP an\n'
-        '3. Request – Client akzeptiert\n'
-        '4. Acknowledge – Server bestätigt\n\n'
-        'Ports: UDP 67 (Server) / UDP 68 (Client)',
-    url: 'https://de.wikipedia.org/wiki/DHCP',
-    hashtags: ['#Netzwerk', '#DHCP', '#IP-Adressierung', '#TCP-IP', '#AP1'],
-  ),
-  CardModel(
-    id: 'hw-002',
-    question: 'Welche Schichten hat das OSI-Modell?',
-    shortAnswer:
-        '7 Schichten: Bitübertragung, Sicherung, Vermittlung, Transport, Sitzung, Darstellung, Anwendung.',
-    longAnswer:
-        '1. Physical – Kabel, WLAN\n'
-        '2. Data Link – MAC-Adressen\n'
-        '3. Network – IP-Routing\n'
-        '4. Transport – TCP/UDP\n'
-        '5. Session – Sitzungsverwaltung\n'
-        '6. Presentation – Verschlüsselung\n'
-        '7. Application – HTTP, FTP, SMTP',
-    url: 'https://de.wikipedia.org/wiki/OSI-Modell',
-    hashtags: ['#Netzwerk', '#OSI', '#Protokolle', '#AP1'],
-  ),
-  CardModel(
-    id: 'hw-003',
-    question: 'Was ist der Unterschied zwischen TCP und UDP?',
-    shortAnswer:
-        'TCP ist verbindungsorientiert und zuverlässig. UDP ist verbindungslos und schneller.',
-    longAnswer:
-        'TCP: 3-Way-Handshake, Fehlerkorrektur, für HTTP/FTP.\n\n'
-        'UDP: kein Verbindungsaufbau, für DNS/VoIP/Streaming.',
-    url: 'https://de.wikipedia.org/wiki/Transmission_Control_Protocol',
-    hashtags: ['#Netzwerk', '#TCP', '#UDP', '#Protokolle', '#AP1'],
-  ),
-];
 
 class LernkartenDecksScreen extends StatelessWidget {
   const LernkartenDecksScreen({super.key});
@@ -81,8 +37,45 @@ class LernkartenDecksScreen extends StatelessWidget {
     go(context, 0);
   }
 
+  String _deckIcon(String name) {
+    if (name.contains('Netzwerk')) return '🔗';
+    if (name.contains('Hardware')) return '💻';
+    if (name.contains('Sicherheit')) return '🛡';
+    if (name.contains('Datenschutz')) return '🔒';
+    if (name.contains('Projekt')) return '📋';
+    if (name.contains('Software')) return '⚙';
+    if (name.contains('Betrieb')) return '🖥';
+    if (name.contains('Wirtschaft')) return '💰';
+    if (name.contains('Marketing')) return '📢';
+    if (name.contains('Team')) return '👥';
+    if (name.contains('Vertrag') || name.contains('Verträge')) return '📄';
+    if (name.contains('Change')) return '🔄';
+    if (name.contains('Multimedia')) return '🎬';
+    if (name.contains('Internet')) return '🌐';
+    if (name.contains('Qualität')) return '✅';
+    if (name.contains('Märkte') || name.contains('Bedarfe')) return '📊';
+    if (name.contains('Kunden') || name.contains('Präsentation')) return '🎤';
+    if (name.contains('Angebot')) return '📝';
+    if (name.contains('Leistung')) return '📦';
+    if (name.contains('Methoden')) return '🧩';
+    return '📚';
+  }
+
+  Color _deckColor(String name) {
+    if (name.contains('Netzwerk')) return const Color(0xFFDBEAFE);
+    if (name.contains('Hardware')) return const Color(0xFFDCFCE7);
+    if (name.contains('Sicherheit')) return const Color(0xFFFEE2E2);
+    if (name.contains('Datenschutz')) return const Color(0xFFFEF3C7);
+    if (name.contains('Projekt')) return const Color(0xFFF3E8FF);
+    if (name.contains('Software')) return const Color(0xFFE0F2FE);
+    return const Color(0xFFF1F5F9);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final totalCards =
+        alleAP1Decks.values.fold(0, (sum, list) => sum + list.length);
+
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
@@ -151,8 +144,12 @@ class LernkartenDecksScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () =>
-                                _startDeck(context, hardwareDeckkarten),
+                            onPressed: () {
+                              final allCards = alleAP1Decks.values
+                                  .expand((list) => list)
+                                  .toList();
+                              _startDeck(context, allCards);
+                            },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.white,
                               side: BorderSide(
@@ -193,10 +190,9 @@ class LernkartenDecksScreen extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _statItem(
-                            '${hardwareDeckkarten.length}', 'DUE'),
+                        _statItem('$totalCards', 'DUE'),
                         _divider(),
-                        _statItem('3', 'LERNEN'),
+                        _statItem('${alleAP1Decks.length}', 'DECKS'),
                         _divider(),
                         _statItem('0', 'FÄLLIG'),
                         _divider(),
@@ -218,51 +214,27 @@ class LernkartenDecksScreen extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                         fontSize: 15,
                         color: Color(0xFF111827))),
-                Text('+ Deck importieren',
+                Text('${alleAP1Decks.length} Decks',
                     style: TextStyle(
-                        fontSize: 12, color: Colors.blue[600])),
+                        fontSize: 12, color: Colors.grey[500])),
               ],
             ),
             const SizedBox(height: 10),
 
-            // Deck 1 — Hardware & Vernetzung (mit echten Karten)
-            _deckCard(
-              context: context,
-              icon: '🔗',
-              iconBg: const Color(0xFFDBEAFE),
-              title: 'Hardware & Vernetzung',
-              subtitle: 'OSI-Modell, Protokolle',
-              due: hardwareDeckkarten.length,
-              learning: 0,
-              cards: hardwareDeckkarten,
-            ),
-            const SizedBox(height: 8),
-
-            // Deck 2 — Programmiergrundlagen (noch keine Karten)
-            _deckCard(
-              context: context,
-              icon: '💻',
-              iconBg: const Color(0xFFF3E8FF),
-              title: 'Programmiergrundlagen',
-              subtitle: 'Algorithmen, Datenstrukturen',
-              due: 24,
-              learning: 18,
-              cards: const [],
-            ),
-            const SizedBox(height: 8),
-
-            // Deck 3 — IT-Sicherheit (noch keine Karten)
-            _deckCard(
-              context: context,
-              icon: '🛡',
-              iconBg: const Color(0xFFFEF3C7),
-              title: 'IT-Sicherheit',
-              subtitle: 'DSGVO, Cyber, Verschlüsselung',
-              due: 0,
-              learning: 16,
-              cards: const [],
-              dueLabelOverride: 'NC',
-            ),
+            // Alle 21 Decks aus alleAP1Decks
+            ...alleAP1Decks.entries.map((entry) => Padding(
+                  padding: const EdgeInsets.only(bottom: 8),
+                  child: _deckCard(
+                    context: context,
+                    icon: _deckIcon(entry.key),
+                    iconBg: _deckColor(entry.key),
+                    title: entry.key,
+                    subtitle: '${entry.value.length} Karten',
+                    due: entry.value.length,
+                    learning: 0,
+                    cards: entry.value,
+                  ),
+                )),
           ],
         ),
       ),
@@ -303,7 +275,6 @@ class LernkartenDecksScreen extends StatelessWidget {
     required int due,
     required int learning,
     required List<CardModel> cards,
-    String? dueLabelOverride,
   }) {
     return Card(
       margin: EdgeInsets.zero,
@@ -334,20 +305,6 @@ class LernkartenDecksScreen extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 6, vertical: 2),
-                        decoration: BoxDecoration(
-                            color: const Color(0xFFDBEAFE),
-                            borderRadius: BorderRadius.circular(3)),
-                        child: const Text('NEU',
-                            style: TextStyle(
-                                fontSize: 9,
-                                fontWeight: FontWeight.w700,
-                                color: Color(0xFF1E40AF),
-                                letterSpacing: 0.4)),
-                      ),
-                      const SizedBox(height: 3),
                       Text(title,
                           style: const TextStyle(
                               fontSize: 13,
@@ -368,10 +325,9 @@ class LernkartenDecksScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    _miniStat(
-                        dueLabelOverride ?? due.toString(), 'Due'),
+                    _miniStat(due.toString(), 'Karten'),
                     const SizedBox(width: 16),
-                    _miniStat(learning.toString(), 'Lernen'),
+                    _miniStat(learning.toString(), 'Gelernt'),
                   ],
                 ),
                 ElevatedButton(
