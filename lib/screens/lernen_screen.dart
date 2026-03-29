@@ -37,29 +37,6 @@ class LernkartenDecksScreen extends StatelessWidget {
     go(context, 0);
   }
 
-  String _deckIcon(String name) {
-    if (name.contains('Netzwerk')) return '🔗';
-    if (name.contains('Hardware')) return '💻';
-    if (name.contains('Sicherheit')) return '🛡';
-    if (name.contains('Datenschutz')) return '🔒';
-    if (name.contains('Projekt')) return '📋';
-    if (name.contains('Software')) return '⚙';
-    if (name.contains('Betrieb')) return '🖥';
-    if (name.contains('Wirtschaft')) return '💰';
-    if (name.contains('Marketing')) return '📢';
-    if (name.contains('Team')) return '👥';
-    if (name.contains('Vertrag') || name.contains('Verträge')) return '📄';
-    if (name.contains('Change')) return '🔄';
-    if (name.contains('Multimedia')) return '🎬';
-    if (name.contains('Internet')) return '🌐';
-    if (name.contains('Qualität')) return '✅';
-    if (name.contains('Märkte') || name.contains('Bedarfe')) return '📊';
-    if (name.contains('Kunden') || name.contains('Präsentation')) return '🎤';
-    if (name.contains('Angebot')) return '📝';
-    if (name.contains('Leistung')) return '📦';
-    if (name.contains('Methoden')) return '🧩';
-    return '📚';
-  }
 
   Color _deckColor(String name) {
     if (name.contains('Netzwerk')) return const Color(0xFFDBEAFE);
@@ -73,8 +50,8 @@ class LernkartenDecksScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final totalCards =
-        alleAP1Decks.values.fold(0, (sum, list) => sum + list.length);
+    final totalCards = alleAP1Decks.fold(
+        0, (sum, deck) => sum + (deck['karten'] as List).length);
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
@@ -145,8 +122,9 @@ class LernkartenDecksScreen extends StatelessWidget {
                         Expanded(
                           child: OutlinedButton(
                             onPressed: () {
-                              final allCards = alleAP1Decks.values
-                                  .expand((list) => list)
+                              final allCards = alleAP1Decks
+                                  .expand((deck) =>
+                                      deck['karten'] as List<CardModel>)
                                   .toList();
                               _startDeck(context, allCards);
                             },
@@ -222,17 +200,17 @@ class LernkartenDecksScreen extends StatelessWidget {
             const SizedBox(height: 10),
 
             // Alle 21 Decks aus alleAP1Decks
-            ...alleAP1Decks.entries.map((entry) => Padding(
+            ...alleAP1Decks.map((deck) => Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: _deckCard(
                     context: context,
-                    icon: _deckIcon(entry.key),
-                    iconBg: _deckColor(entry.key),
-                    title: entry.key,
-                    subtitle: '${entry.value.length} Karten',
-                    due: entry.value.length,
+                    icon: deck['icon'] as String,
+                    iconBg: _deckColor(deck['name'] as String),
+                    title: deck['name'] as String,
+                    subtitle: '${(deck['karten'] as List).length} Karten',
+                    due: (deck['karten'] as List).length,
                     learning: 0,
-                    cards: entry.value,
+                    cards: deck['karten'] as List<CardModel>,
                   ),
                 )),
           ],
