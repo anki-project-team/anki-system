@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'lernen_screen.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
@@ -55,6 +56,12 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
               color: Colors.white,
               size: 20,
             ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.white, size: 20),
+            onPressed: () async {
+              await AuthService().logout();
+            },
           ),
         ],
       ),
