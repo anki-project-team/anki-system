@@ -8,6 +8,7 @@ import 'screens/home_screen.dart';
 import 'screens/lernen_screen.dart';
 import 'services/notification_service.dart';
 import 'services/firestore_service.dart';
+import 'widgets/auth_wrapper.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +44,7 @@ class IHKApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
-      home: const MainShell(),
+      home: const AuthWrapper(authenticatedScreen: MainShell()),
     );
   }
 }

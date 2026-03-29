@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/services/fsrs_service.dart';
 
@@ -441,9 +443,25 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
       String label, String interval, int rating, Color color) {
     return Expanded(
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
           final updated =
               _fsrs.updateCard(widget.card, rating, DateTime.now());
+          final user = FirebaseAuth.instance.currentUser;
+          if (user != null) {
+            await FirebaseFirestore.instance
+                .collection('users')
+                .doc(user.uid)
+                .collection('progress')
+                .doc(widget.card.id)
+                .set({
+              'difficulty': updated.difficulty,
+              'stability': updated.stability,
+              'dueDate': updated.dueDate,
+              'reviewCount': updated.reviewCount,
+              'state': updated.state,
+              'lastReview': DateTime.now(),
+            });
+          }
           widget.onRating(rating, updated);
         },
         child: Container(
