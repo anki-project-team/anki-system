@@ -1,8 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'lernen_screen.dart';
 
-class HomeDashboardScreen extends StatelessWidget {
+class HomeDashboardScreen extends StatefulWidget {
   const HomeDashboardScreen({super.key});
+
+  @override
+  State<HomeDashboardScreen> createState() => _HomeDashboardScreenState();
+}
+
+class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
+  String _firstName = 'Kai';
+
+  @override
+  void initState() {
+    super.initState();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null && user.displayName != null) {
+      _firstName = user.displayName!.split(' ').first;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,10 +64,10 @@ class HomeDashboardScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Begrüßung
-            const Padding(
-              padding: EdgeInsets.only(left: 4, bottom: 8),
+            Padding(
+              padding: const EdgeInsets.only(left: 4, bottom: 8),
               child: Text(
-                'GUTEN MORGEN, KAI',
+                'GUTEN MORGEN, ${_firstName.toUpperCase()}',
                 style: TextStyle(
                   fontSize: 11,
                   color: Color(0xFF9CA3AF),
