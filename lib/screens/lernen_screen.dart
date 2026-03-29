@@ -1,7 +1,85 @@
 import 'package:flutter/material.dart';
+import 'package:ihk_ap1_prep/models/card_model.dart';
+import 'package:ihk_ap1_prep/screens/flashcard_question_screen.dart';
+
+final List<CardModel> hardwareDeckkarten = [
+  CardModel(
+    id: 'hw-001',
+    question: 'Was ist die Funktion von DHCP?',
+    shortAnswer:
+        'DHCP weist Geräten automatisch IP-Adressen, Subnetzmasken, Gateway und DNS-Server zu.',
+    longAnswer:
+        'DHCP (Dynamic Host Configuration Protocol) läuft nach dem DORA-Prinzip ab:\n\n'
+        '1. Discover – Client sendet Broadcast\n'
+        '2. Offer – Server bietet IP an\n'
+        '3. Request – Client akzeptiert\n'
+        '4. Acknowledge – Server bestätigt\n\n'
+        'Ports: UDP 67 (Server) / UDP 68 (Client)',
+    url: 'https://de.wikipedia.org/wiki/DHCP',
+    hashtags: ['#Netzwerk', '#DHCP', '#IP-Adressierung', '#TCP-IP', '#AP1'],
+  ),
+  CardModel(
+    id: 'hw-002',
+    question: 'Welche Schichten hat das OSI-Modell?',
+    shortAnswer:
+        '7 Schichten: Bitübertragung, Sicherung, Vermittlung, Transport, Sitzung, Darstellung, Anwendung.',
+    longAnswer:
+        '1. Physical – Kabel, WLAN\n'
+        '2. Data Link – MAC-Adressen\n'
+        '3. Network – IP-Routing\n'
+        '4. Transport – TCP/UDP\n'
+        '5. Session – Sitzungsverwaltung\n'
+        '6. Presentation – Verschlüsselung\n'
+        '7. Application – HTTP, FTP, SMTP',
+    url: 'https://de.wikipedia.org/wiki/OSI-Modell',
+    hashtags: ['#Netzwerk', '#OSI', '#Protokolle', '#AP1'],
+  ),
+  CardModel(
+    id: 'hw-003',
+    question: 'Was ist der Unterschied zwischen TCP und UDP?',
+    shortAnswer:
+        'TCP ist verbindungsorientiert und zuverlässig. UDP ist verbindungslos und schneller.',
+    longAnswer:
+        'TCP: 3-Way-Handshake, Fehlerkorrektur, für HTTP/FTP.\n\n'
+        'UDP: kein Verbindungsaufbau, für DNS/VoIP/Streaming.',
+    url: 'https://de.wikipedia.org/wiki/Transmission_Control_Protocol',
+    hashtags: ['#Netzwerk', '#TCP', '#UDP', '#Protokolle', '#AP1'],
+  ),
+];
 
 class LernkartenDecksScreen extends StatelessWidget {
   const LernkartenDecksScreen({super.key});
+
+  void _startDeck(BuildContext context, List<CardModel> cards) {
+    if (cards.isEmpty) return;
+
+    void go(BuildContext ctx, int i) {
+      if (i >= cards.length) {
+        Navigator.popUntil(ctx, (r) => r.isFirst);
+        ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
+          content: Text('Lernsitzung abgeschlossen! 🎉'),
+          backgroundColor: Color(0xFFE8813A),
+        ));
+        return;
+      }
+      Navigator.push(
+        ctx,
+        MaterialPageRoute(
+          builder: (_) => FlashcardQuestionScreen(
+            card: cards[i],
+            currentCard: i + 1,
+            totalCards: cards.length,
+            onRating: (rating, updatedCard) {
+              Navigator.pop(ctx);
+              go(ctx, i + 1);
+            },
+          ),
+        ),
+      );
+    }
+
+    go(context, 0);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,18 +147,18 @@ class LernkartenDecksScreen extends StatelessWidget {
                             color: Colors.white,
                             height: 1.25)),
                     const SizedBox(height: 12),
-                    // Two Buttons
                     Row(
                       children: [
                         Expanded(
                           child: OutlinedButton(
-                            onPressed: () {},
+                            onPressed: () =>
+                                _startDeck(context, hardwareDeckkarten),
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.white,
                               side: BorderSide(
                                   color: Colors.white.withOpacity(0.35)),
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6)),
                             ),
@@ -97,8 +175,8 @@ class LernkartenDecksScreen extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFE8813A),
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8),
+                              padding:
+                                  const EdgeInsets.symmetric(vertical: 8),
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6)),
                               elevation: 0,
@@ -112,15 +190,15 @@ class LernkartenDecksScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 14),
-                    // Stats Row
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
-                        _statItem('124', 'DUE'),
+                        _statItem(
+                            '${hardwareDeckkarten.length}', 'DUE'),
                         _divider(),
-                        _statItem('42', 'LERNEN'),
+                        _statItem('3', 'LERNEN'),
                         _divider(),
-                        _statItem('18', 'FÄLLIG'),
+                        _statItem('0', 'FÄLLIG'),
                         _divider(),
                         _statItem('14 🔥', 'STREAK'),
                       ],
@@ -147,35 +225,42 @@ class LernkartenDecksScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Deck Cards
+            // Deck 1 — Hardware & Vernetzung (mit echten Karten)
             _deckCard(
+              context: context,
               icon: '🔗',
               iconBg: const Color(0xFFDBEAFE),
               title: 'Hardware & Vernetzung',
               subtitle: 'OSI-Modell, Protokolle',
-              due: 85,
-              learning: 14,
-              onTap: () {},
+              due: hardwareDeckkarten.length,
+              learning: 0,
+              cards: hardwareDeckkarten,
             ),
             const SizedBox(height: 8),
+
+            // Deck 2 — Programmiergrundlagen (noch keine Karten)
             _deckCard(
+              context: context,
               icon: '💻',
               iconBg: const Color(0xFFF3E8FF),
               title: 'Programmiergrundlagen',
               subtitle: 'Algorithmen, Datenstrukturen',
               due: 24,
               learning: 18,
-              onTap: () {},
+              cards: const [],
             ),
             const SizedBox(height: 8),
+
+            // Deck 3 — IT-Sicherheit (noch keine Karten)
             _deckCard(
+              context: context,
               icon: '🛡',
               iconBg: const Color(0xFFFEF3C7),
               title: 'IT-Sicherheit',
               subtitle: 'DSGVO, Cyber, Verschlüsselung',
               due: 0,
               learning: 16,
-              onTap: () {},
+              cards: const [],
               dueLabelOverride: 'NC',
             ),
           ],
@@ -204,17 +289,20 @@ class LernkartenDecksScreen extends StatelessWidget {
 
   Widget _divider() {
     return Container(
-        width: 1, height: 28, color: Colors.white.withOpacity(0.15));
+        width: 1,
+        height: 28,
+        color: Colors.white.withOpacity(0.15));
   }
 
   Widget _deckCard({
+    required BuildContext context,
     required String icon,
     required Color iconBg,
     required String title,
     required String subtitle,
     required int due,
     required int learning,
-    required VoidCallback onTap,
+    required List<CardModel> cards,
     String? dueLabelOverride,
   }) {
     return Card(
@@ -287,9 +375,12 @@ class LernkartenDecksScreen extends StatelessWidget {
                   ],
                 ),
                 ElevatedButton(
-                  onPressed: onTap,
+                  onPressed: cards.isNotEmpty
+                      ? () => _startDeck(context, cards)
+                      : null,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF162447),
+                    disabledBackgroundColor: const Color(0xFFCBD5E1),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
                         horizontal: 14, vertical: 6),
@@ -301,7 +392,8 @@ class LernkartenDecksScreen extends StatelessWidget {
                   ),
                   child: const Text('Jetzt lernen',
                       style: TextStyle(
-                          fontSize: 11, fontWeight: FontWeight.w600)),
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600)),
                 ),
               ],
             ),
