@@ -39,7 +39,7 @@ class IHKApp extends StatelessWidget {
           primary: Color(0xFFE8813A),
           surface: Color(0xFF162447),
         ),
-        scaffoldBackgroundColor: const Color(0xFF162447),
+        scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
       home: const HomeScreen(),
@@ -119,7 +119,10 @@ class _HomeScreenState extends State<HomeScreen> {
     return Navigator(
       key: _navigatorKeys[index],
       onGenerateRoute: (_) => MaterialPageRoute(
-        builder: (_) => root,
+        builder: (_) => MediaQuery(
+          data: MediaQuery.of(context),
+          child: root,
+        ),
       ),
     );
   }
