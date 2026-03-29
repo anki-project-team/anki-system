@@ -5,6 +5,7 @@ import 'models/card_model.dart';
 import 'screens/flashcard_question_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/home_screen.dart';
+import 'screens/lernen_screen.dart';
 import 'services/notification_service.dart';
 import 'services/firestore_service.dart';
 
@@ -80,7 +81,7 @@ class _MainShellState extends State<MainShell> {
           index: _currentIndex,
           children: [
             _buildTab(0, const HomeDashboardScreen()),
-            _buildTab(1, const LernenScreen()),
+            _buildTab(1, const LernkartenDecksScreen()),
             _buildTab(2, const CalendarScreen()),
           ],
         ),
