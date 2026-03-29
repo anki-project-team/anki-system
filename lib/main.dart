@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import 'models/card_model.dart';
@@ -7,7 +8,7 @@ import 'screens/calendar_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/lernen_screen.dart';
 import 'services/notification_service.dart';
-import 'services/firestore_service.dart';
+
 import 'widgets/auth_wrapper.dart';
 
 void main() async {
@@ -19,13 +20,14 @@ void main() async {
 }
 
 void _scheduleDailyNotification() async {
-  final firestore = FirestoreService();
-  final dueCards = await firestore.getDueCards('demo-user', 'default');
-  await NotificationService.scheduleDailyReminder(
-    hour: 18,
-    minute: 0,
-    dueCardCount: dueCards.length,
-  );
+  final user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    await NotificationService.scheduleDailyLearningReminder(user.uid);
+  } else {
+    await NotificationService.scheduleDailyReminder(
+      hour: 18, minute: 0, dueCardCount: 0,
+    );
+  }
 }
 
 class IHKApp extends StatelessWidget {
