@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'lernen_screen.dart';
 
 class HomeDashboardScreen extends StatelessWidget {
   const HomeDashboardScreen({super.key});
@@ -179,7 +180,12 @@ class HomeDashboardScreen extends StatelessWidget {
                     Row(
                       children: [
                         ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const LernkartenDecksScreen(),
+                            ),
+                          ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFE8813A),
                             foregroundColor: Colors.white,
