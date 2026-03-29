@@ -25,7 +25,7 @@ void _scheduleDailyNotification() async {
     await NotificationService.scheduleDailyLearningReminder(user.uid);
   } else {
     await NotificationService.scheduleDailyReminder(
-      hour: 18, minute: 0, dueCardCount: 0,
+      hour: 7, minute: 30, dueCardCount: 0,
     );
   }
 }

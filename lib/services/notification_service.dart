@@ -80,8 +80,8 @@ class NotificationService {
         : 'Alle Karten für heute wiederholt.';
 
     await scheduleDailyReminder(
-      hour: 18,
-      minute: 0,
+      hour: 7,
+      minute: 30,
       dueCardCount: dueCount,
       customTitle: title,
       customBody: body,
