@@ -21,5 +21,10 @@ class AuthService {
     );
   }
 
+  Future<UserCredential?> signInWithGoogle() async {
+    final provider = GoogleAuthProvider();
+    return await _auth.signInWithPopup(provider);
+  }
+
   Future<void> logout() => _auth.signOut();
 }

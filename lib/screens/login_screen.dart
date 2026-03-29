@@ -118,6 +118,29 @@ class _LoginScreenState extends State<LoginScreen> {
                               fontSize: 16, fontWeight: FontWeight.bold)),
                 ),
               ),
+              const SizedBox(height: 12),
+              OutlinedButton.icon(
+                onPressed: () async {
+                  try {
+                    await AuthService().signInWithGoogle();
+                  } catch (e) {
+                    if (context.mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text(e.toString())),
+                      );
+                    }
+                  }
+                },
+                icon: const Icon(Icons.g_mobiledata, size: 22),
+                label: const Text('Mit Google anmelden'),
+                style: OutlinedButton.styleFrom(
+                  minimumSize: const Size(double.infinity, 48),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  side: const BorderSide(color: Color(0xFFD1D5DB)),
+                ),
+              ),
               const SizedBox(height: 16),
               TextButton(
                 onPressed: () => Navigator.push(
