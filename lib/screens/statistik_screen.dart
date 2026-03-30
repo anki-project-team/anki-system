@@ -302,7 +302,7 @@ class _StatistikScreenState extends State<StatistikScreen> {
     required Color subColor,
     required double valueFontSize,
     Color valueColor = const Color(0xFF111827),
-    Color bgColor = Colors.white,
+    Color bgColor = const Color(0xFFF9FAFB),
     Color borderColor = const Color(0xFFE5E7EB),
   }) {
     return Container(
@@ -345,7 +345,7 @@ class _StatistikScreenState extends State<StatistikScreen> {
       width: double.infinity,
       padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: const Color(0xFFF9FAFB),
         borderRadius: BorderRadius.circular(16),
         border:
             Border.all(color: const Color(0xFFE5E7EB)),
