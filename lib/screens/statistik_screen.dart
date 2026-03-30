@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ihk_ap1_prep/services/premium_service.dart';
+import 'package:ihk_ap1_prep/widgets/premium_lock.dart';
 
 class StatistikScreen extends StatefulWidget {
   const StatistikScreen({super.key});
@@ -84,7 +86,29 @@ class _StatistikScreenState extends State<StatistikScreen> {
           ? const Center(
               child: CircularProgressIndicator(
                   color: Color(0xFFE8813A)))
-          : SingleChildScrollView(
+          : FutureBuilder<bool>(
+              future: PremiumService.isPremium(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                        color: Color(0xFFE8813A)),
+                  );
+                }
+                if (snapshot.data == false) {
+                  return PremiumLock(
+                    featureName: 'Statistik & Auswertung',
+                    child: _buildStatistikContent(),
+                  );
+                }
+                return _buildStatistikContent();
+              },
+            ),
+    );
+  }
+
+  Widget _buildStatistikContent() {
+    return SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -285,8 +309,7 @@ class _StatistikScreenState extends State<StatistikScreen> {
                   const SizedBox(height: 24),
                 ],
               ),
-            ),
-    );
+            );
   }
 
   Widget _statBox({

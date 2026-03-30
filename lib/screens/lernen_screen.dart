@@ -3,9 +3,33 @@ import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/screens/flashcard_question_screen.dart';
 import 'package:ihk_ap1_prep/screens/statistik_screen.dart';
+import 'package:ihk_ap1_prep/services/premium_service.dart';
+import 'package:ihk_ap1_prep/screens/upgrade_screen.dart';
 
-class LernkartenDecksScreen extends StatelessWidget {
+class LernkartenDecksScreen extends StatefulWidget {
   const LernkartenDecksScreen({super.key});
+
+  @override
+  State<LernkartenDecksScreen> createState() => _LernkartenDecksScreenState();
+}
+
+class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
+  bool _isPremium = false;
+  bool _loading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkPremium();
+  }
+
+  Future<void> _checkPremium() async {
+    final premium = await PremiumService.isPremium();
+    setState(() {
+      _isPremium = premium;
+      _loading = false;
+    });
+  }
 
   void _startDeck(BuildContext context, List<CardModel> cards) {
     if (cards.isEmpty) return;
@@ -207,20 +231,26 @@ class LernkartenDecksScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
 
-            // Alle 21 Decks aus alleAP1Decks
-            ...alleAP1Decks.map((deck) => Padding(
-                  padding: const EdgeInsets.only(bottom: 8),
-                  child: _deckCard(
-                    context: context,
-                    icon: deck['icon'] as String,
-                    iconBg: _deckColor(deck['name'] as String),
-                    title: deck['name'] as String,
-                    subtitle: '${(deck['karten'] as List).length} Karten',
-                    due: (deck['karten'] as List).length,
-                    learning: 0,
-                    cards: deck['karten'] as List<CardModel>,
-                  ),
-                )),
+            // Alle Decks — ab Index 5 nur für Premium
+            ...alleAP1Decks.asMap().entries.map((entry) {
+              final i = entry.key;
+              final deck = entry.value;
+              final locked = i >= 5 && !_isPremium;
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 8),
+                child: _deckCard(
+                  context: context,
+                  icon: deck['icon'] as String,
+                  iconBg: _deckColor(deck['name'] as String),
+                  title: deck['name'] as String,
+                  subtitle: '${(deck['karten'] as List).length} Karten',
+                  due: (deck['karten'] as List).length,
+                  learning: 0,
+                  cards: deck['karten'] as List<CardModel>,
+                  locked: locked,
+                ),
+              );
+            }),
           ],
         ),
       ),
@@ -261,6 +291,7 @@ class LernkartenDecksScreen extends StatelessWidget {
     required int due,
     required int learning,
     required List<CardModel> cards,
+    bool locked = false,
   }) {
     return Card(
       margin: EdgeInsets.zero,
@@ -316,12 +347,24 @@ class LernkartenDecksScreen extends StatelessWidget {
                     _miniStat(learning.toString(), 'Gelernt'),
                   ],
                 ),
-                ElevatedButton(
-                  onPressed: cards.isNotEmpty
-                      ? () => _startDeck(context, cards)
-                      : null,
+                ElevatedButton.icon(
+                  onPressed: locked
+                      ? () => Navigator.push(context,
+                            MaterialPageRoute(builder: (_) => const UpgradeScreen()))
+                      : (cards.isNotEmpty
+                          ? () => _startDeck(context, cards)
+                          : null),
+                  icon: locked
+                      ? const Icon(Icons.lock_outline, size: 14)
+                      : const SizedBox.shrink(),
+                  label: Text(locked ? 'Upgraden' : 'Jetzt lernen',
+                      style: const TextStyle(
+                          fontSize: 11,
+                          fontWeight: FontWeight.w600)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF162447),
+                    backgroundColor: locked
+                        ? const Color(0xFFE8813A)
+                        : const Color(0xFF162447),
                     disabledBackgroundColor: const Color(0xFFCBD5E1),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
@@ -332,10 +375,6 @@ class LernkartenDecksScreen extends StatelessWidget {
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                   ),
-                  child: const Text('Jetzt lernen',
-                      style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600)),
                 ),
               ],
             ),
