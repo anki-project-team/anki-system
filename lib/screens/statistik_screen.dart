@@ -78,13 +78,7 @@ class _StatistikScreenState extends State<StatistikScreen> {
                 fontWeight: FontWeight.w600,
                 fontSize: 17)),
         centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh,
-                color: Colors.white, size: 20),
-            onPressed: _loadStats,
-          ),
-        ],
+        actions: [],
       ),
       body: _loading
           ? const Center(
