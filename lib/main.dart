@@ -89,7 +89,7 @@ class _MainShellState extends State<MainShell> {
         body: IndexedStack(
           index: _currentIndex,
           children: [
-            _buildTab(0, const HomeDashboardScreen()),
+            _buildTab(0, const HomeScreen()),
             _buildTab(1, const LernkartenDecksScreen()),
             _buildTab(2, const StatistikScreen()),
           ],

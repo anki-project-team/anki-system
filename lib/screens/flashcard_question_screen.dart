@@ -8,6 +8,7 @@ class FlashcardQuestionScreen extends StatelessWidget {
   final int currentCard;
   final int totalCards;
   final bool isNew;
+  final String? deckName;
 
   const FlashcardQuestionScreen({
     super.key,
@@ -16,6 +17,7 @@ class FlashcardQuestionScreen extends StatelessWidget {
     this.currentCard = 3,
     this.totalCards = 5,
     this.isNew = true,
+    this.deckName,
   });
 
   @override
