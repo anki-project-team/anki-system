@@ -4,7 +4,8 @@ import * as admin from "firebase-admin";
 admin.initializeApp();
 
 export const sendDailyLearningNotification =
-  functions.pubsub.schedule("30 5 * * *")
+  functions.region("europe-west3")
+  .pubsub.schedule("30 5 * * *")
   .timeZone("Europe/Berlin")
   .onRun(async () => {
 
