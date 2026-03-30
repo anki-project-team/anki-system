@@ -64,6 +64,14 @@ class _StatistikScreenState extends State<StatistikScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF162447),
+        elevation: 0,
+        title: const Text('Statistik',
+            style: TextStyle(color: Colors.white,
+                fontWeight: FontWeight.w600, fontSize: 17)),
+        centerTitle: true,
+      ),
       body: _loading
           ? const Center(child: CircularProgressIndicator(color: Color(0xFFE8813A)))
           : CustomScrollView(
