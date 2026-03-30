@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
+import 'package:ihk_ap1_prep/screens/settings_screen.dart';
 import 'lernen_screen.dart';
 
 class HomeDashboardScreen extends StatefulWidget {
@@ -51,17 +52,14 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
               shape: BoxShape.circle,
               color: Colors.white.withOpacity(0.15),
             ),
-            child: const Icon(
-              Icons.notifications_none,
-              color: Colors.white,
-              size: 20,
+            child: IconButton(
+              icon: const Icon(Icons.settings_outlined,
+                  color: Colors.white, size: 20),
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(builder: (_) => const SettingsScreen()),
+              ),
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.logout, color: Colors.white, size: 20),
-            onPressed: () async {
-              await AuthService().logout();
-            },
           ),
         ],
       ),
