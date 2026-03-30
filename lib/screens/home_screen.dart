@@ -80,10 +80,16 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Hero Card
+            // Hero Card — abgerundete untere Ecken
             Container(
-              color: const Color(0xFF162447),
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
+              decoration: const BoxDecoration(
+                color: Color(0xFF162447),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(24),
+                  bottomRight: Radius.circular(24),
+                ),
+              ),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -95,27 +101,27 @@ class _HomeScreenState extends State<HomeScreen> {
                         letterSpacing: 0.8,
                         fontWeight: FontWeight.w500),
                   ),
-                  const SizedBox(height: 12),
+                  const SizedBox(height: 14),
                   const Text(
                     'Meistere deine\nAP1 Prüfung,\nKarte für Karte.',
                     style: TextStyle(
                         color: Colors.white,
-                        fontSize: 24,
+                        fontSize: 26,
                         fontWeight: FontWeight.bold,
                         height: 1.3),
                   ),
-                  const SizedBox(height: 6),
+                  const SizedBox(height: 8),
                   Text(
                     'Beständigkeit ist der Schlüssel zum Erfolg.',
                     style: TextStyle(
                         color: Colors.white.withOpacity(0.6),
                         fontSize: 13),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 18),
                   // Streak Button
                   Container(
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 8),
+                        horizontal: 14, vertical: 9),
                     decoration: BoxDecoration(
                       color: const Color(0xFFE8813A),
                       borderRadius: BorderRadius.circular(8),
@@ -123,8 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Text('⚡',
-                            style: TextStyle(fontSize: 14)),
+                        Text('⚡', style: TextStyle(fontSize: 14)),
                         SizedBox(width: 6),
                         Text(
                           'AKTIVE SERIE · 12 Tage Folge',
@@ -137,15 +142,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   // Stats Row
                   Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       _statItem('$totalCards', 'DUE'),
                       _divider(),
-                      _statItem(
-                          '${alleAP1Decks.length}', 'DECKS'),
+                      _statItem('${alleAP1Decks.length}', 'DECKS'),
                       _divider(),
                       _statItem('0', 'FÄLLIG'),
                       _divider(),
@@ -162,7 +167,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             Padding(
-              padding: const EdgeInsets.all(16),
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -170,13 +175,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   Card(
                     margin: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(16)),
                     color: const Color(0xFF1e3a5f),
+                    elevation: 0,
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(18),
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             mainAxisAlignment:
@@ -185,19 +190,16 @@ class _HomeScreenState extends State<HomeScreen> {
                               Text(
                                 'HEUTE LERNEN',
                                 style: TextStyle(
-                                    color: Colors.white
-                                        .withOpacity(0.6),
+                                    color:
+                                        Colors.white.withOpacity(0.6),
                                     fontSize: 11,
                                     letterSpacing: 0.8),
                               ),
                               Container(
-                                padding:
-                                    const EdgeInsets.symmetric(
-                                        horizontal: 8,
-                                        vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 3),
                                 decoration: BoxDecoration(
-                                  color:
-                                      const Color(0xFFE8813A),
+                                  color: const Color(0xFFE8813A),
                                   borderRadius:
                                       BorderRadius.circular(4),
                                 ),
@@ -205,8 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                     style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 11,
-                                        fontWeight:
-                                            FontWeight.bold)),
+                                        fontWeight: FontWeight.bold)),
                               ),
                             ],
                           ),
@@ -215,28 +216,25 @@ class _HomeScreenState extends State<HomeScreen> {
                             'Tägliche Wiederholung',
                             style: TextStyle(
                                 color: Colors.white,
-                                fontSize: 17,
+                                fontSize: 18,
                                 fontWeight: FontWeight.bold),
                           ),
                           const SizedBox(height: 4),
                           Text(
                             'Netzwerke · Betriebssysteme · IT-Sicherheit · Datenschutz',
                             style: TextStyle(
-                                color: Colors.white
-                                    .withOpacity(0.5),
+                                color: Colors.white.withOpacity(0.5),
                                 fontSize: 12),
                           ),
-                          const SizedBox(height: 14),
+                          const SizedBox(height: 16),
                           Row(
                             children: [
                               Expanded(
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    final deck =
-                                        alleAP1Decks.first;
+                                    final deck = alleAP1Decks.first;
                                     final karten =
-                                        deck['karten']
-                                            as List;
+                                        deck['karten'] as List;
                                     if (karten.isNotEmpty) {
                                       Navigator.push(
                                         context,
@@ -245,52 +243,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                               FlashcardQuestionScreen(
                                             card: karten[0],
                                             currentCard: 1,
-                                            totalCards:
-                                                karten.length,
-                                            deckName: deck[
-                                                'name'] as String,
+                                            totalCards: karten.length,
+                                            deckName: deck['name']
+                                                as String,
                                             onRating: (r, c) =>
-                                                Navigator.pop(
-                                                    context),
+                                                Navigator.pop(context),
                                           ),
                                         ),
                                       );
                                     }
                                   },
-                                  style:
-                                      ElevatedButton.styleFrom(
+                                  style: ElevatedButton.styleFrom(
                                     backgroundColor:
                                         const Color(0xFFE8813A),
-                                    foregroundColor:
-                                        Colors.white,
-                                    padding:
-                                        const EdgeInsets.symmetric(
-                                            vertical: 12),
+                                    foregroundColor: Colors.white,
+                                    padding: const EdgeInsets.symmetric(
+                                        vertical: 13),
                                     shape: RoundedRectangleBorder(
                                         borderRadius:
-                                            BorderRadius.circular(
-                                                8)),
+                                            BorderRadius.circular(8)),
                                     elevation: 0,
                                   ),
                                   child: const Text(
                                       'Lernen starten →',
                                       style: TextStyle(
-                                          fontWeight:
-                                              FontWeight.w600)),
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 15)),
                                 ),
                               ),
                               const SizedBox(width: 12),
                               Row(children: [
                                 Icon(Icons.access_time,
                                     size: 14,
-                                    color: Colors.white
-                                        .withOpacity(0.5)),
+                                    color:
+                                        Colors.white.withOpacity(0.5)),
                                 const SizedBox(width: 4),
                                 Text(
                                   '19 Min. Sitzung',
                                   style: TextStyle(
-                                      color: Colors.white
-                                          .withOpacity(0.5),
+                                      color:
+                                          Colors.white.withOpacity(0.5),
                                       fontSize: 12),
                                 ),
                               ]),
@@ -306,27 +298,22 @@ class _HomeScreenState extends State<HomeScreen> {
                   Card(
                     margin: EdgeInsets.zero,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
+                        borderRadius: BorderRadius.circular(16)),
+                    elevation: 0,
                     child: Padding(
-                      padding: const EdgeInsets.all(16),
+                      padding: const EdgeInsets.all(18),
                       child: Column(
-                        crossAxisAlignment:
-                            CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('Täglicher Fortschritt',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 15,
-                                  color: Color(0xFF111827))),
-                          const SizedBox(height: 4),
                           Row(
                             mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text('Karten wiederholt',
+                              const Text('Täglicher Fortschritt',
                                   style: TextStyle(
-                                      color: Color(0xFF6B7280),
-                                      fontSize: 13)),
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 15,
+                                      color: Color(0xFF111827))),
                               const Text('45 / 60',
                                   style: TextStyle(
                                       fontWeight: FontWeight.bold,
@@ -334,14 +321,17 @@ class _HomeScreenState extends State<HomeScreen> {
                                       color: Color(0xFF111827))),
                             ],
                           ),
-                          const SizedBox(height: 8),
+                          const SizedBox(height: 4),
+                          Text('Karten wiederholt',
+                              style: TextStyle(
+                                  color: Colors.grey[500],
+                                  fontSize: 12)),
+                          const SizedBox(height: 10),
                           ClipRRect(
-                            borderRadius:
-                                BorderRadius.circular(4),
+                            borderRadius: BorderRadius.circular(4),
                             child: const LinearProgressIndicator(
                               value: 0.75,
-                              backgroundColor:
-                                  Color(0xFFE5E7EB),
+                              backgroundColor: Color(0xFFE5E7EB),
                               valueColor:
                                   AlwaysStoppedAnimation<Color>(
                                       Color(0xFF22C55E)),
@@ -354,25 +344,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 horizontal: 12, vertical: 8),
                             decoration: BoxDecoration(
                               color: const Color(0xFFFEF9C3),
-                              borderRadius:
-                                  BorderRadius.circular(8),
+                              borderRadius: BorderRadius.circular(8),
                             ),
                             child: const Row(children: [
                               Text('⚡',
-                                  style:
-                                      TextStyle(fontSize: 14)),
+                                  style: TextStyle(fontSize: 13)),
                               SizedBox(width: 6),
                               Text(
                                 'Tagesziel: Fast geschafft! 60% erreicht.',
                                 style: TextStyle(
                                     fontSize: 12,
                                     color: Color(0xFF92400E),
-                                    fontWeight:
-                                        FontWeight.w500),
+                                    fontWeight: FontWeight.w500),
                               ),
                             ]),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 8),
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
@@ -390,17 +377,16 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
                   // Zuletzt gelernte Decks
                   Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       const Text('Zuletzt gelernte Decks',
                           style: TextStyle(
                               fontWeight: FontWeight.w600,
-                              fontSize: 15,
+                              fontSize: 16,
                               color: Color(0xFF111827))),
                       TextButton(
                         onPressed: () {},
@@ -413,55 +399,54 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
 
                   ...alleAP1Decks.take(3).map((deck) {
                     final name = deck['name'] as String;
                     final icon = deck['icon'] as String;
-                    final karten =
-                        (deck['karten'] as List).length;
                     return Card(
                       margin: const EdgeInsets.only(bottom: 8),
                       shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(10)),
+                          borderRadius: BorderRadius.circular(12)),
+                      elevation: 0,
                       child: ListTile(
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 4),
                         leading: Container(
-                          width: 42,
-                          height: 42,
+                          width: 44,
+                          height: 44,
                           decoration: BoxDecoration(
                             color: const Color(0xFFDBEAFE),
-                            borderRadius:
-                                BorderRadius.circular(8),
+                            borderRadius: BorderRadius.circular(10),
                           ),
                           child: Center(
                               child: Text(icon,
-                                  style: const TextStyle(
-                                      fontSize: 18))),
+                                  style:
+                                      const TextStyle(fontSize: 20))),
                         ),
                         title: Text(name,
                             style: const TextStyle(
                                 fontWeight: FontWeight.w600,
-                                fontSize: 14)),
+                                fontSize: 14,
+                                color: Color(0xFF111827))),
                         subtitle: Text(
                           '42% Meisterschaft',
                           style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[500]),
+                              fontSize: 12, color: Colors.grey[500]),
                         ),
                         trailing: TextButton(
                           onPressed: () {},
                           child: const Text('Jetzt lernen →',
                               style: TextStyle(
                                   color: Color(0xFFE8813A),
-                                  fontSize: 12)),
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w500)),
                         ),
                       ),
                     );
                   }).toList(),
-                  const SizedBox(height: 16),
 
-                  // Footer
+                  const SizedBox(height: 24),
                   Center(
                     child: Text(
                       'Impressum · Datenschutz · Cookie-Einstellungen',
@@ -485,21 +470,23 @@ class _HomeScreenState extends State<HomeScreen> {
         Text(value,
             style: const TextStyle(
                 color: Colors.white,
-                fontSize: 20,
+                fontSize: 22,
                 fontWeight: FontWeight.bold)),
+        const SizedBox(height: 2),
         Text(label,
             style: TextStyle(
                 color: Colors.white.withOpacity(0.5),
                 fontSize: 10,
-                letterSpacing: 0.5)),
+                letterSpacing: 0.5,
+                fontWeight: FontWeight.w500)),
       ],
     );
   }
 
   Widget _divider() => Container(
-        margin: const EdgeInsets.symmetric(horizontal: 12),
+        margin: const EdgeInsets.symmetric(horizontal: 8),
         width: 1,
-        height: 32,
+        height: 34,
         color: Colors.white.withOpacity(0.15),
       );
 }
