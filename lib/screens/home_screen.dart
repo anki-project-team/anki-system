@@ -66,12 +66,13 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
         ],
       ),
       body: SingleChildScrollView(
+        padding: const EdgeInsets.all(12),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             // Begrüßung
             Padding(
-              padding: const EdgeInsets.only(left: 16, top: 12, bottom: 8),
+              padding: const EdgeInsets.only(left: 4, bottom: 8),
               child: Text(
                 'GUTEN MORGEN, ${_firstName.toUpperCase()}',
                 style: TextStyle(
@@ -84,10 +85,13 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
             ),
 
             // Hero Card
-            Container(
-              width: double.infinity,
+            Card(
               margin: EdgeInsets.zero,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
               color: const Color(0xFF162447),
+              elevation: 2,
               child: Padding(
                 padding: const EdgeInsets.all(16),
                 child: Column(
@@ -134,12 +138,6 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
               ),
             ),
             const SizedBox(height: 10),
-
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
 
             // Modul Card
             Card(
@@ -405,9 +403,6 @@ class _HomeDashboardScreenState extends State<HomeDashboardScreen> {
                 ],
               ),
             ),
-            ],
-              ),
-            ), // end Padding
           ],
         ),
       ),
