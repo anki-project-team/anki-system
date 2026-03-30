@@ -133,10 +133,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
 
-            // Dots + Buttons
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
+            // ── Unterer Bereich ──────────────────────────────
+            Container(
+              color: const Color(0xFF0f1d38),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
               child: Column(children: [
+
                 // Dots
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +157,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: 14),
 
                 // Haupt-Button
                 SizedBox(
@@ -173,7 +175,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Text(
                       _currentPage < _pages.length - 1
                           ? 'Weiter →'
-                          : '10 AP1-Karten gratis testen — kein Login',
+                          : '10 AP1-Karten gratis — kein Login nötig',
                       style: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.w700),
                     ),
@@ -181,16 +183,83 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 const SizedBox(height: 12),
 
-                // Login Link
+                // Preisübersicht
+                Row(children: [
+                  _preisBox(
+                    '🎁 Gratis',
+                    '10 Karten\nKein Login',
+                    const Color(0xFF22C55E),
+                    true,
+                  ),
+                  const SizedBox(width: 6),
+                  _preisBox(
+                    '⚡ Light',
+                    '9,99 € einmalig\n50 Karten',
+                    Colors.white,
+                    false,
+                  ),
+                  const SizedBox(width: 6),
+                  _preisBox(
+                    '👑 Deluxe',
+                    '19,99 € einmalig\n450+ Karten',
+                    const Color(0xFFE8813A),
+                    false,
+                  ),
+                ]),
+                const SizedBox(height: 14),
+
+                // Divider mit Text
+                Row(children: [
+                  Expanded(child: Divider(
+                      color: Colors.white.withOpacity(0.1), thickness: 0.5)),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Text('Bereits registriert?',
+                        style: TextStyle(
+                            color: Colors.white.withOpacity(0.3),
+                            fontSize: 11)),
+                  ),
+                  Expanded(child: Divider(
+                      color: Colors.white.withOpacity(0.1), thickness: 0.5)),
+                ]),
+                const SizedBox(height: 10),
+
+                // Login Button mit Kontext
                 GestureDetector(
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const LoginScreen())),
-                  child: Text('Schon registriert? Einloggen →',
-                      style: TextStyle(
-                          color: Colors.white.withOpacity(0.4),
-                          fontSize: 12,
-                          decoration: TextDecoration.underline,
-                          decorationColor: Colors.white.withOpacity(0.25))),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                          color: Colors.white.withOpacity(0.12)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.login_outlined,
+                            size: 15,
+                            color: Colors.white.withOpacity(0.5)),
+                        const SizedBox(width: 8),
+                        Text.rich(TextSpan(
+                          style: TextStyle(
+                              color: Colors.white.withOpacity(0.5),
+                              fontSize: 12),
+                          children: [
+                            const TextSpan(text: 'Einloggen '),
+                            TextSpan(
+                              text: '(Light oder Deluxe bereits gekauft)',
+                              style: TextStyle(
+                                  color: Colors.white.withOpacity(0.3),
+                                  fontSize: 11),
+                            ),
+                          ],
+                        )),
+                      ],
+                    ),
+                  ),
                 ),
               ]),
             ),
@@ -200,10 +269,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
+  Widget _preisBox(String label, String info, Color color, bool isFree) {
+    return Expanded(
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
+        decoration: BoxDecoration(
+          color: color.withOpacity(isFree ? 0.12 : 0.07),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color.withOpacity(0.25)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(label, style: TextStyle(
+                color: color,
+                fontSize: 11,
+                fontWeight: FontWeight.w700)),
+            const SizedBox(height: 4),
+            Text(info, style: TextStyle(
+                color: color.withOpacity(0.7),
+                fontSize: 10,
+                height: 1.4)),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildPage(_OPage page) {
     return Column(
       children: [
-        // Oberer Spacer — schiebt Inhalt nach unten
         const Spacer(flex: 2),
 
         // Emoji Box
@@ -258,7 +353,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontSize: 15, height: 1.6)),
         ),
 
-        // Detail (falls vorhanden)
+        // Detail Box
         if (page.detail != null) ...[
           const SizedBox(height: 24),
           Padding(
@@ -291,7 +386,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ],
 
-        // Unterer Spacer — Balance
         const Spacer(flex: 3),
       ],
     );
@@ -299,9 +393,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _howItWorks() {
     final steps = [
-      ('1', '10 AP1-Karten gratis', 'Kein Login', true),
-      ('2', 'Kostenlos registrieren', '20 weitere Karten', true),
-      ('3', 'App Light — 9,99 €', '50 Top-Karten', false),
+      ('1', '10 AP1-Karten gratis testen', 'Kein Login', true),
+      ('2', 'Kostenlos registrieren', '+20 weitere Karten', true),
+      ('3', 'App Light — 9,99 €', '50 Top-Karten · einmalig', false),
       ('4', 'App Deluxe — 19,99 €', '450+ Karten + Simulator', false),
     ];
     return Container(
