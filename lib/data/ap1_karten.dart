@@ -1,6 +1,7 @@
 // AP1 Fachinformatiker — 21 Themen-Decks
 // Sortiert nach IHK-Prüfungshäufigkeit
 import 'package:ihk_ap1_prep/models/card_model.dart';
+import 'package:ihk_ap1_prep/data/neue_decks.dart';
 
 // ── Hardware (6 Karten — 135x geprüft) ──
 final List<CardModel> hardwareKarten = [
@@ -224,5 +225,7 @@ final List<Map<String, dynamic>> alleAP1Decks = [
   {'name': 'Marketing', 'icon': '📢', 'karten': marketingKarten},
   {'name': 'Internet', 'icon': '🌐', 'karten': internetKarten},
   {'name': 'Change Management', 'icon': '🔀', 'karten': change_managementKarten},
+  {'name': 'Datenbanken', 'icon': '🗄', 'karten': datenbankenKarten},
+  {'name': 'UML', 'icon': '📐', 'karten': umlKarten},
   {'name': 'Algorithmen', 'icon': '🧮', 'karten': algorithmenKarten},
 ];
