@@ -52,7 +52,7 @@ class IHKApp extends StatelessWidget {
         scaffoldBackgroundColor: Colors.white,
         useMaterial3: true,
       ),
-      home: const AuthWrapper(authenticatedScreen: MainShell()),
+      home: const AuthWrapper(),
     );
   }
 }

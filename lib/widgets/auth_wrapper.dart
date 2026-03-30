@@ -1,14 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ihk_ap1_prep/screens/login_screen.dart';
+import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/services/fcm_service.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
+import 'package:ihk_ap1_prep/main.dart';
 
 class AuthWrapper extends StatelessWidget {
-  final Widget authenticatedScreen;
-
-  const AuthWrapper({super.key, required this.authenticatedScreen});
+  const AuthWrapper({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,21 +15,30 @@ class AuthWrapper extends StatelessWidget {
       stream: AuthService().authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Scaffold(
-            backgroundColor: Color(0xFF162447),
-            body: Center(
-              child: CircularProgressIndicator(color: Color(0xFFE8813A)),
-            ),
-          );
+          return const SplashScreen();
         }
         if (snapshot.hasData) {
-          // FCM Token nach Login speichern
           FCMService.init();
           PremiumService.initUserPlan();
-          return authenticatedScreen;
+          return const MainShell();
         }
-        return const LoginScreen();
+        // Kein Login → Free Trial zeigen
+        return const FreeTrialScreen();
       },
+    );
+  }
+}
+
+class SplashScreen extends StatelessWidget {
+  const SplashScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Color(0xFF162447),
+      body: Center(
+        child: CircularProgressIndicator(color: Color(0xFFE8813A)),
+      ),
     );
   }
 }
