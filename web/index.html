@@ -35,7 +35,14 @@
 <body>
   <script>
     if ('serviceWorker' in navigator) {
-      navigator.serviceWorker.register('firebase-messaging-sw.js');
+      navigator.serviceWorker.register(
+        'firebase-messaging-sw.js',
+        {scope: '/'}
+      ).then(function(registration) {
+        console.log('SW registered:', registration.scope);
+      }).catch(function(error) {
+        console.log('SW registration failed:', error);
+      });
     }
   </script>
   <script src="flutter_bootstrap.js" async></script>
