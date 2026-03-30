@@ -43,12 +43,12 @@ class _StatistikScreenState extends State<StatistikScreen> {
 
     for (final doc in progress.docs) {
       final data = doc.data();
-      final lastReview = (data['lastReview'] as Timestamp?)?.toDate();
+      final lastReview =
+          (data['lastReview'] as Timestamp?)?.toDate();
       final rating = (data['reviewCount'] ?? 0) as int;
       if (lastReview != null) {
-        if (lastReview.day == now.day && lastReview.month == now.month) {
-          gelerntHeute++;
-        }
+        if (lastReview.day == now.day &&
+            lastReview.month == now.month) gelerntHeute++;
         final key = '${lastReview.day}.${lastReview.month}';
         proTag[key] = (proTag[key] ?? 0) + 1;
         if (rating >= 3) gut++;
@@ -107,123 +107,55 @@ class _StatistikScreenState extends State<StatistikScreen> {
                       style: TextStyle(
                           fontSize: 13,
                           color: Color(0xFF6B7280))),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
-                  // Zwei große Stats nebeneinander
+                  // GROSSE Box oben — Gesamtanzahl
+                  _statBox(
+                    label: 'GESAMTANZAHL KARTEN',
+                    value: _gesamtKarten.toString(),
+                    sub: '+$_gelerntHeute diese Woche',
+                    subColor: const Color(0xFF22C55E),
+                    valueFontSize: 40,
+                  ),
+                  const SizedBox(height: 10),
+
+                  // Zwei Boxen nebeneinander
                   Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Gesamtanzahl
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                          children: [
-                            const Text('GESAMTANZAHL KARTEN',
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    color: Color(0xFF9CA3AF),
-                                    letterSpacing: 0.5,
-                                    fontWeight:
-                                        FontWeight.w500)),
-                            const SizedBox(height: 6),
-                            Text(
-                              _formatNum(_gesamtKarten),
-                              style: const TextStyle(
-                                  fontSize: 38,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF111827),
-                                  height: 1),
-                            ),
-                            const SizedBox(height: 4),
-                            Text('+$_gelerntHeute heute',
-                                style: const TextStyle(
-                                    fontSize: 12,
-                                    color: Color(0xFF22C55E),
-                                    fontWeight:
-                                        FontWeight.w500)),
-                          ],
-                        ),
-                      ),
-
                       // Gelernt
                       Expanded(
-                        child: Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                          children: [
-                            const Text('GELERNT',
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    color: Color(0xFF9CA3AF),
-                                    letterSpacing: 0.5,
-                                    fontWeight:
-                                        FontWeight.w500)),
-                            const SizedBox(height: 6),
-                            Text(
-                              _formatNum(_gelerntGesamt),
-                              style: const TextStyle(
-                                  fontSize: 38,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFF111827),
-                                  height: 1),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
+                        child: _statBox(
+                          label: 'GELERNT',
+                          value: _gelerntGesamt.toString(),
+                          sub:
                               '${_gesamtKarten > 0 ? (_gelerntGesamt / _gesamtKarten * 100).toStringAsFixed(1) : 0}%',
-                              style: const TextStyle(
-                                  fontSize: 12,
-                                  color: Color(0xFF9CA3AF)),
-                            ),
-                          ],
+                          subColor:
+                              const Color(0xFF6B7280),
+                          valueFontSize: 32,
+                        ),
+                      ),
+                      const SizedBox(width: 10),
+                      // Bestandsquote — gelblich
+                      Expanded(
+                        child: _statBox(
+                          label: 'BESTANDSQUOTE',
+                          value:
+                              '${_retention.toStringAsFixed(1)}%',
+                          sub: 'Ziel: 90%',
+                          subColor:
+                              const Color(0xFF92400E),
+                          valueFontSize: 32,
+                          valueColor:
+                              const Color(0xFFE8813A),
+                          bgColor:
+                              const Color(0xFFFEF9C3),
+                          borderColor:
+                              const Color(0xFFFDE68A),
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(height: 16),
-
-                  // Bestandsquote Badge
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFFFEF9C3),
-                      borderRadius: BorderRadius.circular(10),
-                      border: Border.all(
-                          color: const Color(0xFFFDE68A)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Text('BESTANDSQUOTE',
-                            style: TextStyle(
-                                fontSize: 11,
-                                color: Color(0xFF92400E),
-                                letterSpacing: 0.5,
-                                fontWeight: FontWeight.w600)),
-                        Column(
-                          crossAxisAlignment:
-                              CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              '${_retention.toStringAsFixed(1)}%',
-                              style: const TextStyle(
-                                  fontSize: 22,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color(0xFFE8813A)),
-                            ),
-                            const Text('Ziel: 90%',
-                                style: TextStyle(
-                                    fontSize: 10,
-                                    color: Color(0xFF92400E))),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 20),
 
                   // Künftige Fälligkeiten
                   _sectionCard(
@@ -235,11 +167,14 @@ class _StatistikScreenState extends State<StatistikScreen> {
                           mainAxisAlignment:
                               MainAxisAlignment.spaceBetween,
                           children: [
-                            const Text('Künftige Fälligkeiten',
+                            const Text(
+                                'Künftige Fälligkeiten',
                                 style: TextStyle(
-                                    fontWeight: FontWeight.w600,
+                                    fontWeight:
+                                        FontWeight.w600,
                                     fontSize: 15,
-                                    color: Color(0xFF111827))),
+                                    color:
+                                        Color(0xFF111827))),
                             _toggleChip(),
                           ],
                         ),
@@ -285,22 +220,14 @@ class _StatistikScreenState extends State<StatistikScreen> {
                                   ],
                                 ),
                                 child: Center(
-                                  child: Column(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment
-                                            .center,
-                                    children: [
-                                      Text(
-                                        _formatNum(
-                                            _gesamtKarten),
-                                        style: const TextStyle(
-                                            fontWeight:
-                                                FontWeight.bold,
-                                            fontSize: 18,
-                                            color: Color(
-                                                0xFF162447)),
-                                      ),
-                                    ],
+                                  child: Text(
+                                    _gesamtKarten.toString(),
+                                    style: const TextStyle(
+                                        fontWeight:
+                                            FontWeight.bold,
+                                        fontSize: 18,
+                                        color: Color(
+                                            0xFF162447)),
                                   ),
                                 ),
                               ),
@@ -317,9 +244,7 @@ class _StatistikScreenState extends State<StatistikScreen> {
                                       const Color(
                                           0xFF22C55E)),
                                   const SizedBox(height: 12),
-                                  _legendItem(
-                                      'Lernend',
-                                      '25%',
+                                  _legendItem('Lernend', '25%',
                                       const Color(
                                           0xFFE8813A)),
                                   const SizedBox(height: 12),
@@ -370,6 +295,51 @@ class _StatistikScreenState extends State<StatistikScreen> {
     );
   }
 
+  Widget _statBox({
+    required String label,
+    required String value,
+    required String sub,
+    required Color subColor,
+    required double valueFontSize,
+    Color valueColor = const Color(0xFF111827),
+    Color bgColor = Colors.white,
+    Color borderColor = const Color(0xFFE5E7EB),
+  }) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: bgColor,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: borderColor),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label,
+              style: const TextStyle(
+                  fontSize: 10,
+                  color: Color(0xFF9CA3AF),
+                  letterSpacing: 0.5,
+                  fontWeight: FontWeight.w500)),
+          const SizedBox(height: 6),
+          Text(value,
+              style: TextStyle(
+                  fontSize: valueFontSize,
+                  fontWeight: FontWeight.bold,
+                  color: valueColor,
+                  height: 1.1)),
+          const SizedBox(height: 4),
+          Text(sub,
+              style: TextStyle(
+                  fontSize: 12,
+                  color: subColor,
+                  fontWeight: FontWeight.w500)),
+        ],
+      ),
+    );
+  }
+
   Widget _sectionCard({required Widget child}) {
     return Container(
       width: double.infinity,
@@ -377,14 +347,8 @@ class _StatistikScreenState extends State<StatistikScreen> {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFE5E7EB)),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 8,
-            offset: const Offset(0, 2),
-          ),
-        ],
+        border:
+            Border.all(color: const Color(0xFFE5E7EB)),
       ),
       child: child,
     );
@@ -421,22 +385,21 @@ class _StatistikScreenState extends State<StatistikScreen> {
               : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
         ),
-        child: Text(
-          label,
-          style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: active
-                  ? Colors.white
-                  : Colors.grey[500]),
-        ),
+        child: Text(label,
+            style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+                color:
+                    active ? Colors.white : Colors.grey[500])),
       ),
     );
   }
 
   Widget _buildBarChart() {
     final days = List.generate(
-        7, (i) => DateTime.now().subtract(Duration(days: 6 - i)));
+        7,
+        (i) =>
+            DateTime.now().subtract(Duration(days: 6 - i)));
     final vals = days.map((d) {
       final key = '${d.day}.${d.month}';
       return (_kartenProTag[key] ?? 0).toDouble();
@@ -451,7 +414,8 @@ class _StatistikScreenState extends State<StatistikScreen> {
         children: List.generate(days.length, (i) {
           final d = days[i];
           final count = vals[i];
-          final h = (count / displayMax * 70).clamp(4.0, 70.0);
+          final h =
+              (count / displayMax * 70).clamp(4.0, 70.0);
           final isToday = d.day == DateTime.now().day;
           return Expanded(
             child: Padding(
@@ -478,13 +442,21 @@ class _StatistikScreenState extends State<StatistikScreen> {
                           ? const Color(0xFFE8813A)
                           : const Color(0xFF162447)
                               .withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(5),
+                      borderRadius:
+                          BorderRadius.circular(5),
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa',
-                        'So'][d.weekday - 1],
+                    [
+                      'Mo',
+                      'Di',
+                      'Mi',
+                      'Do',
+                      'Fr',
+                      'Sa',
+                      'So'
+                    ][d.weekday - 1],
                     style: TextStyle(
                         fontSize: 11,
                         color: isToday
@@ -515,8 +487,7 @@ class _StatistikScreenState extends State<StatistikScreen> {
         const SizedBox(width: 8),
         Text(label,
             style: const TextStyle(
-                fontSize: 13,
-                color: Color(0xFF374151))),
+                fontSize: 13, color: Color(0xFF374151))),
         const Spacer(),
         Text(value,
             style: TextStyle(
@@ -570,8 +541,6 @@ class _StatistikScreenState extends State<StatistikScreen> {
       ),
     );
   }
-
-  String _formatNum(int n) => n.toString();
 }
 
 class _DonutPainter extends CustomPainter {
@@ -586,12 +555,13 @@ class _DonutPainter extends CustomPainter {
     if (total == 0) return;
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-    final strokeWidth = 20.0;
+    const strokeWidth = 20.0;
     double startAngle = -3.14159265 / 2;
 
     for (int i = 0; i < values.length; i++) {
       if (values[i] <= 0) continue;
-      final sweepAngle = (values[i] / total) * 2 * 3.14159265;
+      final sweepAngle =
+          (values[i] / total) * 2 * 3.14159265;
       final paint = Paint()
         ..color = colors[i]
         ..style = PaintingStyle.stroke
