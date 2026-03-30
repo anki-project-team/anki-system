@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/screens/flashcard_question_screen.dart';
+import 'package:ihk_ap1_prep/screens/statistik_screen.dart';
 
 class LernkartenDecksScreen extends StatelessWidget {
   const LernkartenDecksScreen({super.key});
@@ -146,7 +147,14 @@ class LernkartenDecksScreen extends StatelessWidget {
                         const SizedBox(width: 8),
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const StatistikScreen(),
+                                ),
+                              );
+                            },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFE8813A),
                               foregroundColor: Colors.white,
