@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
+import 'package:ihk_ap1_prep/screens/onboarding_screen.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/services/fcm_service.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
@@ -22,8 +23,8 @@ class AuthWrapper extends StatelessWidget {
           PremiumService.initUserPlan();
           return const MainShell();
         }
-        // Kein Login → Free Trial zeigen
-        return const FreeTrialScreen();
+        // Kein Login → Onboarding zeigen
+        return const OnboardingScreen();
       },
     );
   }
