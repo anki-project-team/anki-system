@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
+import 'package:ihk_ap1_prep/screens/legal_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -153,14 +154,16 @@ class SettingsScreen extends StatelessWidget {
                     icon: Icons.privacy_tip_outlined,
                     label: 'Datenschutz',
                     subtitle: 'DSGVO-konform',
-                    onTap: () {},
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const DatenschutzScreen())),
                   ),
                   const Divider(height: 1, indent: 56),
                   _settingsRow(
                     icon: Icons.description_outlined,
                     label: 'Impressum',
                     subtitle: 'BBQ Düsseldorf',
-                    onTap: () {},
+                    onTap: () => Navigator.push(context,
+                        MaterialPageRoute(builder: (_) => const ImpressumScreen())),
                   ),
                 ],
               ),
