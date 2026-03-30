@@ -9,6 +9,7 @@ import 'screens/flashcard_question_screen.dart';
 import 'screens/calendar_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/lernen_screen.dart';
+import 'screens/statistik_screen.dart';
 import 'services/notification_service.dart';
 
 import 'widgets/auth_wrapper.dart';
@@ -90,7 +91,7 @@ class _MainShellState extends State<MainShell> {
           children: [
             _buildTab(0, const HomeDashboardScreen()),
             _buildTab(1, const LernkartenDecksScreen()),
-            _buildTab(2, const CalendarScreen()),
+            _buildTab(2, const StatistikScreen()),
           ],
         ),
         bottomNavigationBar: BottomNavigationBar(
