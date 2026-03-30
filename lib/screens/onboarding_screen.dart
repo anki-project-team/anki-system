@@ -16,37 +16,61 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   final List<_OPage> _pages = [
     _OPage(
       emoji: '🎯',
-      badge: 'IHK AP1 PRÜFUNGSVORBEREITUNG',
-      title: 'Bestnotengarantie\nfür IT-Berufe.',
-      subtitle:
-          'Speziell entwickelt für:\n\nFachinformatiker Anwendungsentwicklung · Systemintegration\nDaten- & Prozessanalyse · Digitale Vernetzung · Cyberabwehr\nKaufmann IT-Systemmanagement · Digitalisierungsmanagement',
+      badge: 'NUR FÜR IHK AP1',
+      title: 'Speziell für\ndeine AP1-Prüfung.',
+      subtitle: 'Nicht AP2. Nicht allgemein.\nNur AP1 — gezielt und vollständig.',
+      detail:
+          'Alle Berufsbilder mit IHK Abschlussprüfung Teil 1:\n\n'
+          '• Fachinformatiker Anwendungsentwicklung (FIAE)\n'
+          '• Fachinformatiker Systemintegration (FISI)\n'
+          '• Fachinformatiker Daten- & Prozessanalyse (FIDP)\n'
+          '• Fachinformatiker Digitale Vernetzung (FIDV)\n'
+          '• Fachinformatiker Cyberabwehr (FICA)\n'
+          '• Kaufmann IT-Systemmanagement\n'
+          '• Kaufmann Digitalisierungsmanagement',
     ),
     _OPage(
       emoji: '🧠',
       badge: 'LERNEN DER ZUKUNFT',
       title: 'Der Algorithmus\nlernt mit dir.',
-      subtitle:
-          'FSRS 4.5 — der modernste Lernalgorithmus der Welt.\n\nEr analysiert dein Wissen und zeigt dir genau die richtige Karte zum optimalen Zeitpunkt. Nicht früher. Nicht später.',
+      subtitle: 'FSRS 4.5 — der modernste\nLernalgorithmus der Welt.',
+      detail:
+          'Er analysiert kontinuierlich dein Wissen\n'
+          'und zeigt dir genau die richtige Karte\n'
+          'zum optimalen Zeitpunkt.\n\n'
+          'Nicht früher. Nicht später.\n'
+          '40% weniger Lernzeit — mehr Retention.',
     ),
     _OPage(
       emoji: '🏆',
-      badge: 'BESTNOTEN-VORBEREITUNG',
+      badge: 'SPEZIELLE BESTNOTEN-VORBEREITUNG',
       title: 'Nicht bestehen.\nGlänzen.',
-      subtitle:
-          'Während andere hoffen, weißt du.\n\nMit 450+ echten IHK-Prüfungsfragen, ausführlichen Erklärungen, Prüfungssimulator und personalisierten Lernplänen — für Bestnoten vorbereitet.',
+      subtitle: 'Während andere hoffen, weißt du.',
+      detail:
+          '450+ echte IHK AP1-Prüfungsfragen\n'
+          'mit ausführlichen Erklärungen,\n'
+          'Prüfungssimulator und\n'
+          'personalisierten Lernplänen.\n\n'
+          'Jede Karte mit Kernantwort,\n'
+          'Erklärung, Links und Hashtags.',
     ),
     _OPage(
       emoji: '🔔',
       badge: 'TÄGLICH 15 MINUTEN',
       title: 'Das System\narbeitet für dich.',
-      subtitle:
-          'Jeden Morgen um 07:30 Uhr zeigt dir Learn-Factory genau was du heute lernen musst.\n\n15 Minuten täglich reichen — wenn du zum richtigen Zeitpunkt das Richtige lernst.',
+      subtitle: 'Lernen wann es am effektivsten ist —\nnicht wann du Zeit hast.',
+      detail:
+          'Jeden Morgen um 07:30 Uhr\n'
+          'zeigt dir Learn-Factory genau,\n'
+          'welche AP1-Karten heute dran sind.\n\n'
+          '15 Minuten täglich reichen.\n'
+          'Konsequent bis zur Prüfung.',
     ),
     _OPage(
       emoji: '🚀',
-      badge: 'JETZT KOSTENLOS STARTEN',
+      badge: 'JETZT STARTEN',
       title: 'Erlebe\nLernen der Zukunft.',
-      subtitle: 'Kein Login. Kein Risiko.\nStarte direkt und überzeuge dich selbst.',
+      subtitle: 'Kein Login. Kein Risiko.\nStarte mit 10 AP1-Karten gratis.',
       isLast: true,
     ),
   ];
@@ -60,14 +84,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           children: [
             // Top Row
             Padding(
-              padding: const EdgeInsets.fromLTRB(20, 14, 16, 0),
+              padding: const EdgeInsets.fromLTRB(20, 16, 16, 0),
               child: Row(
                 children: [
                   Container(
-                    width: 34, height: 34,
+                    width: 36, height: 36,
                     decoration: BoxDecoration(
                       color: const Color(0xFF1e3a5f),
-                      borderRadius: BorderRadius.circular(8),
+                      borderRadius: BorderRadius.circular(9),
                       border: Border.all(
                           color: const Color(0xFFE8813A).withOpacity(0.3)),
                     ),
@@ -75,16 +99,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         const Text('LF', style: TextStyle(
-                            color: Colors.white, fontSize: 12,
+                            color: Colors.white, fontSize: 13,
                             fontWeight: FontWeight.bold)),
-                        Container(width: 14, height: 1.5,
+                        Container(width: 16, height: 2,
                             color: const Color(0xFFE8813A)),
                       ],
                     ),
                   ),
-                  const SizedBox(width: 8),
+                  const SizedBox(width: 10),
                   const Text('Learn-Factory', style: TextStyle(
-                      color: Colors.white, fontSize: 14,
+                      color: Colors.white, fontSize: 15,
                       fontWeight: FontWeight.w600)),
                   const Spacer(),
                   if (_currentPage < _pages.length - 1)
@@ -111,8 +135,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
             // Dots + Buttons
             Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 28),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 28),
               child: Column(children: [
+                // Dots
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(_pages.length, (i) =>
@@ -132,12 +157,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
                 const SizedBox(height: 20),
 
+                // Haupt-Button
                 SizedBox(
                   width: double.infinity, height: 52,
                   child: ElevatedButton(
                     onPressed: _currentPage < _pages.length - 1
-                        ? _nextPage
-                        : _startTrial,
+                        ? _nextPage : _startTrial,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE8813A),
                       foregroundColor: Colors.white,
@@ -148,14 +173,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: Text(
                       _currentPage < _pages.length - 1
                           ? 'Weiter →'
-                          : '10 Karten gratis testen — kein Login',
+                          : '10 AP1-Karten gratis testen — kein Login',
                       style: const TextStyle(
                           fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
-                const SizedBox(height: 10),
+                const SizedBox(height: 12),
 
+                // Login Link
                 GestureDetector(
                   onTap: () => Navigator.push(context,
                       MaterialPageRoute(builder: (_) => const LoginScreen())),
@@ -175,113 +201,112 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _buildPage(_OPage page) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(28, 24, 28, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Emoji Box
-          Container(
-            width: 88, height: 88,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1e3a5f),
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(
-                  color: const Color(0xFFE8813A).withOpacity(0.25),
-                  width: 1.5),
-            ),
-            child: Center(child: Text(page.emoji,
-                style: const TextStyle(fontSize: 40))),
-          ),
-          const SizedBox(height: 20),
-
-          // Badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8813A).withOpacity(0.15),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: const Color(0xFFE8813A).withOpacity(0.35)),
-            ),
-            child: Text(page.badge,
-                style: const TextStyle(
-                    color: Color(0xFFE8813A), fontSize: 10,
-                    fontWeight: FontWeight.w700, letterSpacing: 0.8)),
-          ),
-          const SizedBox(height: 18),
-
-          // Titel
-          Text(page.title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 28,
-                  fontWeight: FontWeight.bold, height: 1.3)),
-          const SizedBox(height: 14),
-
-          // Subtitle
-          Text(page.subtitle,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                  color: Colors.white.withOpacity(0.65),
-                  fontSize: 14, height: 1.7)),
-
-          if (page.isLast) ...[
-            const SizedBox(height: 24),
-            _berufsbilderChips(),
-            const SizedBox(height: 20),
-            _howItWorks(),
-          ],
-          const SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget _berufsbilderChips() {
-    final berufe = [
-      'FIAE', 'FISI', 'FIDP', 'FIDV', 'FICA',
-      'IT-Systemmanagement', 'Digitalisierungsmanagement',
-    ];
     return Column(
       children: [
-        Text('Alle IT-Berufsbilder mit IHK AP1',
-            style: TextStyle(
-                color: Colors.white.withOpacity(0.4),
-                fontSize: 10, letterSpacing: 0.6,
-                fontWeight: FontWeight.w600)),
-        const SizedBox(height: 10),
-        Wrap(
-          alignment: WrapAlignment.center,
-          spacing: 6, runSpacing: 6,
-          children: berufe.map((b) => Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 10, vertical: 5),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1e3a5f),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color: Colors.white.withOpacity(0.12)),
-            ),
-            child: Text(b, style: TextStyle(
-                color: Colors.white.withOpacity(0.75),
-                fontSize: 11, fontWeight: FontWeight.w500)),
-          )).toList(),
+        // Oberer Spacer — schiebt Inhalt nach unten
+        const Spacer(flex: 2),
+
+        // Emoji Box
+        Container(
+          width: 90, height: 90,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1e3a5f),
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(
+                color: const Color(0xFFE8813A).withOpacity(0.25),
+                width: 1.5),
+          ),
+          child: Center(child: Text(page.emoji,
+              style: const TextStyle(fontSize: 42))),
         ),
+        const SizedBox(height: 28),
+
+        // Badge
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+          decoration: BoxDecoration(
+            color: const Color(0xFFE8813A).withOpacity(0.15),
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(
+                color: const Color(0xFFE8813A).withOpacity(0.35)),
+          ),
+          child: Text(page.badge,
+              style: const TextStyle(
+                  color: Color(0xFFE8813A), fontSize: 10,
+                  fontWeight: FontWeight.w700, letterSpacing: 0.8)),
+        ),
+        const SizedBox(height: 28),
+
+        // Titel
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 32),
+          child: Text(page.title,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                  color: Colors.white, fontSize: 30,
+                  fontWeight: FontWeight.bold, height: 1.25)),
+        ),
+        const SizedBox(height: 20),
+
+        // Subtitle
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 28),
+          child: Text(page.subtitle,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                  color: Colors.white.withOpacity(0.7),
+                  fontSize: 15, height: 1.6)),
+        ),
+
+        // Detail (falls vorhanden)
+        if (page.detail != null) ...[
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 20, vertical: 16),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1e3a5f),
+                borderRadius: BorderRadius.circular(14),
+                border: Border.all(
+                    color: Colors.white.withOpacity(0.08)),
+              ),
+              child: Text(page.detail!,
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                      color: Colors.white.withOpacity(0.65),
+                      fontSize: 13, height: 1.7)),
+            ),
+          ),
+        ],
+
+        // Letzte Seite: How it works
+        if (page.isLast) ...[
+          const SizedBox(height: 24),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 28),
+            child: _howItWorks(),
+          ),
+        ],
+
+        // Unterer Spacer — Balance
+        const Spacer(flex: 3),
       ],
     );
   }
 
   Widget _howItWorks() {
     final steps = [
-      ('1', '10 Karten gratis', 'Kein Login nötig', true),
+      ('1', '10 AP1-Karten gratis', 'Kein Login', true),
       ('2', 'Kostenlos registrieren', '20 weitere Karten', true),
       ('3', 'App Light — 9,99 €', '50 Top-Karten', false),
       ('4', 'App Deluxe — 19,99 €', '450+ Karten + Simulator', false),
     ];
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(18),
       decoration: BoxDecoration(
         color: const Color(0xFF1e3a5f),
         borderRadius: BorderRadius.circular(16),
@@ -292,36 +317,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           Text('Dein Weg zur Bestnote',
               style: TextStyle(
-                  color: Colors.white.withOpacity(0.45),
+                  color: Colors.white.withOpacity(0.4),
                   fontSize: 10, letterSpacing: 0.8,
                   fontWeight: FontWeight.w600)),
-          const SizedBox(height: 12),
+          const SizedBox(height: 14),
           ...steps.map((s) => Padding(
-            padding: const EdgeInsets.only(bottom: 10),
+            padding: const EdgeInsets.only(bottom: 12),
             child: Row(children: [
               Container(
-                width: 24, height: 24,
+                width: 26, height: 26,
                 decoration: BoxDecoration(
                   color: s.$4
                       ? const Color(0xFF22C55E).withOpacity(0.2)
                       : const Color(0xFFE8813A).withOpacity(0.2),
-                  borderRadius: BorderRadius.circular(6),
+                  borderRadius: BorderRadius.circular(7),
                 ),
                 child: Center(child: Text(s.$1,
                     style: TextStyle(
                         color: s.$4
                             ? const Color(0xFF22C55E)
                             : const Color(0xFFE8813A),
-                        fontSize: 11,
+                        fontSize: 12,
                         fontWeight: FontWeight.bold))),
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: 12),
               Expanded(
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(s.$2, style: const TextStyle(
-                        color: Colors.white, fontSize: 12,
+                        color: Colors.white, fontSize: 13,
                         fontWeight: FontWeight.w600)),
                     Text(s.$3, style: TextStyle(
                         color: Colors.white.withOpacity(0.4),
@@ -337,13 +362,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _nextPage() => _controller.nextPage(
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeInOut);
+      duration: const Duration(milliseconds: 350), curve: Curves.easeInOut);
 
-  void _goToLast() => _controller.animateToPage(
-      _pages.length - 1,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut);
+  void _goToLast() => _controller.animateToPage(_pages.length - 1,
+      duration: const Duration(milliseconds: 400), curve: Curves.easeInOut);
 
   void _startTrial() => Navigator.pushReplacement(context,
       MaterialPageRoute(builder: (_) => const FreeTrialScreen()));
@@ -351,10 +373,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
 class _OPage {
   final String emoji, badge, title, subtitle;
+  final String? detail;
   final bool isLast;
   const _OPage({
     required this.emoji, required this.badge,
     required this.title, required this.subtitle,
-    this.isLast = false,
+    this.detail, this.isLast = false,
   });
 }
