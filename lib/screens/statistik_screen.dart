@@ -25,11 +25,15 @@ class _StatistikScreenState extends State<StatistikScreen> {
 
   Future<void> _loadStats() async {
     final user = FirebaseAuth.instance.currentUser;
-    if (user == null) { setState(() => _loading = false); return; }
-
+    if (user == null) {
+      setState(() => _loading = false);
+      return;
+    }
     final progress = await FirebaseFirestore.instance
-        .collection('users').doc(user.uid)
-        .collection('progress').get();
+        .collection('users')
+        .doc(user.uid)
+        .collection('progress')
+        .get();
 
     final now = DateTime.now();
     int gelerntGesamt = progress.docs.length;
@@ -54,7 +58,8 @@ class _StatistikScreenState extends State<StatistikScreen> {
     setState(() {
       _gelerntGesamt = gelerntGesamt;
       _gelerntHeute = gelerntHeute;
-      _retention = gelerntGesamt > 0 ? (gut / gelerntGesamt * 100) : 0;
+      _retention =
+          gelerntGesamt > 0 ? (gut / gelerntGesamt * 100) : 0;
       _kartenProTag = proTag;
       _loading = false;
     });
@@ -63,394 +68,502 @@ class _StatistikScreenState extends State<StatistikScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
+      backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: const Color(0xFF162447),
         elevation: 0,
-        title: const Text('Statistik',
-            style: TextStyle(color: Colors.white,
-                fontWeight: FontWeight.w600, fontSize: 17)),
+        title: const Text('IHK AP1 Prep',
+            style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w600,
+                fontSize: 17)),
         centerTitle: true,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.refresh,
+                color: Colors.white, size: 20),
+            onPressed: _loadStats,
+          ),
+        ],
       ),
       body: _loading
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFFE8813A)))
-          : CustomScrollView(
-              slivers: [
-                // Dark Header
-                SliverToBoxAdapter(
-                  child: Container(
-                    color: const Color(0xFF162447),
-                    padding: EdgeInsets.only(
-                        top: MediaQuery.of(context).padding.top + 16,
-                        left: 20, right: 20, bottom: 24),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          ? const Center(
+              child: CircularProgressIndicator(
+                  color: Color(0xFFE8813A)))
+          : SingleChildScrollView(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Header
+                  const Text('Akademische Leistung',
+                      style: TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                          color: Color(0xFF111827))),
+                  const SizedBox(height: 4),
+                  const Text(
+                      'Fortschritt bei der Prüfungsvorbereitung',
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Color(0xFF6B7280))),
+                  const SizedBox(height: 24),
+
+                  // Zwei große Stats nebeneinander
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Gesamtanzahl
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
                           children: [
-                            const Text('Akademische Leistung',
+                            const Text('GESAMTANZAHL KARTEN',
                                 style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold)),
-                            IconButton(
-                              icon: const Icon(Icons.refresh,
-                                  color: Colors.white54, size: 20),
-                              onPressed: _loadStats,
-                              padding: EdgeInsets.zero,
+                                    fontSize: 10,
+                                    color: Color(0xFF9CA3AF),
+                                    letterSpacing: 0.5,
+                                    fontWeight:
+                                        FontWeight.w500)),
+                            const SizedBox(height: 6),
+                            Text(
+                              _formatNum(_gesamtKarten),
+                              style: const TextStyle(
+                                  fontSize: 38,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF111827),
+                                  height: 1),
                             ),
+                            const SizedBox(height: 4),
+                            Text('+$_gelerntHeute heute',
+                                style: const TextStyle(
+                                    fontSize: 12,
+                                    color: Color(0xFF22C55E),
+                                    fontWeight:
+                                        FontWeight.w500)),
                           ],
                         ),
-                        const Text('Fortschritt bei der Prüfungsvorbereitung',
-                            style: TextStyle(
-                                color: Colors.white54, fontSize: 12)),
-                        const SizedBox(height: 24),
+                      ),
 
-                        // Große Stats
-                        Row(
+                      // Gelernt
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.start,
                           children: [
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('GESAMTANZAHL KARTEN',
-                                      style: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 10,
-                                          letterSpacing: 0.5)),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _formatNumber(_gesamtKarten),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text('+$_gelerntHeute heute',
-                                      style: const TextStyle(
-                                          color: Color(0xFF22C55E),
-                                          fontSize: 12)),
-                                ],
-                              ),
+                            const Text('GELERNT',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: Color(0xFF9CA3AF),
+                                    letterSpacing: 0.5,
+                                    fontWeight:
+                                        FontWeight.w500)),
+                            const SizedBox(height: 6),
+                            Text(
+                              _formatNum(_gelerntGesamt),
+                              style: const TextStyle(
+                                  fontSize: 38,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFF111827),
+                                  height: 1),
                             ),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  const Text('GELERNT',
-                                      style: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 10,
-                                          letterSpacing: 0.5)),
-                                  const SizedBox(height: 4),
-                                  Text(
-                                    _formatNumber(_gelerntGesamt),
-                                    style: const TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 36,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  Text(
-                                    '${_gesamtKarten > 0 ? (_gelerntGesamt / _gesamtKarten * 100).toStringAsFixed(1) : 0}%',
-                                    style: const TextStyle(
-                                        color: Colors.white54, fontSize: 12)),
-                                ],
-                              ),
+                            const SizedBox(height: 4),
+                            Text(
+                              '${_gesamtKarten > 0 ? (_gelerntGesamt / _gesamtKarten * 100).toStringAsFixed(1) : 0}%',
+                              style: const TextStyle(
+                                  fontSize: 12,
+                                  color: Color(0xFF9CA3AF)),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 16),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
 
-                        // Bestandsquote Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 14, vertical: 10),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF1e3a5f),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              const Text('BESTANDSQUOTE',
-                                  style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 11,
-                                      letterSpacing: 0.5)),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.end,
-                                children: [
-                                  Text(
-                                    '${_retention.toStringAsFixed(1)}%',
-                                    style: const TextStyle(
-                                        color: Color(0xFFE8813A),
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold),
-                                  ),
-                                  const Text('Ziel: 90%',
-                                      style: TextStyle(
-                                          color: Colors.white54,
-                                          fontSize: 10)),
-                                ],
-                              ),
-                            ],
-                          ),
+                  // Bestandsquote Badge
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFEF9C3),
+                      borderRadius: BorderRadius.circular(10),
+                      border: Border.all(
+                          color: const Color(0xFFFDE68A)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('BESTANDSQUOTE',
+                            style: TextStyle(
+                                fontSize: 11,
+                                color: Color(0xFF92400E),
+                                letterSpacing: 0.5,
+                                fontWeight: FontWeight.w600)),
+                        Column(
+                          crossAxisAlignment:
+                              CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              '${_retention.toStringAsFixed(1)}%',
+                              style: const TextStyle(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color(0xFFE8813A)),
+                            ),
+                            const Text('Ziel: 90%',
+                                style: TextStyle(
+                                    fontSize: 10,
+                                    color: Color(0xFF92400E))),
+                          ],
                         ),
                       ],
                     ),
                   ),
-                ),
+                  const SizedBox(height: 24),
 
-                SliverPadding(
-                  padding: const EdgeInsets.all(16),
-                  sliver: SliverList(
-                    delegate: SliverChildListDelegate([
-
-                      // Fälligkeiten Chart
-                      _card(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                  // Künftige Fälligkeiten
+                  _sectionCard(
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
                           children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Künftige Fälligkeiten',
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 14,
-                                        color: Color(0xFF111827))),
-                                _toggleChip(),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            _buildBarChart(),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Kartentypen Donut
-                      _card(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Kartentypen',
+                            const Text('Künftige Fälligkeiten',
                                 style: TextStyle(
                                     fontWeight: FontWeight.w600,
-                                    fontSize: 14,
+                                    fontSize: 15,
                                     color: Color(0xFF111827))),
-                            const SizedBox(height: 16),
-                            Row(
-                              children: [
-                                // Donut
-                                SizedBox(
-                                  width: 100, height: 100,
-                                  child: CustomPaint(
-                                    painter: _DonutPainter(
-                                      values: [
-                                        _gesamtKarten - _gelerntGesamt.toDouble(),
-                                        (_gelerntGesamt * 0.3),
-                                        (_gelerntGesamt * 0.7),
-                                      ],
-                                      colors: const [
-                                        Color(0xFF3B82F6),
-                                        Color(0xFFE8813A),
-                                        Color(0xFF22C55E),
-                                      ],
-                                    ),
-                                    child: Center(
-                                      child: Text(
-                                        _formatNumber(_gesamtKarten),
-                                        style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 16,
-                                            color: Color(0xFF162447)),
-                                      ),
-                                    ),
-                                  ),
+                            _toggleChip(),
+                          ],
+                        ),
+                        const SizedBox(height: 20),
+                        _buildBarChart(),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Kartentypen
+                  _sectionCard(
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        const Text('Kartentypen',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: Color(0xFF111827))),
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            SizedBox(
+                              width: 110,
+                              height: 110,
+                              child: CustomPaint(
+                                painter: _DonutPainter(
+                                  values: [
+                                    (_gelerntGesamt * 0.7)
+                                        .toDouble(),
+                                    (_gelerntGesamt * 0.3)
+                                        .toDouble(),
+                                    (_gesamtKarten -
+                                            _gelerntGesamt)
+                                        .toDouble(),
+                                  ],
+                                  colors: [
+                                    const Color(0xFF22C55E),
+                                    const Color(0xFFE8813A),
+                                    const Color(0xFF3B82F6),
+                                  ],
                                 ),
-                                const SizedBox(width: 24),
-                                // Legende
-                                Expanded(
+                                child: Center(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment
+                                            .center,
                                     children: [
-                                      _legendItem('Gelernt',
-                                          '${(_gesamtKarten > 0 ? _gelerntGesamt / _gesamtKarten * 100 : 0).toStringAsFixed(0)}%',
-                                          const Color(0xFF22C55E)),
-                                      const SizedBox(height: 8),
-                                      _legendItem('Lernend', '25%',
-                                          const Color(0xFFE8813A)),
-                                      const SizedBox(height: 8),
-                                      _legendItem('Neu',
-                                          '${(_gesamtKarten > 0 ? (_gesamtKarten - _gelerntGesamt) / _gesamtKarten * 100 : 100).toStringAsFixed(0)}%',
-                                          const Color(0xFF3B82F6)),
+                                      Text(
+                                        _formatNum(
+                                            _gesamtKarten),
+                                        style: const TextStyle(
+                                            fontWeight:
+                                                FontWeight.bold,
+                                            fontSize: 18,
+                                            color: Color(
+                                                0xFF162447)),
+                                      ),
                                     ],
                                   ),
                                 ),
-                              ],
+                              ),
+                            ),
+                            const SizedBox(width: 24),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment:
+                                    CrossAxisAlignment.start,
+                                children: [
+                                  _legendItem(
+                                      'Gelernt',
+                                      '${_gesamtKarten > 0 ? (_gelerntGesamt / _gesamtKarten * 100).toStringAsFixed(0) : 0}%',
+                                      const Color(
+                                          0xFF22C55E)),
+                                  const SizedBox(height: 12),
+                                  _legendItem(
+                                      'Lernend',
+                                      '25%',
+                                      const Color(
+                                          0xFFE8813A)),
+                                  const SizedBox(height: 12),
+                                  _legendItem(
+                                      'Neu',
+                                      '${_gesamtKarten > 0 ? ((_gesamtKarten - _gelerntGesamt) / _gesamtKarten * 100).toStringAsFixed(0) : 100}%',
+                                      const Color(
+                                          0xFF3B82F6)),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Sicherheitsgrad
-                      _card(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            const Text('Sicherheitsgrad',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: 14,
-                                    color: Color(0xFF111827))),
-                            const SizedBox(height: 12),
-                            _sicherheitRow('HARDWARE', 0.82, 'Gut'),
-                            _sicherheitRow('NETZWERK', 0.65, 'Mittel'),
-                            _sicherheitRow('IT-SICHERHEIT', 0.45, 'Niedrig'),
-                            _sicherheitRow('PROJEKTMANAGEMENT', 0.71, 'Gut'),
-                            _sicherheitRow('SOFTWAREENTWICKLUNG', 0.38, 'Niedrig'),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                    ]),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 16),
+
+                  // Sicherheitsgrad
+                  _sectionCard(
+                    child: Column(
+                      crossAxisAlignment:
+                          CrossAxisAlignment.start,
+                      children: [
+                        const Text('Sicherheitsgrad',
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600,
+                                fontSize: 15,
+                                color: Color(0xFF111827))),
+                        const SizedBox(height: 16),
+                        _sicherheitRow(
+                            'HARDWARE', 0.82, 'Gut'),
+                        _sicherheitRow(
+                            'NETZWERK', 0.65, 'Mittel'),
+                        _sicherheitRow(
+                            'IT-SICHERHEIT', 0.45, 'Niedrig'),
+                        _sicherheitRow(
+                            'PROJEKTMANAGEMENT', 0.71, 'Gut'),
+                        _sicherheitRow('SOFTWAREENTWICKLUNG',
+                            0.38, 'Niedrig'),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
     );
   }
 
-  Widget _card({required Widget child}) => Card(
-    margin: EdgeInsets.zero,
-    elevation: 0,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-    color: Colors.white,
-    child: Padding(padding: const EdgeInsets.all(16), child: child),
-  );
+  Widget _sectionCard({required Widget child}) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(18),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFE5E7EB)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: child,
+    );
+  }
 
-  Widget _toggleChip() => Container(
-    decoration: BoxDecoration(
-      color: const Color(0xFFF1F5F9),
-      borderRadius: BorderRadius.circular(8),
-    ),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        _chipBtn('1 Tag', _showTage, () => setState(() => _showTage = true)),
-        _chipBtn('31 T.', !_showTage, () => setState(() => _showTage = false)),
-      ],
-    ),
-  );
-
-  Widget _chipBtn(String label, bool active, VoidCallback onTap) =>
-    GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-        decoration: BoxDecoration(
-          color: active ? const Color(0xFF162447) : Colors.transparent,
-          borderRadius: BorderRadius.circular(6),
-        ),
-        child: Text(label,
-            style: TextStyle(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-                color: active ? Colors.white : Colors.grey)),
+  Widget _toggleChip() {
+    return Container(
+      decoration: BoxDecoration(
+        color: const Color(0xFFF1F5F9),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _chipBtn('Tag', _showTage,
+              () => setState(() => _showTage = true)),
+          _chipBtn('31 T.', !_showTage,
+              () => setState(() => _showTage = false)),
+        ],
       ),
     );
+  }
+
+  Widget _chipBtn(
+      String label, bool active, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 12, vertical: 6),
+        decoration: BoxDecoration(
+          color: active
+              ? const Color(0xFF162447)
+              : Colors.transparent,
+          borderRadius: BorderRadius.circular(6),
+        ),
+        child: Text(
+          label,
+          style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+              color: active
+                  ? Colors.white
+                  : Colors.grey[500]),
+        ),
+      ),
+    );
+  }
 
   Widget _buildBarChart() {
-    final days = List.generate(7, (i) =>
-        DateTime.now().subtract(Duration(days: 6 - i)));
-    final maxVal = days
-        .map((d) => (_kartenProTag['${d.day}.${d.month}'] ?? 0).toDouble())
-        .reduce((a, b) => a > b ? a : b)
-        .clamp(1.0, double.infinity);
+    final days = List.generate(
+        7, (i) => DateTime.now().subtract(Duration(days: 6 - i)));
+    final vals = days.map((d) {
+      final key = '${d.day}.${d.month}';
+      return (_kartenProTag[key] ?? 0).toDouble();
+    }).toList();
+    final maxVal = vals.reduce((a, b) => a > b ? a : b);
+    final displayMax = maxVal < 1 ? 1.0 : maxVal;
 
     return SizedBox(
-      height: 80,
+      height: 100,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
-        children: days.map((d) {
-          final key = '${d.day}.${d.month}';
-          final count = (_kartenProTag[key] ?? 0).toDouble();
-          final h = (count / maxVal * 60).clamp(4.0, 60.0);
+        children: List.generate(days.length, (i) {
+          final d = days[i];
+          final count = vals[i];
+          final h = (count / displayMax * 70).clamp(4.0, 70.0);
           final isToday = d.day == DateTime.now().day;
           return Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 3),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 4),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
+                  if (count > 0)
+                    Text(
+                      count.toInt().toString(),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: isToday
+                              ? const Color(0xFFE8813A)
+                              : const Color(0xFF162447),
+                          fontWeight: FontWeight.w600),
+                    ),
+                  const SizedBox(height: 3),
                   Container(
                     height: h,
                     decoration: BoxDecoration(
                       color: isToday
                           ? const Color(0xFFE8813A)
-                          : const Color(0xFF162447).withOpacity(0.7),
-                      borderRadius: BorderRadius.circular(4),
+                          : const Color(0xFF162447)
+                              .withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(5),
                     ),
                   ),
-                  const SizedBox(height: 4),
+                  const SizedBox(height: 6),
                   Text(
-                    ['Mo','Di','Mi','Do','Fr','Sa','So'][d.weekday - 1],
+                    ['Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa',
+                        'So'][d.weekday - 1],
                     style: TextStyle(
-                        fontSize: 10,
+                        fontSize: 11,
                         color: isToday
                             ? const Color(0xFFE8813A)
-                            : Colors.grey[400]),
+                            : Colors.grey[400],
+                        fontWeight: isToday
+                            ? FontWeight.w600
+                            : FontWeight.normal),
                   ),
                 ],
               ),
             ),
           );
-        }).toList(),
+        }),
       ),
     );
   }
 
-  Widget _legendItem(String label, String value, Color color) => Row(
-    children: [
-      Container(width: 10, height: 10,
-          decoration: BoxDecoration(color: color, shape: BoxShape.circle)),
-      const SizedBox(width: 8),
-      Text(label, style: const TextStyle(fontSize: 13, color: Color(0xFF374151))),
-      const Spacer(),
-      Text(value, style: TextStyle(fontSize: 13,
-          fontWeight: FontWeight.w600, color: color)),
-    ],
-  );
+  Widget _legendItem(
+      String label, String value, Color color) {
+    return Row(
+      children: [
+        Container(
+            width: 10,
+            height: 10,
+            decoration: BoxDecoration(
+                color: color, shape: BoxShape.circle)),
+        const SizedBox(width: 8),
+        Text(label,
+            style: const TextStyle(
+                fontSize: 13,
+                color: Color(0xFF374151))),
+        const Spacer(),
+        Text(value,
+            style: TextStyle(
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                color: color)),
+      ],
+    );
+  }
 
-  Widget _sicherheitRow(String label, double value, String grade) {
-    final color = value >= 0.7 ? const Color(0xFF22C55E)
-        : value >= 0.5 ? const Color(0xFFE8813A)
-        : const Color(0xFFEF4444);
+  Widget _sicherheitRow(
+      String label, double value, String grade) {
+    final color = value >= 0.7
+        ? const Color(0xFF22C55E)
+        : value >= 0.5
+            ? const Color(0xFFE8813A)
+            : const Color(0xFFEF4444);
     return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+      padding: const EdgeInsets.only(bottom: 12),
       child: Column(
         children: [
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment:
+                MainAxisAlignment.spaceBetween,
             children: [
-              Text(label, style: const TextStyle(
-                  fontSize: 11, color: Color(0xFF6B7280),
-                  letterSpacing: 0.3)),
-              Text(grade, style: TextStyle(
-                  fontSize: 11, fontWeight: FontWeight.w600, color: color)),
+              Text(label,
+                  style: const TextStyle(
+                      fontSize: 11,
+                      color: Color(0xFF6B7280),
+                      letterSpacing: 0.3,
+                      fontWeight: FontWeight.w500)),
+              Text(grade,
+                  style: TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w700,
+                      color: color)),
             ],
           ),
-          const SizedBox(height: 4),
+          const SizedBox(height: 5),
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
               value: value,
               backgroundColor: const Color(0xFFE5E7EB),
-              valueColor: AlwaysStoppedAnimation<Color>(color),
-              minHeight: 6,
+              valueColor:
+                  AlwaysStoppedAnimation<Color>(color),
+              minHeight: 7,
             ),
           ),
         ],
@@ -458,18 +571,13 @@ class _StatistikScreenState extends State<StatistikScreen> {
     );
   }
 
-  String _formatNumber(int n) {
-    if (n >= 1000) {
-      return '${(n / 1000).toStringAsFixed(1)}.${(n % 1000).toString().padLeft(3, '0')}';
-    }
-    return n.toString();
-  }
+  String _formatNum(int n) => n.toString();
 }
 
-// Donut Chart Painter
 class _DonutPainter extends CustomPainter {
   final List<double> values;
   final List<Color> colors;
+
   _DonutPainter({required this.values, required this.colors});
 
   @override
@@ -478,19 +586,25 @@ class _DonutPainter extends CustomPainter {
     if (total == 0) return;
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
-    const strokeWidth = 18.0;
-    double startAngle = -3.14159 / 2;
+    final strokeWidth = 20.0;
+    double startAngle = -3.14159265 / 2;
 
     for (int i = 0; i < values.length; i++) {
-      final sweepAngle = (values[i] / total) * 2 * 3.14159;
+      if (values[i] <= 0) continue;
+      final sweepAngle = (values[i] / total) * 2 * 3.14159265;
       final paint = Paint()
         ..color = colors[i]
         ..style = PaintingStyle.stroke
         ..strokeWidth = strokeWidth
         ..strokeCap = StrokeCap.butt;
       canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius - strokeWidth / 2),
-        startAngle, sweepAngle - 0.05, false, paint,
+        Rect.fromCircle(
+            center: center,
+            radius: radius - strokeWidth / 2),
+        startAngle,
+        sweepAngle - 0.04,
+        false,
+        paint,
       );
       startAngle += sweepAngle;
     }
