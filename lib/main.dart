@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'services/fcm_service.dart';
 import 'models/card_model.dart';
 import 'screens/flashcard_question_screen.dart';
 import 'screens/calendar_screen.dart';
@@ -14,6 +16,9 @@ import 'widgets/auth_wrapper.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  if (kIsWeb) {
+    await FCMService.init();
+  }
   await NotificationService.init();
   _scheduleDailyNotification();
   runApp(const IHKApp());
