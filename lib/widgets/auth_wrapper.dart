@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/login_screen.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
+import 'package:ihk_ap1_prep/services/fcm_service.dart';
 
 class AuthWrapper extends StatelessWidget {
   final Widget authenticatedScreen;
@@ -22,6 +23,8 @@ class AuthWrapper extends StatelessWidget {
           );
         }
         if (snapshot.hasData) {
+          // FCM Token nach Login speichern
+          FCMService.init();
           return authenticatedScreen;
         }
         return const LoginScreen();
