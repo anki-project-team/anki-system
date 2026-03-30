@@ -9,26 +9,39 @@ class FCMService {
   static Future<void> init() async {
     if (!kIsWeb) return;
 
-    final messaging = FirebaseMessaging.instance;
+    try {
+      final messaging = FirebaseMessaging.instance;
 
-    // Berechtigung anfragen
-    final settings = await messaging.requestPermission(
-      alert: true, badge: true, sound: true);
+      final settings = await messaging.requestPermission(
+        alert: true, badge: true, sound: true);
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      // FCM Token holen
-      final token = await messaging.getToken(vapidKey: _vapidKey);
-      if (token != null) {
-        await _saveToken(token);
+      print('FCM Permission: ${settings.authorizationStatus}');
+
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        try {
+          final token = await messaging.getToken(
+            vapidKey: _vapidKey);
+          print('FCM Token: $token');
+          if (token != null) {
+            await _saveToken(token);
+            print('FCM Token gespeichert!');
+          } else {
+            print('FCM Token ist null!');
+          }
+        } catch (e) {
+          print('FCM getToken Fehler: $e');
+        }
+
+        messaging.onTokenRefresh.listen(_saveToken);
+
+        FirebaseMessaging.onMessage.listen((message) {
+          print('FCM Foreground: ${message.notification?.title}');
+        });
+      } else {
+        print('FCM nicht erlaubt: ${settings.authorizationStatus}');
       }
-
-      // Token refresh
-      messaging.onTokenRefresh.listen(_saveToken);
-
-      // Foreground Messages anzeigen
-      FirebaseMessaging.onMessage.listen((message) {
-        print('FCM Foreground: ${message.notification?.title}');
-      });
+    } catch (e) {
+      print('FCM init Fehler: $e');
     }
   }
 
