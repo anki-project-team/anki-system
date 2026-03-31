@@ -74,6 +74,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ),
   ];
 
+  bool get _isLastPage => _currentPage == _pages.length - 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,6 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       body: SafeArea(
         child: Column(
           children: [
+            // Top Row
             Padding(
               padding: const EdgeInsets.fromLTRB(20, 16, 16, 0),
               child: Row(children: [
@@ -99,13 +102,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 const SizedBox(width: 10),
                 const Text('Learn-Factory', style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
                 const Spacer(),
-                if (_currentPage < _pages.length - 1)
+                if (!_isLastPage)
                   TextButton(
                     onPressed: _goToLast,
                     child: Text('Überspringen', style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
                   ),
               ]),
             ),
+
+            // Pages
             Expanded(
               child: PageView.builder(
                 controller: _controller,
@@ -114,10 +119,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 itemBuilder: (_, i) => _buildPage(_pages[i]),
               ),
             ),
+
+            // Unterer Bereich
             Container(
               color: const Color(0xFF0f1d38),
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
               child: Column(children: [
+
+                // Dots
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: List.generate(_pages.length, (i) => AnimatedContainer(
@@ -127,15 +136,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     height: 7,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: i == _currentPage ? const Color(0xFFE8813A) : Colors.white.withOpacity(0.2),
+                      color: i == _currentPage
+                          ? const Color(0xFFE8813A)
+                          : Colors.white.withOpacity(0.2),
                     ),
                   )),
                 ),
-                const SizedBox(height: 14),
+                const SizedBox(height: 16),
+
+                // Haupt-Button
                 SizedBox(
                   width: double.infinity, height: 52,
                   child: ElevatedButton(
-                    onPressed: _currentPage < _pages.length - 1 ? _nextPage : _startTrial,
+                    onPressed: _isLastPage ? _startTrial : _nextPage,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFE8813A),
                       foregroundColor: Colors.white,
@@ -143,48 +156,58 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       elevation: 0,
                     ),
                     child: Text(
-                      _currentPage < _pages.length - 1 ? 'Weiter →' : '10 AP1-Karten gratis — kein Login nötig',
+                      _isLastPage ? '10 AP1-Karten gratis — kein Login nötig' : 'Weiter →',
                       style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
                     ),
                   ),
                 ),
                 const SizedBox(height: 12),
-                Row(children: [
-                  _preisBox('🎁 Gratis', '10 Karten\nKein Login', const Color(0xFF22C55E), true),
-                  const SizedBox(width: 6),
-                  _preisBox('⚡ Light', '9,99 € einmalig\n50 Karten', Colors.white, false),
-                  const SizedBox(width: 6),
-                  _preisBox('👑 Deluxe', '19,99 € einmalig\n450+ Karten', const Color(0xFFE8813A), false),
-                ]),
-                const SizedBox(height: 14),
+
+                // Preis-Chips — NUR auf letzter Seite
+                if (_isLastPage) ...[
+                  Row(children: [
+                    _preisBox('🎁 Gratis', '10 Karten\nKein Login', const Color(0xFF22C55E), true),
+                    const SizedBox(width: 6),
+                    _preisBox('⚡ Light', '9,99 € einmalig\n50 Karten', Colors.white, false),
+                    const SizedBox(width: 6),
+                    _preisBox('👑 Deluxe', '19,99 € einmalig\n450+ Karten', const Color(0xFFE8813A), false),
+                  ]),
+                  const SizedBox(height: 14),
+                ],
+
+                // Divider
                 Row(children: [
                   Expanded(child: Divider(color: Colors.white.withOpacity(0.1), thickness: 0.5)),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('Bereits registriert?', style: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 11)),
+                    child: Text('Bereits registriert?',
+                        style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 13)),
                   ),
                   Expanded(child: Divider(color: Colors.white.withOpacity(0.1), thickness: 0.5)),
                 ]),
                 const SizedBox(height: 10),
+
+                // Login Button
                 GestureDetector(
-                  onTap: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const LoginScreen())),
+                  onTap: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const LoginScreen())),
                   child: Container(
                     width: double.infinity,
-                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                     decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white.withOpacity(0.12)),
+                      border: Border.all(color: Colors.white.withOpacity(0.15)),
                       borderRadius: BorderRadius.circular(10),
                     ),
                     child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                      Icon(Icons.login_outlined, size: 15, color: Colors.white.withOpacity(0.5)),
+                      Icon(Icons.login_outlined, size: 18, color: Colors.white.withOpacity(0.6)),
                       const SizedBox(width: 8),
                       Text.rich(TextSpan(
-                        style: TextStyle(color: Colors.white.withOpacity(0.5), fontSize: 12),
+                        style: TextStyle(color: Colors.white.withOpacity(0.6), fontSize: 14),
                         children: [
                           const TextSpan(text: 'Einloggen '),
                           TextSpan(
                             text: '(Light oder Deluxe bereits gekauft)',
-                            style: TextStyle(color: Colors.white.withOpacity(0.3), fontSize: 11),
+                            style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 12),
                           ),
                         ],
                       )),
