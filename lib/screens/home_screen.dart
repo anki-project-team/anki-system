@@ -4,6 +4,7 @@ import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/screens/settings_screen.dart';
 import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/screens/flashcard_question_screen.dart';
+import 'package:ihk_ap1_prep/widgets/calendar_setup_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -24,6 +25,9 @@ class _HomeScreenState extends State<HomeScreen> {
         _firstName = user.displayName!.split(' ').first;
       });
     }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      CalendarSetupSheet.showIfNeeded(context);
+    });
   }
 
   String _getGreeting() {
