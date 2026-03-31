@@ -2,65 +2,127 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class CalendarService {
-  static const _setupDoneKey = 'calendar_setup_done';
+  static const _prefKey = 'calendarSetupDone';
 
   static Future<bool> isSetupDone() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(_setupDoneKey) ?? false;
+    return prefs.getBool(_prefKey) ?? false;
   }
 
   static Future<void> markSetupDone() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool(_setupDoneKey, true);
+    await prefs.setBool(_prefKey, true);
   }
 
-  /// Google Kalender-Link öffnen mit täglichem Lern-Reminder
-  static Future<void> openGoogleCalendar() async {
+  // Datum formatieren für Google Calendar URL
+  static String _fmt(DateTime dt) =>
+      '${dt.year}'
+      '${dt.month.toString().padLeft(2, '0')}'
+      '${dt.day.toString().padLeft(2, '0')}'
+      'T'
+      '${dt.hour.toString().padLeft(2, '0')}'
+      '${dt.minute.toString().padLeft(2, '0')}'
+      '00';
+
+  // Google Kalender App öffnen (Android Intent)
+  // Fallback: Google Kalender Website
+  static Future<bool> openGoogleCalendar() async {
     final now = DateTime.now();
     final start = DateTime(now.year, now.month, now.day, 7, 30);
-    final end = start.add(const Duration(minutes: 30));
+    final end   = DateTime(now.year, now.month, now.day, 7, 45);
 
-    String _fmt(DateTime d) =>
-        '${d.year}${_pad(d.month)}${_pad(d.day)}T${_pad(d.hour)}${_pad(d.minute)}00';
-
-    final uri = Uri.parse(
-      'https://calendar.google.com/calendar/render?action=TEMPLATE'
-      '&text=AP1+Lernzeit+%F0%9F%93%9A'
-      '&details=T%C3%A4glich+30+Min+Flashcards+lernen+%E2%80%93+Learn-Factory'
-      '&dates=${_fmt(start)}/${_fmt(end)}'
-      '&recur=RRULE:FREQ=DAILY'
-      '&ctz=Europe/Berlin',
+    final title   = Uri.encodeComponent('Learn-Factory: AP1 Lerneinheit 🎯');
+    final details = Uri.encodeComponent(
+      'Deine täglichen IHK AP1-Lernkarten warten!\n'
+      'Nur 15 Minuten täglich — Bestnoten-Vorbereitung.\n\n'
+      '👉 https://ihk-ap1-prep.web.app',
     );
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    final location = Uri.encodeComponent('https://ihk-ap1-prep.web.app');
+    final dates    = '${_fmt(start)}/${_fmt(end)}';
+
+    // Weg 1: Google Kalender App direkt (Android)
+    final appUri = Uri.parse(
+      'https://www.google.com/calendar/event'
+      '?action=TEMPLATE'
+      '&text=$title'
+      '&dates=$dates'
+      '&recur=RRULE%3AFREQ%3DDAILY'
+      '&ctz=Europe%2FBerlin'
+      '&details=$details'
+      '&location=$location',
+    );
+
+    // Weg 2: Web-Fallback (öffnet als Website)
+    final webUri = Uri.parse(
+      'https://calendar.google.com/calendar/render'
+      '?action=TEMPLATE'
+      '&text=$title'
+      '&dates=$dates'
+      '&recur=RRULE%3AFREQ%3DDAILY'
+      '&ctz=Europe%2FBerlin'
+      '&details=$details'
+      '&location=$location',
+    );
+
+    // Erst App-Link probieren, dann Web-Fallback
+    try {
+      if (await canLaunchUrl(appUri)) {
+        await launchUrl(appUri,
+            mode: LaunchMode.externalNonBrowserApplication);
+        await markSetupDone();
+        return true;
+      }
+    } catch (_) {}
+
+    // Web-Fallback
+    if (await canLaunchUrl(webUri)) {
+      await launchUrl(webUri,
+          mode: LaunchMode.externalApplication);
+      await markSetupDone();
+      return true;
+    }
+
+    return false;
+  }
+
+  // ICS-Inhalt für Apple Kalender / Outlook
+  static String buildIcsContent() {
+    final now      = DateTime.now();
+    final yyyymmdd =
+        '${now.year}'
+        '${now.month.toString().padLeft(2, '0')}'
+        '${now.day.toString().padLeft(2, '0')}';
+
+    return 'BEGIN:VCALENDAR\r\n'
+        'VERSION:2.0\r\n'
+        'PRODID:-//Learn-Factory//IHK AP1 Prep//DE\r\n'
+        'CALSCALE:GREGORIAN\r\n'
+        'METHOD:PUBLISH\r\n'
+        'BEGIN:VEVENT\r\n'
+        'SUMMARY:Learn-Factory: AP1 Lerneinheit\r\n'
+        'DTSTART;TZID=Europe/Berlin:${yyyymmdd}T073000\r\n'
+        'DURATION:PT15M\r\n'
+        'RRULE:FREQ=DAILY\r\n'
+        'DESCRIPTION:Deine IHK AP1-Lernkarten warten!\\nhttps://ihk-ap1-prep.web.app\r\n'
+        'URL:https://ihk-ap1-prep.web.app\r\n'
+        'BEGIN:VALARM\r\n'
+        'TRIGGER:-PT5M\r\n'
+        'ACTION:DISPLAY\r\n'
+        'DESCRIPTION:Learn-Factory: Jetzt AP1 lernen!\r\n'
+        'END:VALARM\r\n'
+        'END:VEVENT\r\n'
+        'END:VCALENDAR';
+  }
+
+  // ICS Download (Web)
+  static Future<void> downloadIcs() async {
+    final ics     = buildIcsContent();
+    final encoded = Uri.encodeComponent(ics);
+    final dataUrl =
+        Uri.parse('data:text/calendar;charset=utf-8,$encoded');
+    if (await canLaunchUrl(dataUrl)) {
+      await launchUrl(dataUrl);
+      await markSetupDone();
     }
   }
-
-  /// ICS-Datei als Download-Link öffnen
-  static Future<void> downloadICS() async {
-    final ics = '''BEGIN:VCALENDAR
-VERSION:2.0
-PRODID:-//Learn-Factory//AP1 Prep//DE
-BEGIN:VEVENT
-DTSTART;TZID=Europe/Berlin:${_todayFormatted()}T073000
-DTEND;TZID=Europe/Berlin:${_todayFormatted()}T080000
-RRULE:FREQ=DAILY
-SUMMARY:AP1 Lernzeit 📚
-DESCRIPTION:Täglich 30 Min Flashcards lernen – Learn-Factory
-END:VEVENT
-END:VCALENDAR''';
-
-    final uri = Uri.dataFromString(ics,
-        mimeType: 'text/calendar', encoding: null);
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    }
-  }
-
-  static String _todayFormatted() {
-    final now = DateTime.now();
-    return '${now.year}${_pad(now.month)}${_pad(now.day)}';
-  }
-
-  static String _pad(int n) => n.toString().padLeft(2, '0');
 }

@@ -80,7 +80,7 @@ class CalendarSetupSheet extends StatelessWidget {
             width: double.infinity, height: 52,
             child: OutlinedButton.icon(
               onPressed: () async {
-                await CalendarService.downloadICS();
+                await CalendarService.downloadIcs();
                 await CalendarService.markSetupDone();
                 if (context.mounted) Navigator.pop(context);
               },
