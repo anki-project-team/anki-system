@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/screens/legal_screen.dart';
+import 'package:ihk_ap1_prep/widgets/auth_wrapper.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -178,6 +179,12 @@ class _SettingsScreenState extends State<SettingsScreen> {
               InkWell(
                 onTap: () async {
                   await AuthService().logout();
+                  if (context.mounted) {
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(builder: (_) => const AuthWrapper()),
+                      (route) => false,
+                    );
+                  }
                 },
                 borderRadius: BorderRadius.circular(12),
                 child: Padding(
