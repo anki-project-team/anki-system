@@ -35,37 +35,35 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
     });
   }
 
-  void _startDeck(BuildContext context, List<CardModel> cards) {
+  Future<void> _startDeck(BuildContext context, List<CardModel> cards) async {
     if (cards.isEmpty) return;
-    int currentIndex = 0;
 
-    void showNext() {
+    for (int i = 0; i < cards.length; i++) {
       if (!context.mounted) return;
-      if (currentIndex >= cards.length) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Lernsitzung abgeschlossen! 🎉'),
-            backgroundColor: Color(0xFFE8813A),
-          ),
-        );
-        return;
-      }
-      Navigator.of(context).push(
+      await Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (ctx) => FlashcardQuestionScreen(
-            card: cards[currentIndex],
-            currentCard: currentIndex + 1,
+          builder: (_) => FlashcardQuestionScreen(
+            card: cards[i],
+            currentCard: i + 1,
             totalCards: cards.length,
             onRating: (rating, updatedCard) {
-              currentIndex++;
-              Future.microtask(() => showNext());
+              Navigator.of(context)
+                ..pop() // AnswerScreen
+                ..pop(); // QuestionScreen
             },
           ),
         ),
       );
     }
 
-    showNext();
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Lernsitzung abgeschlossen! 🎉'),
+          backgroundColor: Color(0xFFE8813A),
+        ),
+      );
+    }
   }
 
 
