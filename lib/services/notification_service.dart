@@ -98,6 +98,7 @@ class NotificationService {
 
   /// Nächsten Zeitpunkt berechnen (heute oder morgen)
   static tz.TZDateTime _nextInstanceOfTime(int hour, int minute) {
+    tz.initializeTimeZones();
     final now = tz.TZDateTime.now(tz.local);
     var scheduled =
         tz.TZDateTime(tz.local, now.year, now.month, now.day, hour, minute);
