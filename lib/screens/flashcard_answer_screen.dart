@@ -467,9 +467,9 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Column(
             children: [
@@ -482,7 +482,7 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
               Text(interval,
                   style: TextStyle(
                       fontSize: 10,
-                      color: color.withOpacity(0.7))),
+                      color: color.withValues(alpha: 0.7))),
             ],
           ),
         ),

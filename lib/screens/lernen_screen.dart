@@ -96,7 +96,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             height: 34,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: Colors.white.withOpacity(0.15),
+              color: Colors.white.withValues(alpha: 0.15),
             ),
             child: const Icon(Icons.settings_outlined,
                 color: Colors.white, size: 18),
@@ -124,7 +124,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                       padding: const EdgeInsets.symmetric(
                           horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.18),
+                          color: Colors.white.withValues(alpha: 0.18),
                           borderRadius: BorderRadius.circular(4)),
                       child: const Text('AKTUELLER FORTSCHRITT',
                           style: TextStyle(
@@ -156,7 +156,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.white,
                               side: BorderSide(
-                                  color: Colors.white.withOpacity(0.35)),
+                                  color: Colors.white.withValues(alpha: 0.35)),
                               padding:
                                   const EdgeInsets.symmetric(vertical: 8),
                               shape: RoundedRectangleBorder(
@@ -269,7 +269,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
         Text(label,
             style: TextStyle(
                 fontSize: 9,
-                color: Colors.white.withOpacity(0.55),
+                color: Colors.white.withValues(alpha: 0.55),
                 letterSpacing: 0.5)),
       ],
     );

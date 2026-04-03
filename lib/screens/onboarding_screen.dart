@@ -1,510 +1,756 @@
-import 'package:flutter/material.dart';
-import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
-import 'package:ihk_ap1_prep/screens/login_screen.dart';
+// lib/screens/onboarding_screen.dart
+// Austauschbar: einfach Datei ersetzen, keine weiteren Änderungen nötig.
+// Navigation nach Onboarding → HomeScreen oder FreeTrialScreen.
 
+import 'package:flutter/material.dart';
+
+// ─── Design Tokens ──────────────────────────────────────
+const _bgColor     = Color(0xFF162447);
+const _accentColor = Color(0xFFE8813A);
+const _cardColor   = Color(0xFF1e3a5f);
+const _darkColor   = Color(0xFF1a2744);
+const _greenColor  = Color(0xFF32CD32);
+
+// ─── Daten ──────────────────────────────────────────────
+const _itBerufe = [
+  ('FIAE',  'Anwendungsentwicklung'),
+  ('FISI',  'Systemintegration'),
+  ('FIADA', 'Daten- & Prozessanalyse'),
+  ('FIDV',  'Digitale Vernetzung'),
+  ('ITSE',  'IT-System-Elektroniker'),
+];
+
+const _kmBerufe = [
+  ('KSM',  'IT-System-Management'),
+  ('KDM',  'Digitalisierungsmanagement'),
+];
+
+const _fsrsFeatures = [
+  'Optimale Wiederholungszeitpunkte',
+  'Passt sich deinem Lerntempo an',
+  '200+ Karten zu allen AP1-Themen',
+  'Bis zu 90 % weniger Lernzeit',
+  'Wissenschaftlich belegt (Ebbinghaus)',
+];
+
+// ════════════════════════════════════════════════════════
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
+
   @override
   State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final PageController _controller = PageController();
+  final PageController _pageController = PageController();
   int _currentPage = 0;
 
-  final List<_OPage> _pages = [
-    _OPage(
-      emoji: '🎯',
-      badge: 'NUR FÜR IHK AP1',
-      title: 'Speziell für\ndeine AP1-Prüfung.',
-      // Kein subtitle auf Seite 1 — macht Platz für die Detail-Box
-      detail:
-          'Alle Berufsbilder mit IHK Abschlussprüfung Teil 1:\n\n'
-          '• Fachinformatiker Anwendungsentwicklung (FIAE)\n'
-          '• Fachinformatiker Systemintegration (FISI)\n'
-          '• Fachinformatiker Daten- & Prozessanalyse (FIDP)\n'
-          '• Fachinformatiker Digitale Vernetzung (FIDV)\n'
-          '• Fachinformatiker Cyberabwehr (FICA)\n'
-          '• Kaufmann IT-Systemmanagement\n'
-          '• Kaufmann Digitalisierungsmanagement',
-    ),
-    _OPage(
-      emoji: '🧠',
-      badge: 'LERNEN DER ZUKUNFT',
-      title: 'Der Algorithmus\nlernt mit dir.',
-      subtitle: 'FSRS 4.5 — der modernste\nLernalgorithmus der Welt.',
-      detail:
-          'Er analysiert kontinuierlich dein Wissen\n'
-          'und zeigt dir genau die richtige Karte\n'
-          'zum optimalen Zeitpunkt.\n\n'
-          'Nicht früher. Nicht später.\n'
-          '40% weniger Lernzeit — mehr Retention.',
-    ),
-    _OPage(
-      emoji: '🏆',
-      badge: 'SPEZIELLE BESTNOTEN-VORBEREITUNG',
-      title: 'Nicht bestehen.\nGlänzen.',
-      subtitle: 'Während andere hoffen, weißt du.',
-      detail:
-          '450+ echte IHK AP1-Prüfungsfragen\n'
-          'mit ausführlichen Erklärungen,\n'
-          'Prüfungssimulator und\n'
-          'personalisierten Lernplänen.\n\n'
-          'Jede Karte mit Kernantwort,\n'
-          'Erklärung, Links und Hashtags.',
-    ),
-    _OPage(
-      emoji: '🔔',
-      badge: 'TÄGLICH 15 MINUTEN',
-      title: 'Das System\narbeitet für dich.',
-      subtitle: 'Lernen wann es am effektivsten ist —\nnicht wann du Zeit hast.',
-      detail:
-          'Jeden Morgen um 07:30 Uhr\n'
-          'zeigt dir Learn-Factory genau,\n'
-          'welche AP1-Karten heute dran sind.\n\n'
-          '15 Minuten täglich reichen.\n'
-          'Konsequent bis zur Prüfung.',
-    ),
-    _OPage(
-      emoji: '🚀',
-      badge: 'JETZT STARTEN',
-      title: 'Erlebe\nLernen der Zukunft.',
-      subtitle: 'Kein Login. Kein Risiko.\nStarte mit 10 AP1-Karten gratis.',
-      isLast: true,
-    ),
-  ];
+  void _nextPage() {
+    if (_currentPage < 2) {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 350),
+        curve: Curves.easeInOut,
+      );
+    }
+  }
 
-  bool get _isLastPage => _currentPage == _pages.length - 1;
+  void _skip() {
+    // Direkt zu Screen 3 (Upgrade/Start)
+    _pageController.animateToPage(
+      2,
+      duration: const Duration(milliseconds: 400),
+      curve: Curves.easeInOut,
+    );
+  }
+
+  void _startFree() {
+    // TODO: Navigation zur kostenlosen Testversion (10 Karten)
+    Navigator.of(context).pushReplacementNamed('/free-trial');
+  }
+
+  void _buyFullVersion() {
+    // TODO: In-App-Purchase oder Digistore24 WebView
+    Navigator.of(context).pushReplacementNamed('/purchase');
+  }
+
+  void _login() {
+    Navigator.of(context).pushReplacementNamed('/login');
+  }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF162447),
+      backgroundColor: _bgColor,
       body: SafeArea(
         child: Column(
           children: [
-            // Top Row
-            Padding(
-              padding: const EdgeInsets.fromLTRB(20, 16, 16, 0),
-              child: Row(children: [
-                Container(
-                  width: 36, height: 36,
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF1e3a5f),
-                    borderRadius: BorderRadius.circular(9),
-                    border: Border.all(
-                        color: const Color(0xFFE8813A).withOpacity(0.3)),
-                  ),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text('LF',
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight: FontWeight.bold)),
-                        Container(
-                            width: 16,
-                            height: 2,
-                            color: const Color(0xFFE8813A)),
-                      ]),
-                ),
-                const SizedBox(width: 10),
-                const Text('Learn-Factory',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 15,
-                        fontWeight: FontWeight.w600)),
-                const Spacer(),
-                if (!_isLastPage)
-                  TextButton(
-                    onPressed: _goToLast,
-                    child: Text('Überspringen',
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.4),
-                            fontSize: 12)),
-                  ),
-              ]),
-            ),
+            // ── Top Bar ──────────────────────────────────
+            _TopBar(onSkip: _skip),
 
-            // Pages — scrollbar pro Seite
+            // ── Pages ────────────────────────────────────
             Expanded(
-              child: PageView.builder(
-                controller: _controller,
-                onPageChanged: (i) =>
-                    setState(() => _currentPage = i),
-                itemCount: _pages.length,
-                itemBuilder: (_, i) => _buildPage(_pages[i]),
-              ),
-            ),
-
-            // Unterer Bereich
-            Container(
-              color: const Color(0xFF0f1d38),
-              padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-              child: Column(children: [
-                // Dots
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(
-                    _pages.length,
-                    (i) => AnimatedContainer(
-                      duration: const Duration(milliseconds: 250),
-                      margin:
-                          const EdgeInsets.symmetric(horizontal: 3),
-                      width: i == _currentPage ? 22 : 7,
-                      height: 7,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
-                        color: i == _currentPage
-                            ? const Color(0xFFE8813A)
-                            : Colors.white.withOpacity(0.2),
-                      ),
-                    ),
+              child: PageView(
+                controller: _pageController,
+                onPageChanged: (i) => setState(() => _currentPage = i),
+                children: [
+                  _Page1(),
+                  _Page2(),
+                  _Page3(
+                    onStartFree: _startFree,
+                    onBuyFull: _buyFullVersion,
                   ),
-                ),
-                const SizedBox(height: 16),
-
-                // Haupt-Button
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: ElevatedButton(
-                    onPressed:
-                        _isLastPage ? _startTrial : _nextPage,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE8813A),
-                      foregroundColor: Colors.white,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(14)),
-                      elevation: 0,
-                    ),
-                    child: Text(
-                      _isLastPage
-                          ? '10 AP1-Karten gratis — kein Login nötig'
-                          : 'Weiter →',
-                      style: const TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w700),
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 12),
-
-                // Preis-Chips — NUR auf letzter Seite
-                if (_isLastPage) ...[
-                  Row(children: [
-                    _preisBox('🎁 Gratis', '10 Karten\nKein Login',
-                        const Color(0xFF22C55E), true),
-                    const SizedBox(width: 6),
-                    _preisBox('⚡ Light', '9,99 € einmalig\n50 Karten',
-                        Colors.white, false),
-                    const SizedBox(width: 6),
-                    _preisBox('👑 Deluxe',
-                        '19,99 € einmalig\n450+ Karten',
-                        const Color(0xFFE8813A), false),
-                  ]),
-                  const SizedBox(height: 14),
                 ],
+              ),
+            ),
 
-                // Divider
-                Row(children: [
-                  Expanded(
-                      child: Divider(
-                          color: Colors.white.withOpacity(0.1),
-                          thickness: 0.5)),
-                  Padding(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10),
-                    child: Text('Bereits registriert?',
-                        style: TextStyle(
-                            color: Colors.white.withOpacity(0.5),
-                            fontSize: 13)),
-                  ),
-                  Expanded(
-                      child: Divider(
-                          color: Colors.white.withOpacity(0.1),
-                          thickness: 0.5)),
-                ]),
-                const SizedBox(height: 10),
+            // ── Dots ─────────────────────────────────────
+            _DotIndicator(current: _currentPage, total: 3),
+            const SizedBox(height: 16),
 
-                // Login Button
-                GestureDetector(
-                  onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (_) => const LoginScreen())),
-                  child: Container(
-                    width: double.infinity,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 12),
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                          color: Colors.white.withOpacity(0.15)),
-                      borderRadius: BorderRadius.circular(10),
+            // ── Buttons ──────────────────────────────────
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: _currentPage < 2
+                  ? _PrimaryButton(
+                      label: 'Weiter →',
+                      onTap: _nextPage,
+                    )
+                  : Column(
+                      children: [
+                        _PrimaryButton(
+                          label: 'Kostenlos starten →',
+                          onTap: _startFree,
+                        ),
+                        const SizedBox(height: 10),
+                        _OutlineButton(
+                          label: 'Vollversion kaufen — 29,90 €',
+                          onTap: _buyFullVersion,
+                        ),
+                      ],
                     ),
-                    child: Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.center,
-                        children: [
-                          Icon(Icons.login_outlined,
-                              size: 18,
-                              color:
-                                  Colors.white.withOpacity(0.6)),
-                          const SizedBox(width: 8),
-                          Text.rich(TextSpan(
-                            style: TextStyle(
-                                color:
-                                    Colors.white.withOpacity(0.6),
-                                fontSize: 14),
-                            children: [
-                              const TextSpan(text: 'Einloggen '),
-                              TextSpan(
-                                text:
-                                    '(Light oder Deluxe bereits gekauft)',
-                                style: TextStyle(
-                                    color: Colors.white
-                                        .withOpacity(0.35),
-                                    fontSize: 12),
-                              ),
-                            ],
-                          )),
-                        ]),
+            ),
+
+            const SizedBox(height: 16),
+
+            // ── Login Link ───────────────────────────────
+            GestureDetector(
+              onTap: _login,
+              child: const Text(
+                'Bereits registriert?',
+                style: TextStyle(
+                  color: Colors.white60,
+                  fontSize: 13,
+                ),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: GestureDetector(
+                onTap: _login,
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  decoration: BoxDecoration(
+                    color: _cardColor.withOpacity(0.7),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: const Text(
+                    '⇒  Einloggen  (Vollversion bereits gekauft)',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(color: Colors.white70, fontSize: 12),
                   ),
                 ),
-              ]),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _preisBox(
-      String label, String info, Color color, bool isFree) {
-    return Expanded(
-      child: Container(
-        padding:
-            const EdgeInsets.symmetric(vertical: 8, horizontal: 6),
-        decoration: BoxDecoration(
-          color: color.withOpacity(isFree ? 0.12 : 0.07),
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(color: color.withOpacity(0.25)),
-        ),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(label,
-                  style: TextStyle(
-                      color: color,
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700)),
-              const SizedBox(height: 4),
-              Text(info,
-                  style: TextStyle(
-                      color: color.withOpacity(0.7),
-                      fontSize: 10,
-                      height: 1.4)),
-            ]),
-      ),
-    );
-  }
-
-  // ── Seite — jetzt SingleChildScrollView für Mobile ──────
-  Widget _buildPage(_OPage page) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.fromLTRB(28, 32, 28, 16),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          // Emoji Box
-          Container(
-            width: 90, height: 90,
-            decoration: BoxDecoration(
-              color: const Color(0xFF1e3a5f),
-              borderRadius: BorderRadius.circular(22),
-              border: Border.all(
-                  color:
-                      const Color(0xFFE8813A).withOpacity(0.25),
-                  width: 1.5),
-            ),
-            child: Center(
-                child: Text(page.emoji,
-                    style: const TextStyle(fontSize: 42))),
-          ),
-          const SizedBox(height: 24),
-
-          // Badge
-          Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 14, vertical: 6),
-            decoration: BoxDecoration(
-              color: const Color(0xFFE8813A).withOpacity(0.15),
-              borderRadius: BorderRadius.circular(20),
-              border: Border.all(
-                  color:
-                      const Color(0xFFE8813A).withOpacity(0.35)),
-            ),
-            child: Text(page.badge,
-                style: const TextStyle(
-                    color: Color(0xFFE8813A),
-                    fontSize: 10,
-                    fontWeight: FontWeight.w700,
-                    letterSpacing: 0.8)),
-          ),
-          const SizedBox(height: 24),
-
-          // Titel
-          Text(page.title,
-              textAlign: TextAlign.center,
-              style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 30,
-                  fontWeight: FontWeight.bold,
-                  height: 1.25)),
-
-          // Subtitle (nur wenn vorhanden)
-          if (page.subtitle != null) ...[
-            const SizedBox(height: 16),
-            Text(page.subtitle!,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Colors.white.withOpacity(0.7),
-                    fontSize: 15,
-                    height: 1.6)),
-          ],
-
-          // Detail Box
-          if (page.detail != null) ...[
-            const SizedBox(height: 24),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 20, vertical: 18),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1e3a5f),
-                borderRadius: BorderRadius.circular(14),
-                border: Border.all(
-                    color: Colors.white.withOpacity(0.08)),
               ),
-              child: Text(page.detail!,
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                      color: Colors.white.withOpacity(0.7),
-                      fontSize: 14,
-                      height: 1.8)),
             ),
+            const SizedBox(height: 20),
           ],
+        ),
+      ),
+    );
+  }
+}
 
-          // How it works — letzte Seite
-          if (page.isLast) ...[
-            const SizedBox(height: 24),
-            _howItWorks(),
-          ],
-          const SizedBox(height: 16),
+// ════════════════════════════════════════════════════════
+// TOP BAR
+// ════════════════════════════════════════════════════════
+class _TopBar extends StatelessWidget {
+  final VoidCallback onSkip;
+  const _TopBar({required this.onSkip});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      child: Row(
+        children: [
+          // Logo
+          Container(
+            width: 36, height: 36,
+            decoration: BoxDecoration(
+              color: _accentColor,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            alignment: Alignment.center,
+            child: const Text('LF',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          const Text('Learn-Factory',
+            style: TextStyle(
+              color: Colors.white,
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
+            ),
+          ),
+          const Spacer(),
+          GestureDetector(
+            onTap: onSkip,
+            child: const Text('Überspringen',
+              style: TextStyle(color: Colors.white60, fontSize: 14),
+            ),
+          ),
         ],
       ),
     );
   }
-
-  Widget _howItWorks() {
-    final steps = [
-      ('1', '10 AP1-Karten gratis testen', 'Kein Login', true),
-      ('2', 'Kostenlos registrieren', '+20 weitere Karten', true),
-      ('3', 'App Light — 9,99 €', '50 Top-Karten · einmalig',
-          false),
-      ('4', 'App Deluxe — 19,99 €',
-          '450+ Karten + Simulator', false),
-    ];
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: const Color(0xFF1e3a5f),
-        borderRadius: BorderRadius.circular(16),
-        border:
-            Border.all(color: Colors.white.withOpacity(0.08)),
-      ),
-      child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Dein Weg zur Bestnote',
-                style: TextStyle(
-                    color: Colors.white.withOpacity(0.4),
-                    fontSize: 10,
-                    letterSpacing: 0.8,
-                    fontWeight: FontWeight.w600)),
-            const SizedBox(height: 14),
-            ...steps.map((s) => Padding(
-                  padding: const EdgeInsets.only(bottom: 12),
-                  child: Row(children: [
-                    Container(
-                      width: 26, height: 26,
-                      decoration: BoxDecoration(
-                        color: s.$4
-                            ? const Color(0xFF22C55E)
-                                .withOpacity(0.2)
-                            : const Color(0xFFE8813A)
-                                .withOpacity(0.2),
-                        borderRadius: BorderRadius.circular(7),
-                      ),
-                      child: Center(
-                          child: Text(s.$1,
-                              style: TextStyle(
-                                  color: s.$4
-                                      ? const Color(0xFF22C55E)
-                                      : const Color(0xFFE8813A),
-                                  fontSize: 12,
-                                  fontWeight:
-                                      FontWeight.bold))),
-                    ),
-                    const SizedBox(width: 12),
-                    Expanded(
-                        child: Row(
-                      mainAxisAlignment:
-                          MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(s.$2,
-                            style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 13,
-                                fontWeight:
-                                    FontWeight.w600)),
-                        Text(s.$3,
-                            style: TextStyle(
-                                color: Colors.white
-                                    .withOpacity(0.4),
-                                fontSize: 11)),
-                      ],
-                    )),
-                  ]),
-                )),
-          ]),
-    );
-  }
-
-  void _nextPage() => _controller.nextPage(
-      duration: const Duration(milliseconds: 350),
-      curve: Curves.easeInOut);
-  void _goToLast() => _controller.animateToPage(
-      _pages.length - 1,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut);
-  void _startTrial() => Navigator.pushReplacement(context,
-      MaterialPageRoute(
-          builder: (_) => const FreeTrialScreen()));
 }
 
-class _OPage {
-  final String emoji, badge, title;
-  final String? subtitle, detail;
-  final bool isLast;
-  const _OPage({
-    required this.emoji,
-    required this.badge,
-    required this.title,
-    this.subtitle,
-    this.detail,
-    this.isLast = false,
-  });
+// ════════════════════════════════════════════════════════
+// PAGE 1 — AP1-Fokus
+// ════════════════════════════════════════════════════════
+class _Page1 extends StatelessWidget {
+  const _Page1();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          // Icon
+          Container(
+            width: 76, height: 76,
+            decoration: BoxDecoration(
+              color: _cardColor,
+              shape: BoxShape.circle,
+            ),
+            alignment: Alignment.center,
+            child: const Text('🎯', style: TextStyle(fontSize: 34)),
+          ),
+          const SizedBox(height: 12),
+          // Badge
+          _Badge(label: 'NUR FÜR IHK AP1'),
+          const SizedBox(height: 16),
+          // Headline
+          const Text(
+            'Speziell für\ndeine AP1-Prüfung.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 26,
+              fontWeight: FontWeight.bold,
+              height: 1.25,
+            ),
+          ),
+          const SizedBox(height: 16),
+          // Berufsbilder Box
+          Container(
+            decoration: BoxDecoration(
+              color: _cardColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Header
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                  child: const Text(
+                    'Berufsbilder mit IHK AP1',
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Divider(color: Colors.white12, height: 1),
+                const SizedBox(height: 8),
+
+                // IT-Berufe
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, bottom: 6),
+                  child: Text('IT-Berufe',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.35),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                ..._itBerufe.map((b) => _BerufRow(kuerzel: b.$1, name: b.$2)),
+
+                const SizedBox(height: 4),
+                const Divider(color: Colors.white12, height: 1, indent: 16),
+                const SizedBox(height: 6),
+
+                // Kaufmännisch
+                Padding(
+                  padding: const EdgeInsets.only(left: 16, bottom: 6),
+                  child: Text('Kaufmännisch',
+                    style: TextStyle(
+                      color: Colors.white.withOpacity(0.35),
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 0.5,
+                    ),
+                  ),
+                ),
+                ..._kmBerufe.map((b) => _BerufRow(kuerzel: b.$1, name: b.$2)),
+                const SizedBox(height: 14),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// PAGE 2 — Lerne smarter
+// ════════════════════════════════════════════════════════
+class _Page2 extends StatelessWidget {
+  const _Page2();
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 88, height: 88,
+            decoration: BoxDecoration(color: _cardColor, shape: BoxShape.circle),
+            alignment: Alignment.center,
+            child: const Text('🧠', style: TextStyle(fontSize: 40)),
+          ),
+          const SizedBox(height: 12),
+          _Badge(label: 'FSRS 4.5 ALGORITHMUS'),
+          const SizedBox(height: 16),
+          const Text(
+            'Lerne smarter,\nnicht länger.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              height: 1.25,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Container(
+            decoration: BoxDecoration(
+              color: _cardColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 14, 16, 0),
+                  child: const Text(
+                    'Der modernste Spaced-Repetition-Algorithmus',
+                    style: TextStyle(
+                      color: Colors.white54,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 8),
+                const Divider(color: Colors.white12, height: 1),
+                const SizedBox(height: 6),
+                ..._fsrsFeatures.map((f) => _CheckRow(text: f)),
+                const SizedBox(height: 12),
+              ],
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// PAGE 3 — Jetzt starten / Upgrade
+// ════════════════════════════════════════════════════════
+class _Page3 extends StatelessWidget {
+  final VoidCallback onStartFree;
+  final VoidCallback onBuyFull;
+  const _Page3({required this.onStartFree, required this.onBuyFull});
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 20),
+      child: Column(
+        children: [
+          const SizedBox(height: 8),
+          Container(
+            width: 88, height: 88,
+            decoration: BoxDecoration(color: _cardColor, shape: BoxShape.circle),
+            alignment: Alignment.center,
+            child: const Text('🚀', style: TextStyle(fontSize: 40)),
+          ),
+          const SizedBox(height: 12),
+          _Badge(label: 'KOSTENLOS STARTEN'),
+          const SizedBox(height: 16),
+          const Text(
+            'Deine Bestnoten-\nVorbereitung.',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 30,
+              fontWeight: FontWeight.bold,
+              height: 1.25,
+            ),
+          ),
+          const SizedBox(height: 16),
+
+          // ── Gratis Box ──────────────────────────────
+          Container(
+            decoration: BoxDecoration(
+              color: _darkColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: IntrinsicHeight(
+              child: Row(
+                children: [
+                  // linker grüner Streifen
+                  Container(width: 4, color: _greenColor),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('Gratis testen',
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text('10 Karten  ·  Kein Login  ·  Sofort starten',
+                            style: TextStyle(color: Colors.white54, fontSize: 12),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text('✓  Netzwerktechnik-Karten inklusive',
+                            style: TextStyle(color: _greenColor, fontSize: 11),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 10),
+
+          // ── Vollversion Box ─────────────────────────
+          Container(
+            decoration: BoxDecoration(
+              color: _cardColor,
+              borderRadius: BorderRadius.circular(12),
+            ),
+            clipBehavior: Clip.hardEdge,
+            child: IntrinsicHeight(
+              child: Row(
+                children: [
+                  Container(width: 4, color: _accentColor),
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(12, 12, 12, 12),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Vollversion',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Container(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 5),
+                                decoration: BoxDecoration(
+                                  color: _accentColor,
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: const Text('29,90 €',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          const SizedBox(height: 4),
+                          const Text('Einmalig  ·  Kein Abo  ·  Dauerhaft',
+                            style: TextStyle(color: Colors.white54, fontSize: 12),
+                          ),
+                          const SizedBox(height: 6),
+                          _AccentCheck('200+ Karten  ·  Alle Themen'),
+                          _AccentCheck('FSRS · Prüfungssimulator · Kalender'),
+                          _AccentCheck('DSGVO-konform  ·  EU-Server'),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// SHARED WIDGETS
+// ════════════════════════════════════════════════════════
+
+class _Badge extends StatelessWidget {
+  final String label;
+  const _Badge({required this.label});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+      decoration: BoxDecoration(
+        color: _accentColor.withOpacity(0.18),
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: _accentColor),
+      ),
+      child: Text(
+        label,
+        style: const TextStyle(
+          color: _accentColor,
+          fontSize: 11,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 0.8,
+        ),
+      ),
+    );
+  }
+}
+
+class _BerufRow extends StatelessWidget {
+  final String kuerzel;
+  final String name;
+  const _BerufRow({required this.kuerzel, required this.name});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      child: Row(
+        children: [
+          Container(
+            width: 54, height: 24,
+            decoration: BoxDecoration(
+              color: _accentColor.withOpacity(0.2),
+              borderRadius: BorderRadius.circular(6),
+              border: Border.all(color: _accentColor),
+            ),
+            alignment: Alignment.center,
+            child: Text(kuerzel,
+              style: const TextStyle(
+                color: _accentColor,
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+          const SizedBox(width: 10),
+          Text(name,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 13,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CheckRow extends StatelessWidget {
+  final String text;
+  const _CheckRow({required this.text});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+      child: Row(
+        children: [
+          const Text('✓ ',
+            style: TextStyle(
+              color: _accentColor,
+              fontSize: 13,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          Expanded(
+            child: Text(text,
+              style: const TextStyle(color: Colors.white, fontSize: 13),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _AccentCheck extends StatelessWidget {
+  final String text;
+  const _AccentCheck(this.text);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 3),
+      child: Row(
+        children: [
+          const Text('✓  ',
+            style: TextStyle(color: _accentColor, fontSize: 11),
+          ),
+          Expanded(
+            child: Text(text,
+              style: const TextStyle(color: _accentColor, fontSize: 11),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _DotIndicator extends StatelessWidget {
+  final int current;
+  final int total;
+  const _DotIndicator({required this.current, required this.total});
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: List.generate(total, (i) {
+        final isActive = i == current;
+        return AnimatedContainer(
+          duration: const Duration(milliseconds: 300),
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          width: isActive ? 24 : 8,
+          height: 8,
+          decoration: BoxDecoration(
+            color: isActive ? _accentColor : Colors.white30,
+            borderRadius: BorderRadius.circular(4),
+          ),
+        );
+      }),
+    );
+  }
+}
+
+class _PrimaryButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const _PrimaryButton({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 52,
+      child: ElevatedButton(
+        onPressed: onTap,
+        style: ElevatedButton.styleFrom(
+          backgroundColor: _accentColor,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+          elevation: 0,
+        ),
+        child: Text(label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 16,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _OutlineButton extends StatelessWidget {
+  final String label;
+  final VoidCallback onTap;
+  const _OutlineButton({required this.label, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: double.infinity,
+      height: 48,
+      child: OutlinedButton(
+        onPressed: onTap,
+        style: OutlinedButton.styleFrom(
+          side: const BorderSide(color: _accentColor),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(8),
+          ),
+        ),
+        child: Text(label,
+          style: const TextStyle(
+            color: _accentColor,
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+  }
 }

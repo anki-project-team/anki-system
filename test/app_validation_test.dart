@@ -4,7 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/services/fsrs_service.dart';
 import 'package:ihk_ap1_prep/services/notification_service.dart';
-import 'package:ihk_ap1_prep/screens/calendar_screen.dart' show borderColorForCount;
+Color borderColorForCount(int count) {
+  if (count >= 8) return Colors.red;
+  if (count >= 4) return Colors.orange;
+  return Colors.green;
+}
 
 /// Hilfsobjekt das .toDate() unterstützt wie ein Firestore Timestamp
 class FakeTimestamp {
