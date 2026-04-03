@@ -38,32 +38,32 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   void _startDeck(BuildContext context, List<CardModel> cards) {
     if (cards.isEmpty) return;
 
-    void go(BuildContext ctx, int i) {
+    void go(int i) {
       if (i >= cards.length) {
-        Navigator.of(ctx, rootNavigator: false).pop();
-        ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
-          content: Text('Lernsitzung abgeschlossen! 🎉'),
-          backgroundColor: Color(0xFFE8813A),
-        ));
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Lernsitzung abgeschlossen! 🎉'),
+            backgroundColor: Color(0xFFE8813A),
+          ),
+        );
         return;
       }
-      Navigator.push(
-        ctx,
+      Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => FlashcardQuestionScreen(
             card: cards[i],
             currentCard: i + 1,
             totalCards: cards.length,
             onRating: (rating, updatedCard) {
-              Navigator.pop(ctx);
-              go(ctx, i + 1);
+              Navigator.of(context).pop();
+              go(i + 1);
             },
           ),
         ),
       );
     }
 
-    go(context, 0);
+    go(0);
   }
 
 
