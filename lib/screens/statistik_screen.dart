@@ -99,6 +99,7 @@ class _StatistikScreenState extends State<StatistikScreen> {
                 if (snapshot.data == false) {
                   return PremiumLock(
                     featureName: 'Statistik & Auswertung',
+                    isPremium: false,
                     child: _buildStatistikContent(),
                   );
                 }
