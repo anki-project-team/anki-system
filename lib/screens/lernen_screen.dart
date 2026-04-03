@@ -38,8 +38,10 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   void _startDeck(BuildContext context, List<CardModel> cards) {
     if (cards.isEmpty) return;
 
-    void go(int i) {
-      if (i >= cards.length) {
+    int currentIndex = 0;
+
+    void showNext() {
+      if (currentIndex >= cards.length) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
             content: Text('Lernsitzung abgeschlossen! 🎉'),
@@ -48,22 +50,25 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
         );
         return;
       }
+
+      final card = cards[currentIndex];
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (_) => FlashcardQuestionScreen(
-            card: cards[i],
-            currentCard: i + 1,
+          builder: (ctx) => FlashcardQuestionScreen(
+            card: card,
+            currentCard: currentIndex + 1,
             totalCards: cards.length,
             onRating: (rating, updatedCard) {
-              Navigator.of(context).pop();
-              go(i + 1);
+              currentIndex++;
+              Navigator.of(ctx).pop();
+              showNext();
             },
           ),
         ),
       );
     }
 
-    go(0);
+    showNext();
   }
 
 
