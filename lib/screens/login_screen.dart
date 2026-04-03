@@ -26,7 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
       if (mounted) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        Navigator.of(context).pushReplacementNamed('/');
       }
     } catch (e) {
       if (mounted) {
@@ -47,7 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await AuthService().signInWithGoogle();
       if (mounted) {
-        Navigator.of(context).popUntil((route) => route.isFirst);
+        Navigator.of(context).pushReplacementNamed('/');
       }
     } catch (e) {
       if (mounted) {
