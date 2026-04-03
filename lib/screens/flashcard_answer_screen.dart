@@ -4,6 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/services/fsrs_service.dart';
 
+const _ratingMap = {
+  1: FSRSRating.again,
+  2: FSRSRating.hard,
+  3: FSRSRating.good,
+  4: FSRSRating.easy,
+};
+
 class FlashcardAnswerScreen extends StatefulWidget {
   final CardModel card;
   final int currentCard;
@@ -31,7 +38,7 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
   final FSRSService _fsrs = FSRSService();
 
   String _intervalLabel(int rating) =>
-      _fsrs.getIntervalLabel(widget.card, rating);
+      _fsrs.getIntervalLabel(widget.card, _ratingMap[rating]!);
 
   // Hebt Schlüsselwörter orange hervor
   Widget _buildHighlightedText(String text, List<String> keywords) {
@@ -444,8 +451,11 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
     return Expanded(
       child: GestureDetector(
         onTap: () async {
+          final fsrsCard = FSRSCard.fromCardModel(widget.card);
+          final fsrsRating = _ratingMap[rating]!;
           final updated =
-              _fsrs.updateCard(widget.card, rating, DateTime.now());
+              _fsrs.updateCard(fsrsCard, fsrsRating, DateTime.now());
+          final updatedCard = updated.toCardModel(widget.card);
           final user = FirebaseAuth.instance.currentUser;
           if (user != null) {
             await FirebaseFirestore.instance
@@ -454,15 +464,15 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
                 .collection('progress')
                 .doc(widget.card.id)
                 .set({
-              'difficulty': updated.difficulty,
-              'stability': updated.stability,
-              'dueDate': updated.dueDate,
-              'reviewCount': updated.reviewCount,
-              'state': updated.state,
+              'difficulty': updatedCard.difficulty,
+              'stability': updatedCard.stability,
+              'dueDate': updatedCard.dueDate,
+              'reviewCount': updatedCard.reviewCount,
+              'state': updated.state.name,
               'lastReview': DateTime.now(),
             });
           }
-          widget.onRating(rating, updated);
+          widget.onRating(rating, updatedCard);
         },
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 10),
