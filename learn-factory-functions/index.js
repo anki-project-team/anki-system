@@ -9,7 +9,9 @@
 // 5. Webhook-URL in Digistore24 eintragen:
 //    https://us-central1-ihk-ap1-prep.cloudfunctions.net/digistore24Webhook
 
-const functions = require('firebase-functions');
+const { onRequest } = require('firebase-functions/v2/https');
+const { setGlobalOptions } = require('firebase-functions/v2');
+setGlobalOptions({ region: 'europe-west1' });
 const admin = require('firebase-admin');
 const express = require('express');
 
@@ -135,6 +137,4 @@ app.get('/purchase-success', (req, res) => {
   res.redirect('https://ihk-ap1-prep.web.app/?purchase=success');
 });
 
-exports.digistore24Webhook = functions
-  .region('europe-west1')
-  .https.onRequest(app);
+exports.digistore24Webhook = onRequest(app);
