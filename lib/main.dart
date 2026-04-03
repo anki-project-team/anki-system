@@ -89,6 +89,7 @@ class LearnFactoryApp extends StatelessWidget {
         '/onboarding': (ctx) => const OnboardingScreen(),
         '/login':      (ctx) => const LoginScreen(),
         '/purchase':   (ctx) => const PurchaseScreen(),
+        '/free-trial': (ctx) => const FlashcardQuestionScreen(),
 
         // Haupt-App mit BottomNav (Nested Navigator)
         '/main':       (ctx) => const MainShell(),
