@@ -40,7 +40,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
 
     void go(BuildContext ctx, int i) {
       if (i >= cards.length) {
-        Navigator.popUntil(ctx, (r) => r.isFirst);
+        Navigator.of(ctx, rootNavigator: false).pop();
         ScaffoldMessenger.of(ctx).showSnackBar(const SnackBar(
           content: Text('Lernsitzung abgeschlossen! 🎉'),
           backgroundColor: Color(0xFFE8813A),

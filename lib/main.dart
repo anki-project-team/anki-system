@@ -15,6 +15,7 @@ import 'screens/onboarding_screen.dart';
 import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/decks_screen.dart';
+import 'screens/lernen_screen.dart';
 import 'screens/statistics_screen.dart';
 import 'screens/flashcard_question_screen.dart';
 import 'screens/free_trial_screen.dart';
@@ -159,7 +160,7 @@ class _MainShellState extends State<MainShell> {
   // Die 3 Tab-Root-Screens
   final List<Widget> _rootScreens = const [
     HomeScreen(),
-    DecksScreen(),
+    LernkartenDecksScreen(),
     StatisticsScreen(),
   ];
 
