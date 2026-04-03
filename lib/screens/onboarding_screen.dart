@@ -55,16 +55,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _skip() {
-    // Direkt zu Screen 3 (Upgrade/Start)
-    _pageController.animateToPage(
-      2,
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
+    Navigator.of(context).pushReplacementNamed('/login');
   }
 
   void _startFree() {
-    // TODO: Navigation zur kostenlosen Testversion (10 Karten)
+    // Direkt zu den 10 Gratis-Karten — kein Login nötig
     Navigator.of(context).pushReplacementNamed('/free-trial');
   }
 
