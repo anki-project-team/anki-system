@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
@@ -24,7 +25,10 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   }
 
   Future<void> _checkPremium() async {
-    final premium = await PremiumService.isPremium();
+    final user = FirebaseAuth.instance.currentUser;
+    final premium = user != null
+        ? await PremiumService().checkPremiumStatus(user.uid)
+        : false;
     setState(() {
       _isPremium = premium;
       _loading = false;

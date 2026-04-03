@@ -89,7 +89,8 @@ class _StatistikScreenState extends State<StatistikScreen> {
               child: CircularProgressIndicator(color: Color(0xFFE8813A)),
             )
           : FutureBuilder<bool>(
-              future: PremiumService.isPremium(),
+              future: PremiumService().checkPremiumStatus(
+                    FirebaseAuth.instance.currentUser?.uid ?? ''),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(
