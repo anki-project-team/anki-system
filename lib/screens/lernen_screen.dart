@@ -35,11 +35,16 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
     });
   }
 
+  // ── FIXED: nur ein pop() in onRating ──────────────────
+  // Flow: DeckScreen → push(QuestionScreen) → push(AnswerScreen)
+  // AnswerScreen popt sich selbst → QuestionScreen ruft onRating
+  // onRating popt QuestionScreen → for-loop await resolved → nächste Karte
   Future<void> _startDeck(BuildContext context, List<CardModel> cards) async {
     if (cards.isEmpty) return;
 
     for (int i = 0; i < cards.length; i++) {
       if (!context.mounted) return;
+
       await Navigator.of(context).push(
         MaterialPageRoute(
           builder: (_) => FlashcardQuestionScreen(
@@ -47,13 +52,15 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             currentCard: i + 1,
             totalCards: cards.length,
             onRating: (rating, updatedCard) {
-              Navigator.of(context)
-                ..pop() // AnswerScreen
-                ..pop(); // QuestionScreen
+              // NUR einen pop: QuestionScreen entfernen
+              // AnswerScreen hat sich bereits selbst gepoppt
+              Navigator.of(context).pop();
             },
           ),
         ),
       );
+      // await resolved = QuestionScreen wurde gepoppt
+      // for-loop geht zur nächsten Karte
     }
 
     if (context.mounted) {
@@ -65,7 +72,6 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
       );
     }
   }
-
 
   Color _deckColor(String name) {
     if (name.contains('Netzwerk')) return const Color(0xFFDBEAFE);
@@ -112,7 +118,6 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Hero Progress Card
             Card(
               margin: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
@@ -219,7 +224,6 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             ),
             const SizedBox(height: 16),
 
-            // Decks Header
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -235,7 +239,6 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             ),
             const SizedBox(height: 10),
 
-            // Alle Decks — ab Index 5 nur für Premium
             ...alleAP1Decks.asMap().entries.map((entry) {
               final i = entry.key;
               final deck = entry.value;
