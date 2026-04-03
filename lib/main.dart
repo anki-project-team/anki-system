@@ -16,7 +16,7 @@ import 'screens/login_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/decks_screen.dart';
 import 'screens/statistics_screen.dart';
-import 'screens/flashcard_question_screen.dart';
+import 'screens/free_trial_screen.dart';
 import 'screens/flashcard_answer_screen.dart';
 import 'screens/settings_screen.dart';
 import 'screens/profile_screen.dart';
@@ -89,7 +89,7 @@ class LearnFactoryApp extends StatelessWidget {
         '/onboarding': (ctx) => const OnboardingScreen(),
         '/login':      (ctx) => const LoginScreen(),
         '/purchase':   (ctx) => const PurchaseScreen(),
-        '/free-trial': (ctx) => const FlashcardQuestionScreen(),
+        '/free-trial': (ctx) => const FreeTrialScreen(),
 
         // Haupt-App mit BottomNav (Nested Navigator)
         '/main':       (ctx) => const MainShell(),
