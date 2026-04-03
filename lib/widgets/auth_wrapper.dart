@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/onboarding_screen.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
-import 'package:ihk_ap1_prep/services/fcm_service.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
 import 'package:ihk_ap1_prep/main.dart';
 
@@ -23,7 +22,6 @@ class AuthWrapper extends StatelessWidget {
 
         if (snapshot.hasData) {
           final user = snapshot.data!;
-          FCMService.init();
 
           // Premium-Status laden BEVOR MainShell gezeigt wird
           return FutureBuilder<bool>(
