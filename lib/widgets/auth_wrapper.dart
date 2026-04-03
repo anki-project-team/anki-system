@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
 import 'package:ihk_ap1_prep/screens/onboarding_screen.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/services/fcm_service.dart';
@@ -37,9 +36,7 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Color(0xFF162447),
-      body: Center(
-        child: CircularProgressIndicator(color: Color(0xFFE8813A)),
-      ),
+      body: Center(child: CircularProgressIndicator(color: Color(0xFFE8813A))),
     );
   }
 }

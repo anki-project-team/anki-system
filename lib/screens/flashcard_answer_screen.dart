@@ -1,499 +1,551 @@
+// lib/screens/flashcard_answer_screen.dart
+// Screen 04 — Antwort-Ansicht mit Live-FSRS-Integration
+
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ihk_ap1_prep/models/card_model.dart';
-import 'package:ihk_ap1_prep/services/fsrs_service.dart';
+import '../models/card_model.dart';
+import '../services/fsrs_service.dart';
 
-const _ratingMap = {
-  1: FSRSRating.again,
-  2: FSRSRating.hard,
-  3: FSRSRating.good,
-  4: FSRSRating.easy,
-};
+const _bgColor     = Color(0xFFF5F5F5);
+const _navColor    = Color(0xFF162447);
+const _cardColor   = Color(0xFF1e3a5f);
+const _darkColor   = Color(0xFF1a2744);
+const _accentColor = Color(0xFFE8813A);
+const _againColor  = Color(0xFFE84C3C);
+const _hardColor   = Color(0xFFF0C030);
+const _goodColor   = Color(0xFF32CD32);
+const _easyColor   = Color(0xFFE8813A);
 
+// ════════════════════════════════════════════════════════
 class FlashcardAnswerScreen extends StatefulWidget {
   final CardModel card;
+  final String? deckId;
   final int currentCard;
   final int totalCards;
-  final String deckName;
-  final Function(int rating, CardModel updatedCard) onRating;
+  final void Function(FSRSRating)? onRating;
 
   const FlashcardAnswerScreen({
     super.key,
     required this.card,
     required this.currentCard,
     required this.totalCards,
-    this.deckName = 'Hardware',
-    required this.onRating,
+    this.deckId,
+    this.onRating,
   });
 
   @override
-  State<FlashcardAnswerScreen> createState() =>
-      _FlashcardAnswerScreenState();
+  State<FlashcardAnswerScreen> createState() => _FlashcardAnswerScreenState();
 }
 
 class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
-  bool _erklaerungOpen = false;
-  bool _weiterlernOpen = false;
   final FSRSService _fsrs = FSRSService();
 
-  String _intervalLabel(int rating) =>
-      _fsrs.getIntervalLabel(widget.card, _ratingMap[rating]!);
+  bool _erklaerungExpanded = false;
+  bool _weiterlernExpanded = false;
+  bool _isRating = false;
 
-  // Hebt Schlüsselwörter orange hervor
-  Widget _buildHighlightedText(String text, List<String> keywords) {
-    final spans = <TextSpan>[];
-    String remaining = text;
-    while (remaining.isNotEmpty) {
-      int earliest = remaining.length;
-      String? match;
-      for (final kw in keywords) {
-        final idx = remaining.toLowerCase().indexOf(kw.toLowerCase());
-        if (idx != -1 && idx < earliest) {
-          earliest = idx;
-          match = remaining.substring(idx, idx + kw.length);
-        }
-      }
-      if (match == null) {
-        spans.add(TextSpan(
-            text: remaining,
-            style: const TextStyle(
-                color: Colors.white, fontSize: 15, height: 1.6)));
-        break;
-      }
-      if (earliest > 0) {
-        spans.add(TextSpan(
-            text: remaining.substring(0, earliest),
-            style: const TextStyle(
-                color: Colors.white, fontSize: 15, height: 1.6)));
-      }
-      spans.add(TextSpan(
-          text: match,
-          style: const TextStyle(
-              color: Color(0xFFE8813A),
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-              height: 1.6)));
-      remaining = remaining.substring(earliest + match.length);
-    }
-    return RichText(text: TextSpan(children: spans));
+  // Interval-Labels für die 4 Buttons — werden beim Build berechnet
+  late Map<FSRSRating, String> _labels;
+
+  @override
+  void initState() {
+    super.initState();
+    _labels = _fsrs.getAllIntervalLabels(widget.card);
   }
 
-  List<String> _getKeywords() => widget.card.hashtags
-      .where((h) => !h.contains('AP'))
-      .map((h) => h.replaceAll('#', ''))
-      .toList();
+  // ── Bewertung abgeben ────────────────────────────────
+  Future<void> _rate(FSRSRating rating) async {
+    if (_isRating) return;
+    setState(() => _isRating = true);
 
-  // Formatiert den longAnswer-Text mit Zeilenumbrüchen
-  Widget _buildFormattedText(String text) {
-    final lines = text.split('\\n');
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: lines.map((line) {
-        final isNumbered = RegExp(r'^\d+\.').hasMatch(line.trim());
-        final isBullet = line.trim().startsWith('–') ||
-            line.trim().startsWith('-') ||
-            line.trim().startsWith('•');
-        return Padding(
-          padding: EdgeInsets.only(
-              bottom: 4,
-              left: (isNumbered || isBullet) ? 8 : 0),
-          child: Text(
-            line,
-            style: TextStyle(
-              fontSize: 13,
-              color: const Color(0xFF374151),
-              height: 1.6,
-              fontWeight: isNumbered || isBullet
-                  ? FontWeight.w500
-                  : FontWeight.normal,
-            ),
-          ),
-        );
-      }).toList(),
-    );
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await _fsrs.reviewCard(
+        userId: user.uid,
+        deckId: widget.deckId ?? '',
+        card: widget.card,
+        rating: rating,
+      );
+    }
+
+    if (!mounted) return;
+
+    // Zurück zum Question Screen oder Session beenden
+    widget.onRating?.call(rating);
+    Navigator.of(context).pop(rating);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF162447),
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.white),
-          onPressed: () => Navigator.pop(context),
+      backgroundColor: _bgColor,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // ── AppBar ───────────────────────────────
+            _AppBar(
+              cardIndex: widget.currentCard,
+              totalCards: widget.totalCards,
+            ),
+
+            // ── Scrollbarer Inhalt ───────────────────
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Frage (als Text, nicht in Karte)
+                    Text(
+                      widget.card.question,
+                      style: const TextStyle(
+                        color: _navColor,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        height: 1.4,
+                      ),
+                    ),
+                    const SizedBox(height: 14),
+
+                    // ── KERNANTWORT ─────────────────
+                    _KernantwortCard(shortAnswer: widget.card.shortAnswer),
+                    const SizedBox(height: 10),
+
+                    // ── Accordion: Erklärung ────────
+                    _Accordion(
+                      icon: '📖',
+                      title: 'Erklärung',
+                      subtitle: 'Schritt-für-Schritt · Details',
+                      expanded: _erklaerungExpanded,
+                      onTap: () => setState(
+                          () => _erklaerungExpanded = !_erklaerungExpanded),
+                      content: widget.card.longAnswer,
+                    ),
+                    const SizedBox(height: 8),
+
+                    // ── Accordion: Weiterlernen ─────
+                    _Accordion(
+                      icon: '🔗',
+                      title: 'Weiterlernen',
+                      subtitle: 'Links, Videos, Docs',
+                      expanded: _weiterlernExpanded,
+                      onTap: () => setState(
+                          () => _weiterlernExpanded = !_weiterlernExpanded),
+                      content: widget.card.url.isNotEmpty
+                          ? widget.card.url
+                          : 'Keine Links hinterlegt.',
+                    ),
+                    const SizedBox(height: 12),
+
+                    // ── Hashtags ────────────────────
+                    if (widget.card.hashtags.isNotEmpty) ...[
+                      Wrap(
+                        spacing: 6,
+                        runSpacing: 6,
+                        children: widget.card.hashtags
+                            .map((tag) => _HashtagPill(tag: tag))
+                            .toList(),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+
+            // ── Bewertungsbereich (immer sichtbar) ──
+            _RatingSection(
+              labels: _labels,
+              isRating: _isRating,
+              onRate: _rate,
+            ),
+          ],
         ),
-        title: const Text('IHK Prüfungsvorbereitung',
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// APP BAR
+// ════════════════════════════════════════════════════════
+class _AppBar extends StatelessWidget {
+  final int cardIndex;
+  final int totalCards;
+
+  const _AppBar({required this.cardIndex, required this.totalCards});
+
+  @override
+  Widget build(BuildContext context) {
+    final progress = totalCards > 0 ? cardIndex / totalCards : 0.0;
+
+    return Column(
+      children: [
+        // Dunkle AppBar
+        Container(
+          color: _navColor,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.of(context).pop(),
+                child: const Icon(Icons.arrow_back_ios,
+                    color: Colors.white70, size: 18),
+              ),
+              const SizedBox(width: 8),
+              const Expanded(
+                child: Text('IHK Prüfungsvorbereitung',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Text('$cardIndex / $totalCards',
+                style: const TextStyle(color: Colors.white54, fontSize: 12)),
+            ],
+          ),
+        ),
+
+        // Fortschrittsbalken
+        LinearProgressIndicator(
+          value: progress,
+          backgroundColor: Colors.grey.shade300,
+          valueColor: const AlwaysStoppedAnimation<Color>(_accentColor),
+          minHeight: 3,
+        ),
+
+        // Kartenfortschritt
+        Container(
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                decoration: BoxDecoration(
+                  color: Colors.green,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: const Text('NEU',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 9,
+                      fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  'Netzwerkgrundlagen · AP1 Teil 1',
+                  style: TextStyle(
+                      color: Colors.grey.shade500, fontSize: 11),
+                ),
+              ),
+              // Dot-Fortschritt
+              Row(
+                children: List.generate(5, (i) {
+                  final filled = i < cardIndex;
+                  return Container(
+                    margin: const EdgeInsets.only(left: 3),
+                    width: 8, height: 8,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: filled ? _accentColor : Colors.grey.shade300,
+                    ),
+                  );
+                }),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// KERNANTWORT KARTE
+// ════════════════════════════════════════════════════════
+class _KernantwortCard extends StatelessWidget {
+  final String shortAnswer;
+  const _KernantwortCard({required this.shortAnswer});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: _darkColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text('KERNANTWORT',
             style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 16)),
-        centerTitle: true,
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_horiz, color: Colors.white),
-            onPressed: () {},
+              color: _accentColor,
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              letterSpacing: 1.2,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            shortAnswer,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 14,
+              height: 1.55,
+            ),
           ),
         ],
       ),
-      body: Column(
-        children: [
-          // Fortschrittsbalken
-          LinearProgressIndicator(
-            value: widget.currentCard / widget.totalCards,
-            backgroundColor: const Color(0xFFE5E7EB),
-            valueColor: const AlwaysStoppedAnimation<Color>(
-                Color(0xFFE8813A)),
-            minHeight: 4,
-          ),
+    );
+  }
+}
 
-          Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+// ════════════════════════════════════════════════════════
+// ACCORDION
+// ════════════════════════════════════════════════════════
+class _Accordion extends StatelessWidget {
+  final String icon;
+  final String title;
+  final String subtitle;
+  final bool expanded;
+  final VoidCallback onTap;
+  final String content;
+
+  const _Accordion({
+    required this.icon,
+    required this.title,
+    required this.subtitle,
+    required this.expanded,
+    required this.onTap,
+    required this.content,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 4,
+              offset: const Offset(0, 2),
+            ),
+          ],
+        ),
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: Row(
                 children: [
-                  // NEU Badge + Deck-Name + Fortschrittspunkte
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 7, vertical: 3),
-                          decoration: BoxDecoration(
-                              color: const Color(0xFFDBEAFE),
-                              borderRadius: BorderRadius.circular(4)),
-                          child: const Text('NEU',
-                              style: TextStyle(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w700,
-                                  color: Color(0xFF1E40AF))),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          widget.deckName,
+                  Text(icon, style: const TextStyle(fontSize: 18)),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title,
                           style: const TextStyle(
-                              fontSize: 12,
-                              color: Color(0xFF6B7280)),
-                        ),
-                      ]),
-                      Row(children: [
-                        ...List.generate(
-                          widget.totalCards > 5 ? 5 : widget.totalCards,
-                          (i) => Container(
-                            margin: const EdgeInsets.only(left: 4),
-                            width: 8,
-                            height: 8,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: i < widget.currentCard
-                                  ? const Color(0xFF162447)
-                                  : const Color(0xFFE5E7EB),
-                            ),
+                            color: _navColor,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
-                        const SizedBox(width: 6),
-                        Text(
-                          '${widget.currentCard}/${widget.totalCards}',
-                          style: const TextStyle(
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF374151)),
+                        Text(subtitle,
+                          style: TextStyle(
+                            color: Colors.grey.shade500,
+                            fontSize: 11,
+                          ),
                         ),
-                      ]),
-                    ],
-                  ),
-                  const SizedBox(height: 14),
-
-                  // Frage als Text
-                  Text(
-                    widget.card.question,
-                    style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                        color: Color(0xFF162447),
-                        height: 1.4),
-                  ),
-                  const SizedBox(height: 14),
-
-                  // KERNANTWORT Karte
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF1a2744),
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Text('KERNANTWORT',
-                            style: TextStyle(
-                                color: Color(0xFFE8813A),
-                                fontSize: 11,
-                                fontWeight: FontWeight.w700,
-                                letterSpacing: 0.6)),
-                        const SizedBox(height: 10),
-                        _buildHighlightedText(
-                            widget.card.shortAnswer, _getKeywords()),
                       ],
                     ),
                   ),
-                  const SizedBox(height: 10),
-
-                  // Accordion: Erklärungen
-                  if (widget.card.longAnswer.isNotEmpty)
-                    _accordion(
-                      icon: Icons.menu_book_outlined,
-                      title: 'Erklärungen',
-                      subtitle: 'Ausführliche Erklärung',
-                      isOpen: _erklaerungOpen,
-                      onTap: () => setState(
-                          () => _erklaerungOpen = !_erklaerungOpen),
-                      child: _buildFormattedText(widget.card.longAnswer),
-                    ),
-                  if (widget.card.longAnswer.isNotEmpty)
-                    const SizedBox(height: 8),
-
-                  // Accordion: Weiterlernen (nur wenn URL vorhanden)
-                  _accordion(
-                    icon: Icons.open_in_new_outlined,
-                    title: 'Weiterlernen',
-                    subtitle: widget.card.url.isNotEmpty
-                        ? '2 Ressourcen · Links'
-                        : 'Links & Ressourcen',
-                    isOpen: _weiterlernOpen,
-                    onTap: () => setState(
-                        () => _weiterlernOpen = !_weiterlernOpen),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        if (widget.card.url.isNotEmpty) ...[
-                          _linkRow(
-                              '🔗 Wikipedia',
-                              widget.card.url),
-                          const SizedBox(height: 8),
-                          _linkRow(
-                              '📘 IT-Handbuch',
-                              'https://www.it-handbuch.de'),
-                        ] else
-                          _linkRow(
-                              '📘 IT-Handbuch',
-                              'https://www.it-handbuch.de'),
-                      ],
-                    ),
+                  Icon(
+                    expanded ? Icons.expand_less : Icons.expand_more,
+                    color: Colors.grey.shade400,
                   ),
-                  const SizedBox(height: 14),
-
-                  // Hashtags — ohne + Button
-                  const Text('Hashtags',
-                      style: TextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w600,
-                          color: Color(0xFF374151))),
-                  const SizedBox(height: 8),
-                  Wrap(
-                    spacing: 6,
-                    runSpacing: 6,
-                    children: widget.card.hashtags
-                        .map((tag) => Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 5),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFFF3F4F6),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(tag,
-                                  style: const TextStyle(
-                                      fontSize: 12,
-                                      color: Color(0xFF6B7280))),
-                            ))
-                        .toList(),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // Bewertungs-Label
-                  const Center(
-                    child: Text(
-                      'Wie gut kennst du diese Karte?',
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: Color(0xFF6B7280),
-                          fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-
-                  // 4 Bewertungsbuttons
-                  Row(
-                    children: [
-                      _ratingBtn('Nochmal', _intervalLabel(1), 1,
-                          const Color(0xFFEF4444)),
-                      const SizedBox(width: 6),
-                      _ratingBtn('Schwer', _intervalLabel(2), 2,
-                          const Color(0xFFF59E0B)),
-                      const SizedBox(width: 6),
-                      _ratingBtn('Gut', _intervalLabel(3), 3,
-                          const Color(0xFF22C55E)),
-                      const SizedBox(width: 6),
-                      _ratingBtn('Einfach', _intervalLabel(4), 4,
-                          const Color(0xFFE8813A)),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
                 ],
               ),
             ),
+            if (expanded)
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                child: Text(
+                  content,
+                  style: TextStyle(
+                    color: Colors.grey.shade700,
+                    fontSize: 13,
+                    height: 1.6,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// HASHTAG PILL
+// ════════════════════════════════════════════════════════
+class _HashtagPill extends StatelessWidget {
+  final String tag;
+  const _HashtagPill({required this.tag});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      decoration: BoxDecoration(
+        color: _accentColor.withValues(alpha: 0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: _accentColor.withValues(alpha: 0.4)),
+      ),
+      child: Text(
+        tag.startsWith('#') ? tag : '#$tag',
+        style: const TextStyle(
+          color: _accentColor,
+          fontSize: 11,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+    );
+  }
+}
+
+// ════════════════════════════════════════════════════════
+// BEWERTUNGS-SECTION (immer sichtbar, am Screen-Ende)
+// ════════════════════════════════════════════════════════
+class _RatingSection extends StatelessWidget {
+  final Map<FSRSRating, String> labels;
+  final bool isRating;
+  final Future<void> Function(FSRSRating) onRate;
+
+  const _RatingSection({
+    required this.labels,
+    required this.isRating,
+    required this.onRate,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.white,
+      padding: const EdgeInsets.fromLTRB(16, 10, 16, 16),
+      child: Column(
+        children: [
+          const Text(
+            'Wie gut kennst du diese Karte?',
+            style: TextStyle(
+              color: _navColor,
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+            ),
+          ),
+          const SizedBox(height: 10),
+          Row(
+            children: [
+              _RatingButton(
+                label: 'Nochmal',
+                interval: labels[FSRSRating.again] ?? '<1 Min',
+                color: _againColor,
+                isLoading: isRating,
+                onTap: () => onRate(FSRSRating.again),
+              ),
+              const SizedBox(width: 6),
+              _RatingButton(
+                label: 'Schwer',
+                interval: labels[FSRSRating.hard] ?? '<10 Min',
+                color: _hardColor,
+                isLoading: isRating,
+                onTap: () => onRate(FSRSRating.hard),
+              ),
+              const SizedBox(width: 6),
+              _RatingButton(
+                label: 'Gut',
+                interval: labels[FSRSRating.good] ?? '4 Tage',
+                color: _goodColor,
+                isLoading: isRating,
+                onTap: () => onRate(FSRSRating.good),
+              ),
+              const SizedBox(width: 6),
+              _RatingButton(
+                label: 'Einfach',
+                interval: labels[FSRSRating.easy] ?? '14 Tage',
+                color: _easyColor,
+                isLoading: isRating,
+                onTap: () => onRate(FSRSRating.easy),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+}
 
-  Widget _linkRow(String label, String url) {
-    return Row(
-      children: [
-        Expanded(
-          child: Text(label,
-              style: const TextStyle(
-                  fontSize: 13, color: Color(0xFF374151))),
-        ),
-        Text(
-          url.length > 35 ? '${url.substring(0, 35)}...' : url,
-          style: const TextStyle(
-              fontSize: 11, color: Color(0xFF3B82F6)),
-        ),
-      ],
-    );
-  }
+class _RatingButton extends StatelessWidget {
+  final String label;
+  final String interval;
+  final Color color;
+  final bool isLoading;
+  final VoidCallback onTap;
 
-  Widget _accordion({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-    required bool isOpen,
-    required VoidCallback onTap,
-    required Widget child,
-  }) {
-    return Column(
-      children: [
-        GestureDetector(
-          onTap: onTap,
+  const _RatingButton({
+    required this.label,
+    required this.interval,
+    required this.color,
+    required this.isLoading,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: GestureDetector(
+        onTap: isLoading ? null : onTap,
+        child: AnimatedOpacity(
+          duration: const Duration(milliseconds: 150),
+          opacity: isLoading ? 0.5 : 1.0,
           child: Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 14, vertical: 12),
+            padding: const EdgeInsets.symmetric(vertical: 10),
             decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: isOpen
-                  ? const BorderRadius.only(
-                      topLeft: Radius.circular(10),
-                      topRight: Radius.circular(10))
-                  : BorderRadius.circular(10),
-              border: Border.all(color: const Color(0xFFE5E7EB)),
+              color: color.withValues(alpha: 0.12),
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(color: color),
             ),
-            child: Row(
+            child: Column(
               children: [
-                Icon(icon, size: 18, color: const Color(0xFF6B7280)),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(title,
-                          style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                              color: Color(0xFF111827))),
-                      Text(subtitle,
-                          style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF9CA3AF))),
-                    ],
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: color,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                Icon(
-                  isOpen
-                      ? Icons.keyboard_arrow_up
-                      : Icons.keyboard_arrow_down,
-                  color: const Color(0xFF9CA3AF),
+                const SizedBox(height: 2),
+                Text(
+                  interval,
+                  style: TextStyle(
+                    color: color.withValues(alpha: 0.8),
+                    fontSize: 10,
+                  ),
                 ),
               ],
             ),
-          ),
-        ),
-        if (isOpen)
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.all(14),
-            decoration: const BoxDecoration(
-              color: Color(0xFFF9FAFB),
-              border: Border(
-                left: BorderSide(color: Color(0xFFE5E7EB)),
-                right: BorderSide(color: Color(0xFFE5E7EB)),
-                bottom: BorderSide(color: Color(0xFFE5E7EB)),
-              ),
-              borderRadius: BorderRadius.only(
-                bottomLeft: Radius.circular(10),
-                bottomRight: Radius.circular(10),
-              ),
-            ),
-            child: child,
-          ),
-      ],
-    );
-  }
-
-  Widget _ratingBtn(
-      String label, String interval, int rating, Color color) {
-    return Expanded(
-      child: GestureDetector(
-        onTap: () async {
-          final fsrsCard = FSRSCard.fromCardModel(widget.card);
-          final fsrsRating = _ratingMap[rating]!;
-          final updated =
-              _fsrs.updateCard(fsrsCard, fsrsRating, DateTime.now());
-          final updatedCard = updated.toCardModel(widget.card);
-          final user = FirebaseAuth.instance.currentUser;
-          if (user != null) {
-            await FirebaseFirestore.instance
-                .collection('users')
-                .doc(user.uid)
-                .collection('progress')
-                .doc(widget.card.id)
-                .set({
-              'difficulty': updatedCard.difficulty,
-              'stability': updatedCard.stability,
-              'dueDate': updatedCard.dueDate,
-              'reviewCount': updatedCard.reviewCount,
-              'state': updated.state.name,
-              'lastReview': DateTime.now(),
-            });
-          }
-          widget.onRating(rating, updatedCard);
-        },
-        child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-            border: Border.all(color: color.withValues(alpha: 0.3)),
-          ),
-          child: Column(
-            children: [
-              Text(label,
-                  style: TextStyle(
-                      fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                      color: color)),
-              const SizedBox(height: 2),
-              Text(interval,
-                  style: TextStyle(
-                      fontSize: 10,
-                      color: color.withValues(alpha: 0.7))),
-            ],
           ),
         ),
       ),

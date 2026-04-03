@@ -146,9 +146,9 @@ class FlashcardQuestionScreen extends StatelessWidget {
                         MaterialPageRoute(
                           builder: (_) => FlashcardAnswerScreen(
                             card: card,
-                            onRating: onRating,
                             currentCard: currentCard,
                             totalCards: totalCards,
+                            onRating: (rating) => onRating(rating.value, card),
                           ),
                         ),
                       ),
