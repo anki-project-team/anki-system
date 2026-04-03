@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/card_model.dart';
+import '../services/fsrs_service.dart';
 import 'flashcard_answer_screen.dart';
 
 class FlashcardQuestionScreen extends StatelessWidget {
@@ -141,17 +142,21 @@ class FlashcardQuestionScreen extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
-                      onPressed: () => Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => FlashcardAnswerScreen(
-                            card: card,
-                            currentCard: currentCard,
-                            totalCards: totalCards,
-                            onRating: (rating) => onRating(rating.value, card),
+                      onPressed: () async {
+                        final result = await Navigator.push<FSRSRating>(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => FlashcardAnswerScreen(
+                              card: card,
+                              currentCard: currentCard,
+                              totalCards: totalCards,
+                            ),
                           ),
-                        ),
-                      ),
+                        );
+                        if (result != null) {
+                          onRating(result.value, card);
+                        }
+                      },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: const Color(0xFFE8813A),
                         padding: const EdgeInsets.symmetric(vertical: 18),

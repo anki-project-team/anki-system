@@ -71,7 +71,6 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
     if (!mounted) return;
 
     // Zurück zum Question Screen oder Session beenden
-    widget.onRating?.call(rating);
     Navigator.of(context).pop(rating);
   }
 
