@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/onboarding_screen.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/services/fcm_service.dart';
-import 'package:ihk_ap1_prep/services/premium_service.dart';
 import 'package:ihk_ap1_prep/main.dart';
 
 class AuthWrapper extends StatelessWidget {
@@ -19,7 +18,6 @@ class AuthWrapper extends StatelessWidget {
         }
         if (snapshot.hasData) {
           FCMService.init();
-          PremiumService.initUserPlan();
           return const MainShell();
         }
         // Kein Login → Onboarding zeigen
