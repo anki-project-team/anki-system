@@ -59,10 +59,10 @@ class _FlashcardAnswerScreenState extends State<FlashcardAnswerScreen> {
     setState(() => _isRating = true);
 
     final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
+    if (user != null && widget.deckId != null && widget.deckId!.isNotEmpty) {
       await _fsrs.reviewCard(
         userId: user.uid,
-        deckId: widget.deckId ?? '',
+        deckId: widget.deckId!,
         card: widget.card,
         rating: rating,
       );
