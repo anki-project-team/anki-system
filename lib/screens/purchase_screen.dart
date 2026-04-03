@@ -13,7 +13,7 @@ import '../services/premium_service.dart';
 
 // ─── Digistore24 Konfiguration ───────────────────────────
 
-const String _kDigistoreProductId = 'iwilfried49';
+const String _kDigistoreProductId = '681920';
 const String _kAppBaseUrl         = 'https://ihk-ap1-prep.web.app';
 const String _kSuccessPath        = '/purchase-success';
 const String _kCancelPath         = '/purchase-cancel';
