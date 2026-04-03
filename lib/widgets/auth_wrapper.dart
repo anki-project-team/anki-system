@@ -34,6 +34,11 @@ class AuthWrapper extends StatelessWidget {
                 return const SplashScreen();
               }
 
+              // NEU: Fehlerfall — trotzdem zur App navigieren
+              if (premiumSnapshot.hasError) {
+                return const MainShell(isPremium: false);
+              }
+
               final isPremium = premiumSnapshot.data ?? false;
 
               // MainShell mit Premium-Status aufrufen
