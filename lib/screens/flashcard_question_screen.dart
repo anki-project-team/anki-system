@@ -47,7 +47,8 @@ class FlashcardQuestionScreen extends StatelessWidget {
           LinearProgressIndicator(
             value: currentCard / totalCards,
             backgroundColor: const Color(0xFFE0E0E0),
-            valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFE8813A)),
+            valueColor:
+                const AlwaysStoppedAnimation<Color>(Color(0xFFE8813A)),
             minHeight: 3,
           ),
           Expanded(
@@ -119,9 +120,7 @@ class FlashcardQuestionScreen extends StatelessWidget {
                     child: Text(
                       '$currentCard / $totalCards',
                       style: const TextStyle(
-                        color: Color(0xFF9E9E9E),
-                        fontSize: 14,
-                      ),
+                          color: Color(0xFF9E9E9E), fontSize: 14),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -144,14 +143,11 @@ class FlashcardQuestionScreen extends StatelessWidget {
                         );
 
                         // AnswerScreen hat sich gepoppt (mit rating)
-                        if (result != null) {
-                          // onRating aufrufen (lernen_screen bekommt Bescheid)
+                        if (result != null && context.mounted) {
+                          // ERST QuestionScreen poppen
+                          Navigator.of(context).pop();
+                          // DANN nächste Karte pushen via onRating
                           onRating(result.value, card);
-                          // QuestionScreen poppt sich selbst
-                          // → löst den await in lernen_screen._startDeck auf
-                          if (context.mounted) {
-                            Navigator.of(context).pop();
-                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -235,7 +231,8 @@ class FlashcardQuestionScreen extends StatelessWidget {
       children: [
         if (isNew)
           Container(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+            padding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
               color: const Color(0xFF4CAF50),
               borderRadius: BorderRadius.circular(6),
@@ -254,7 +251,10 @@ class FlashcardQuestionScreen extends StatelessWidget {
         const Expanded(
           child: Text(
             'Netzwerkgrundlagen · AP1 Teil 1',
-            style: TextStyle(color: Color(0xFF9E9E9E), fontSize: 13),
+            style: TextStyle(
+              color: Color(0xFF9E9E9E),
+              fontSize: 13,
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),
