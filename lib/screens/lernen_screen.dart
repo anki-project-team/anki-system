@@ -37,8 +37,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
 
   void _startDeck(BuildContext context, List<CardModel> cards) {
     if (cards.isEmpty) return;
-    Navigator.push(
-      context,
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (_) => LernSessionScreen(
           cards: cards,
