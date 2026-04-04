@@ -616,11 +616,12 @@ class _QuickStats extends StatelessWidget {
           ('🔥', '$streak', 'Streak'),
         ];
 
-        return Row(
-          children: stats.map((s) => Expanded(
+        return Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: stats.map((s) => SizedBox(
+            width: (MediaQuery.of(context).size.width - 40 - 16) / 3,
             child: Container(
-              margin: EdgeInsets.only(
-                  right: s == stats.last ? 0 : 8),
               padding: const EdgeInsets.symmetric(
                   vertical: 14),
               decoration: BoxDecoration(
