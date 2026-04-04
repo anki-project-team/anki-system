@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
-import 'package:ihk_ap1_prep/screens/flashcard_question_screen.dart';
+import 'package:ihk_ap1_prep/screens/lern_session_screen.dart';
 import 'package:ihk_ap1_prep/screens/statistik_screen.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
 import 'package:ihk_ap1_prep/screens/upgrade_screen.dart';
@@ -35,34 +35,14 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
     });
   }
 
-  // ── Karten nacheinander zeigen — ohne async/await ──────
   void _startDeck(BuildContext context, List<CardModel> cards) {
     if (cards.isEmpty) return;
-    _showCard(context, cards, 0);
-  }
-
-  void _showCard(BuildContext context, List<CardModel> cards, int index) {
-    if (!context.mounted) return;
-    if (index >= cards.length) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Lernsitzung abgeschlossen! 🎉'),
-          backgroundColor: Color(0xFFE8813A),
-        ),
-      );
-      return;
-    }
-    Navigator.of(context).push(
+    Navigator.push(
+      context,
       MaterialPageRoute(
-        builder: (_) => FlashcardQuestionScreen(
-          card: cards[index],
-          currentCard: index + 1,
-          totalCards: cards.length,
-          onRating: (rating, updatedCard) {
-            // QuestionScreen poppt sich selbst (in flashcard_question_screen.dart)
-            // Dann nächste Karte zeigen
-            _showCard(context, cards, index + 1);
-          },
+        builder: (_) => LernSessionScreen(
+          cards: cards,
+          deckName: 'Lernsitzung',
         ),
       ),
     );
