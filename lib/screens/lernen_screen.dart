@@ -52,9 +52,8 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             currentCard: i + 1,
             totalCards: cards.length,
             onRating: (rating, updatedCard) {
-              // NUR einen pop: QuestionScreen entfernen
-              // AnswerScreen hat sich bereits selbst gepoppt
-              Navigator.of(context).pop();
+              // QuestionScreen poppt sich selbst in flashcard_question_screen.dart
+              // nach dem onRating Callback — nichts zu tun hier
             },
           ),
         ),
@@ -86,18 +85,23 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   @override
   Widget build(BuildContext context) {
     final totalCards = alleAP1Decks.fold(
-        0, (sum, deck) => sum + (deck['karten'] as List).length);
+      0,
+      (sum, deck) => sum + (deck['karten'] as List).length,
+    );
 
     return Scaffold(
       backgroundColor: const Color(0xFFF5F5F5),
       appBar: AppBar(
         backgroundColor: const Color(0xFF162447),
         elevation: 0,
-        title: const Text('IHK AP1 Vorbereitung',
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 17)),
+        title: const Text(
+          'IHK AP1 Vorbereitung',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 17,
+          ),
+        ),
         centerTitle: true,
         actions: [
           Container(
@@ -108,8 +112,11 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
               shape: BoxShape.circle,
               color: Colors.white.withValues(alpha: 0.15),
             ),
-            child: const Icon(Icons.settings_outlined,
-                color: Colors.white, size: 18),
+            child: const Icon(
+              Icons.settings_outlined,
+              color: Colors.white,
+              size: 18,
+            ),
           ),
         ],
       ),
@@ -121,7 +128,8 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             Card(
               margin: EdgeInsets.zero,
               shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
+                borderRadius: BorderRadius.circular(12),
+              ),
               color: const Color(0xFF162447),
               elevation: 2,
               child: Padding(
@@ -131,25 +139,33 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                   children: [
                     Container(
                       padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
                       decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.18),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: const Text('AKTUELLER FORTSCHRITT',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5)),
+                        color: Colors.white.withValues(alpha: 0.18),
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: const Text(
+                        'AKTUELLER FORTSCHRITT',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w700,
+                          letterSpacing: 0.5,
+                        ),
+                      ),
                     ),
                     const SizedBox(height: 8),
                     const Text(
-                        'Meistere die IHK\nAP1 Prüfung\nKarte für Karte.',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            height: 1.25)),
+                      'Meistere die IHK\nAP1 Prüfung\nKarte für Karte.',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                        height: 1.25,
+                      ),
+                    ),
                     const SizedBox(height: 12),
                     Row(
                       children: [
@@ -157,24 +173,29 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                           child: OutlinedButton(
                             onPressed: () {
                               final allCards = alleAP1Decks
-                                  .expand((deck) =>
-                                      deck['karten'] as List<CardModel>)
+                                  .expand(
+                                    (deck) => deck['karten'] as List<CardModel>,
+                                  )
                                   .toList();
                               _startDeck(context, allCards);
                             },
                             style: OutlinedButton.styleFrom(
                               foregroundColor: Colors.white,
                               side: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.35)),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
+                                color: Colors.white.withValues(alpha: 0.35),
+                              ),
+                              padding: const EdgeInsets.symmetric(vertical: 8),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                             ),
-                            child: const Text('Tägliche Wiederholung',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600)),
+                            child: const Text(
+                              'Tägliche Wiederholung',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -191,16 +212,19 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: const Color(0xFFE8813A),
                               foregroundColor: Colors.white,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
+                              padding: const EdgeInsets.symmetric(vertical: 8),
                               shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
+                                borderRadius: BorderRadius.circular(6),
+                              ),
                               elevation: 0,
                             ),
-                            child: const Text('Statistik ansehen',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600)),
+                            child: const Text(
+                              'Statistik ansehen',
+                              style: TextStyle(
+                                fontSize: 11,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                           ),
                         ),
                       ],
@@ -227,14 +251,18 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Lernkarten-Decks',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        color: Color(0xFF111827))),
-                Text('${alleAP1Decks.length} Decks',
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.grey[500])),
+                const Text(
+                  'Lernkarten-Decks',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 15,
+                    color: Color(0xFF111827),
+                  ),
+                ),
+                Text(
+                  '${alleAP1Decks.length} Decks',
+                  style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                ),
               ],
             ),
             const SizedBox(height: 10),
@@ -267,26 +295,33 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   Widget _statItem(String value, String label) {
     return Column(
       children: [
-        Text(value,
-            style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Colors.white,
+          ),
+        ),
         const SizedBox(height: 2),
-        Text(label,
-            style: TextStyle(
-                fontSize: 9,
-                color: Colors.white.withValues(alpha: 0.55),
-                letterSpacing: 0.5)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 9,
+            color: Colors.white.withValues(alpha: 0.55),
+            letterSpacing: 0.5,
+          ),
+        ),
       ],
     );
   }
 
   Widget _divider() {
     return Container(
-        width: 1,
-        height: 28,
-        color: Colors.white.withOpacity(0.15));
+      width: 1,
+      height: 28,
+      color: Colors.white.withOpacity(0.15),
+    );
   }
 
   Widget _deckCard({
@@ -302,8 +337,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   }) {
     return Card(
       margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       color: Colors.white,
       elevation: 1,
       child: Padding(
@@ -318,26 +352,33 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                   width: 36,
                   height: 36,
                   decoration: BoxDecoration(
-                      color: iconBg,
-                      borderRadius: BorderRadius.circular(8)),
+                    color: iconBg,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                   child: Center(
-                      child: Text(icon,
-                          style: const TextStyle(fontSize: 18))),
+                    child: Text(icon, style: const TextStyle(fontSize: 18)),
+                  ),
                 ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title,
-                          style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF111827))),
-                      Text(subtitle,
-                          style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF6B7280))),
+                      Text(
+                        title,
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                          color: Color(0xFF111827),
+                        ),
+                      ),
+                      Text(
+                        subtitle,
+                        style: const TextStyle(
+                          fontSize: 11,
+                          color: Color(0xFF6B7280),
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -356,18 +397,25 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                 ),
                 ElevatedButton.icon(
                   onPressed: locked
-                      ? () => Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => const UpgradeScreen()))
+                      ? () => Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const UpgradeScreen(),
+                          ),
+                        )
                       : (cards.isNotEmpty
-                          ? () => _startDeck(context, cards)
-                          : null),
+                            ? () => _startDeck(context, cards)
+                            : null),
                   icon: locked
                       ? const Icon(Icons.lock_outline, size: 14)
                       : const SizedBox.shrink(),
-                  label: Text(locked ? 'Upgraden' : 'Jetzt lernen',
-                      style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600)),
+                  label: Text(
+                    locked ? 'Upgraden' : 'Jetzt lernen',
+                    style: const TextStyle(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: locked
                         ? const Color(0xFFE8813A)
@@ -375,9 +423,12 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                     disabledBackgroundColor: const Color(0xFFCBD5E1),
                     foregroundColor: Colors.white,
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 6),
+                      horizontal: 14,
+                      vertical: 6,
+                    ),
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
+                      borderRadius: BorderRadius.circular(6),
+                    ),
                     elevation: 0,
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -395,14 +446,18 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(value,
-            style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF111827))),
-        Text(label,
-            style: const TextStyle(
-                fontSize: 10, color: Color(0xFF9CA3AF))),
+        Text(
+          value,
+          style: const TextStyle(
+            fontSize: 15,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF111827),
+          ),
+        ),
+        Text(
+          label,
+          style: const TextStyle(fontSize: 10, color: Color(0xFF9CA3AF)),
+        ),
       ],
     );
   }

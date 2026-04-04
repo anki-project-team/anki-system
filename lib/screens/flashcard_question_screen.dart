@@ -32,7 +32,7 @@ class FlashcardQuestionScreen extends StatelessWidget {
           onPressed: () => Navigator.pop(context),
         ),
         title: const Text(
-          'IHK Pr\u00fcfungsvorbereitung',
+          'IHK Prüfungsvorbereitung',
           style: TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -44,7 +44,6 @@ class FlashcardQuestionScreen extends StatelessWidget {
       ),
       body: Column(
         children: [
-          // Fortschrittsbalken (orange)
           LinearProgressIndicator(
             value: currentCard / totalCards,
             backgroundColor: const Color(0xFFE0E0E0),
@@ -52,22 +51,16 @@ class FlashcardQuestionScreen extends StatelessWidget {
                 const AlwaysStoppedAnimation<Color>(Color(0xFFE8813A)),
             minHeight: 3,
           ),
-
           Expanded(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // ── KARTENFORTSCHRITT + Punkte ──
                   _buildProgressRow(),
                   const SizedBox(height: 16),
-
-                  // ── NEU Badge + Breadcrumb ──
                   _buildBreadcrumb(),
                   const SizedBox(height: 16),
-
-                  // ── Frage als Text ──
                   Text(
                     card.question,
                     style: const TextStyle(
@@ -78,8 +71,6 @@ class FlashcardQuestionScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 24),
-
-                  // ── Frage-Karte (DARK NAVY) ──
                   Expanded(
                     child: Center(
                       child: Container(
@@ -114,11 +105,9 @@ class FlashcardQuestionScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // ── Breadcrumb unter der Karte ──
                   Center(
                     child: Text(
-                      'NETZWERKGRUNDLAGEN \u00b7 AP1 \u00b7 TEIL 1',
+                      'NETZWERKGRUNDLAGEN · AP1 · TEIL 1',
                       style: TextStyle(
                         color: Colors.grey[500],
                         fontSize: 12,
@@ -127,8 +116,6 @@ class FlashcardQuestionScreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 16),
-
-                  // ── Karten-Z\u00e4hler ──
                   Center(
                     child: Text(
                       '$currentCard / $totalCards',
@@ -138,11 +125,12 @@ class FlashcardQuestionScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
 
-                  // ── Antwort zeigen Button ──
+                  // ── Antwort zeigen Button ──────────────────────────
                   SizedBox(
                     width: double.infinity,
                     child: ElevatedButton(
                       onPressed: () async {
+                        // Push AnswerScreen — wartet bis AnswerScreen sich selbst poppt
                         final result = await Navigator.push<FSRSRating>(
                           context,
                           MaterialPageRoute(
@@ -153,8 +141,16 @@ class FlashcardQuestionScreen extends StatelessWidget {
                             ),
                           ),
                         );
+
+                        // AnswerScreen hat sich gepoppt (mit rating)
                         if (result != null) {
+                          // onRating aufrufen (lernen_screen bekommt Bescheid)
                           onRating(result.value, card);
+                          // QuestionScreen poppt sich selbst
+                          // → löst den await in lernen_screen._startDeck auf
+                          if (context.mounted) {
+                            Navigator.of(context).pop();
+                          }
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -191,7 +187,6 @@ class FlashcardQuestionScreen extends StatelessWidget {
     );
   }
 
-  // ── Fortschrittspunkte + Z\u00e4hler ──
   Widget _buildProgressRow() {
     return Row(
       children: [
@@ -234,7 +229,6 @@ class FlashcardQuestionScreen extends StatelessWidget {
     );
   }
 
-  // ── NEU Badge + Breadcrumb ──
   Widget _buildBreadcrumb() {
     return Row(
       children: [
@@ -259,7 +253,7 @@ class FlashcardQuestionScreen extends StatelessWidget {
         if (isNew) const SizedBox(width: 10),
         const Expanded(
           child: Text(
-            'Netzwerkgrundlagen \u00b7 AP1 Teil 1',
+            'Netzwerkgrundlagen · AP1 Teil 1',
             style: TextStyle(
               color: Color(0xFF9E9E9E),
               fontSize: 13,
