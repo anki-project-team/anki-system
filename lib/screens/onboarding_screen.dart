@@ -20,12 +20,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       backgroundColor: const Color(0xFF162447),
       body: SafeArea(
         child: Column(children: [
-
-          // ── Header — kompakter ───────────────────────
+          // ── Header ──────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
             child: Row(children: [
-              // LF Logo — kleiner
               Container(
                 width: 30, height: 30,
                 decoration: BoxDecoration(
@@ -63,7 +61,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ),
           ),
 
-          // ── Footer — kompakter ────────────────────────
+          // ── Footer ───────────────────────────────────
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
             child: Column(children: [
@@ -84,7 +82,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ))),
               const SizedBox(height: 10),
 
-              // Haupt-Button — schmaler
+              // Haupt-Button
               SizedBox(
                 width: double.infinity, height: 46,
                 child: ElevatedButton(
@@ -108,9 +106,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               // Preis-Chips — nur letzte Seite
               if (_isLast) ...[
                 Row(children: [
-                  _chip('Gratis', '10 Karten testen', const Color(0xFF22C55E)),
+                  _chip('Gratis', '10 Karten testen',
+                      const Color(0xFF22C55E)),
                   const SizedBox(width: 8),
-                  _chip('Vollversion', '29,99 € einmalig', const Color(0xFFE8813A)),
+                  _chip('Vollversion', '29,99 € einmalig',
+                      const Color(0xFFE8813A)),
                 ]),
                 const SizedBox(height: 8),
               ],
@@ -126,7 +126,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     color: const Color(0xFF1e3a5f).withOpacity(0.6),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                     const Icon(Icons.arrow_forward,
                         size: 14, color: Colors.white),
@@ -148,84 +149,72 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ── Seite 1 — Figma Design, kompakt, kein Scroll ────
+  // ── Seite 1 ──────────────────────────────────────────
   Widget _page1() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          // Emoji — kleinerer Kreis
-          Container(
-            width: 72, height: 72,
-            decoration: const BoxDecoration(
-              color: Color(0xFF1e3a5f),
-              shape: BoxShape.circle,
-            ),
-            child: const Center(
-                child: Text('🎯', style: TextStyle(fontSize: 34))),
+      child: Column(children: [
+        Container(
+          width: 72, height: 72,
+          decoration: const BoxDecoration(
+            color: Color(0xFF1e3a5f),
+            shape: BoxShape.circle,
           ),
-          const SizedBox(height: 10),
-
-          // Badge
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
-            decoration: BoxDecoration(
-              border: Border.all(color: const Color(0xFFE8813A), width: 1.5),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: const Text('7 BERUFSBILDER · EINE APP',
-                style: TextStyle(color: Color(0xFFE8813A),
-                    fontSize: 11, fontWeight: FontWeight.w700,
-                    letterSpacing: 0.5)),
+          child: const Center(
+              child: Text('🎯', style: TextStyle(fontSize: 34))),
+        ),
+        const SizedBox(height: 10),
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xFFE8813A), width: 1.5),
+            borderRadius: BorderRadius.circular(20),
           ),
-          const SizedBox(height: 8),
-
-          // Headline — kleiner
-          const Text('Deine AP1-Prüfung.',
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Colors.white,
-                  fontSize: 22, fontWeight: FontWeight.bold)),
-          const SizedBox(height: 10),
-
-          // Berufsbilder Card — zentriert, schmaler
-          Container(
-            width: 300, // schmaler als volle Breite, zentriert
-            decoration: BoxDecoration(
-              color: const Color(0xFF1e3a5f),
-              borderRadius: BorderRadius.circular(14),
-            ),
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // IT-Berufe
-                Text('IT-Berufe', style: TextStyle(
-                    color: Colors.white.withOpacity(0.45),
-                    fontSize: 11, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 8),
-                _berufRow('FIAE',  'Anwendungsentwicklung'),
-                _berufRow('FISI',  'Systemintegration'),
-                _berufRow('FIADA', 'Daten- & Prozessanalyse'),
-                _berufRow('FIDV',  'Digitale Vernetzung'),
-                _berufRow('ITSE',  'IT-System-Elektroniker'),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Divider(
-                      color: Colors.white.withOpacity(0.1), height: 1),
-                ),
-                // Kaufmännisch
-                Text('Kaufmännisch', style: TextStyle(
-                    color: Colors.white.withOpacity(0.45),
-                    fontSize: 11, fontWeight: FontWeight.w500)),
-                const SizedBox(height: 8),
-                _berufRow('KSM', 'IT-System-Management'),
-                _berufRow('KDM', 'Digitalisierungsmanagement'),
-              ],
-            ),
+          child: const Text('7 BERUFSBILDER · EINE APP',
+              style: TextStyle(color: Color(0xFFE8813A),
+                  fontSize: 11, fontWeight: FontWeight.w700,
+                  letterSpacing: 0.5)),
+        ),
+        const SizedBox(height: 8),
+        const Text('Deine AP1-Prüfung.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white,
+                fontSize: 22, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 10),
+        Container(
+          width: 300,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1e3a5f),
+            borderRadius: BorderRadius.circular(14),
           ),
-        ],
-      ),
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('IT-Berufe', style: TextStyle(
+                  color: Colors.white.withOpacity(0.45),
+                  fontSize: 11, fontWeight: FontWeight.w500)),
+              const SizedBox(height: 8),
+              _berufRow('FIAE',  'Anwendungsentwicklung'),
+              _berufRow('FISI',  'Systemintegration'),
+              _berufRow('FIADA', 'Daten- & Prozessanalyse'),
+              _berufRow('FIDV',  'Digitale Vernetzung'),
+              _berufRow('ITSE',  'IT-System-Elektroniker'),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                child: Divider(
+                    color: Colors.white.withOpacity(0.1), height: 1),
+              ),
+              Text('Kaufmännisch', style: TextStyle(
+                  color: Colors.white.withOpacity(0.45),
+                  fontSize: 11, fontWeight: FontWeight.w500)),
+              const SizedBox(height: 8),
+              _berufRow('KSM', 'IT-System-Management'),
+              _berufRow('KDM', 'Digitalisierungsmanagement'),
+            ],
+          ),
+        ),
+      ]),
     );
   }
 
@@ -234,7 +223,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.only(bottom: 7),
       child: Row(children: [
         SizedBox(
-          width: 54, // feste Breite → Text bündig untereinander
+          width: 54,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
             decoration: BoxDecoration(
@@ -249,8 +238,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
         const SizedBox(width: 10),
-        Text(name, style: const TextStyle(
-            color: Colors.white, fontSize: 13)),
+        Text(name, style: const TextStyle(color: Colors.white, fontSize: 13)),
       ]),
     );
   }
@@ -283,19 +271,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ]),
   );
 
-  // ── Seite 4 ───────────────────────────────────────────
+  // ── Seite 4 — nur noch Vollversion 29,99 € ────────────
   Widget _page4() => _pageShell(
     emoji: '🚀', badge: 'KOSTENLOS STARTEN',
     title: 'Jetzt testen.\nKein Risiko.',
     child: Column(children: [
       const SizedBox(height: 14),
-      _step('1', '10 AP1-Karten gratis', 'Kein Login', const Color(0xFF22C55E)),
-      const SizedBox(height: 7),
-      _step('2', 'Registrieren', '+20 Karten kostenlos', const Color(0xFF22C55E)),
-      const SizedBox(height: 7),
-      _step('3', 'App Light — 9,99 €', '50 Top-Karten · einmalig', const Color(0xFFE8813A)),
-      const SizedBox(height: 7),
-      _step('4', 'App Deluxe — 19,99 €', '450+ Karten + Simulator', const Color(0xFFE8813A)),
+      _step('1', '10 AP1-Karten gratis', 'Kein Login',
+          const Color(0xFF22C55E)),
+      const SizedBox(height: 8),
+      _step('2', 'Kostenlos registrieren', '+20 weitere Karten',
+          const Color(0xFF22C55E)),
+      const SizedBox(height: 8),
+      _step('3', 'Vollversion — 29,99 €',
+          '450+ Karten · Simulator · Statistik',
+          const Color(0xFFE8813A)),
     ]),
   );
 
@@ -342,8 +332,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     child: Row(children: [
       Text(emoji, style: const TextStyle(fontSize: 20)),
       const SizedBox(width: 12),
-      Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+      Expanded(child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(title, style: const TextStyle(color: Colors.white,
             fontSize: 13, fontWeight: FontWeight.w600)),
         Text(sub, style: TextStyle(
@@ -363,8 +353,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           color: color, fontSize: 12, fontWeight: FontWeight.bold))),
     ),
     const SizedBox(width: 12),
-    Expanded(child: Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    Expanded(child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title, style: const TextStyle(color: Colors.white,
             fontSize: 13, fontWeight: FontWeight.w600)),
@@ -376,10 +366,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _chip(String label, String value, Color color) => Expanded(
     child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 6),
+      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
       decoration: BoxDecoration(
         color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(9),
         border: Border.all(color: color.withOpacity(0.25)),
       ),
       child: Column(children: [
