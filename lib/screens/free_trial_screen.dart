@@ -390,7 +390,7 @@ class _FreeTrialScreenState extends State<FreeTrialScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text('440 weitere Karten in der Vollversion',
+                          const Text('Vollversion — 450+ Karten, Simulator, Statistik',
                               style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w600,

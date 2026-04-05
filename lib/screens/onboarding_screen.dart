@@ -108,11 +108,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               // Preis-Chips — nur letzte Seite
               if (_isLast) ...[
                 Row(children: [
-                  _chip('Gratis', '10 Karten', const Color(0xFF22C55E)),
-                  const SizedBox(width: 5),
-                  _chip('Light', '9,99 €', Colors.white),
-                  const SizedBox(width: 5),
-                  _chip('Deluxe', '19,99 €', const Color(0xFFE8813A)),
+                  _chip('Gratis', '10 Karten testen', const Color(0xFF22C55E)),
+                  const SizedBox(width: 8),
+                  _chip('Vollversion', '29,99 € einmalig', const Color(0xFFE8813A)),
                 ]),
                 const SizedBox(height: 8),
               ],
