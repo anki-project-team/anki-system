@@ -18,7 +18,9 @@ class AuthWrapper extends StatelessWidget {
       stream: AuthService().authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SplashScreen(nextScreen: SizedBox());
+          return const Scaffold(
+            backgroundColor: Color(0xFF162447),
+          );
         }
 
         if (snapshot.hasData) {
