@@ -1,129 +1,222 @@
 import 'package:flutter/material.dart';
 
-class SplashView extends StatefulWidget {
-  //////To display the logo/image of the splash view,
-  final Widget image;
+class SplashScreen extends StatefulWidget {
+  final Widget nextScreen;
 
-  /// To hide/show the loading.
-  final bool? showLoading;
-
-  /// To show loading to the bottom of the page.
-  final bool? bottomLoading;
-
-  /// Redirect to another page, when loading is completed.
-  final Widget home;
-
-  ///To display the title or name of you application.
-  final String title;
-
-  ///The [TextStyle] of the title.
-  final TextStyle? titleTextStyle;
-
-  ///  Redirected time (in seconds).
-  final int? seconds;
-
-  /// Background Color can be set using [backgroundColor]
-  final Color? backgroundColor;
-
-  /// The [Widget] of the loading indicator.
-  final Widget? loading;
-
-  ///Background image can be set using [backgroundImage]
-  final ImageProvider<Object>? backgroundImage;
-
-  ///The [BoxFit] of the background image.
-  final BoxFit? backgroundImageFit;
-
-  ///The opacity of the background image.
-  final double? backgroundImageOpacity;
-
-  ///The [ColorFilter] of the background image.
-  final ColorFilter? backgroundImageColorFilter;
-
-  const SplashView({
-    super.key,
-    required this.image,
-    required this.title,
-    required this.home,
-    this.seconds = 3,
-    this.showLoading = true,
-    this.backgroundColor,
-    this.backgroundImage,
-    this.titleTextStyle = const TextStyle(
-      fontWeight: FontWeight.bold,
-      fontSize: 20,
-    ),
-    this.loading,
-    this.bottomLoading = false,
-    this.backgroundImageFit = BoxFit.cover,
-    this.backgroundImageOpacity = 1.0,
-    this.backgroundImageColorFilter,
-  });
+  const SplashScreen({super.key, required this.nextScreen});
 
   @override
-  State<SplashView> createState() => _SplashViewState();
+  State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashViewState extends State<SplashView> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeIn;
+  late Animation<double> _scaleUp;
+  late Animation<double> _fadeOut;
+
   @override
   void initState() {
     super.initState();
-    Future.delayed(
-      Duration(seconds: widget.seconds!),
-      () {
-        if (!mounted) return;
+
+    _controller = AnimationController(
+      duration: const Duration(milliseconds: 2400),
+      vsync: this,
+    );
+
+    // Logo faded in + skaliert hoch (0–40%)
+    _fadeIn = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+      ),
+    );
+    _scaleUp = Tween<double>(begin: 0.75, end: 1.0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+      ),
+    );
+
+    // Alles faded aus (75–100%)
+    _fadeOut = Tween<double>(begin: 1, end: 0).animate(
+      CurvedAnimation(
+        parent: _controller,
+        curve: const Interval(0.75, 1.0, curve: Curves.easeIn),
+      ),
+    );
+
+    _controller.forward().then((_) {
+      if (mounted) {
         Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => widget.home,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => widget.nextScreen,
+            transitionDuration: Duration.zero,
           ),
         );
-      },
-    );
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        decoration: BoxDecoration(
-          color: widget.backgroundColor,
-          image: (widget.backgroundImage != null)
-              ? DecorationImage(
-                  image: widget.backgroundImage!,
-                  fit: widget.backgroundImageFit,
-                  opacity: widget.backgroundImageOpacity!,
-                  colorFilter: widget.backgroundImageColorFilter ??
-                      ColorFilter.mode(
-                        Colors.black.withValues(alpha: 0.6),
-                        BlendMode.darken,
+      backgroundColor: const Color(0xFF162447),
+      body: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, _) {
+          final opacity =
+              _controller.value < 0.75 ? _fadeIn.value : _fadeOut.value;
+          return Opacity(
+            opacity: opacity,
+            child: Stack(
+              children: [
+                // Dezenter Hintergrund-Akzent
+                Positioned(
+                  top: -80,
+                  right: -80,
+                  child: Container(
+                    width: 300,
+                    height: 300,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFFE8813A).withOpacity(0.06),
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: -100,
+                  left: -60,
+                  child: Container(
+                    width: 260,
+                    height: 260,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: const Color(0xFF1e3a5f).withOpacity(0.5),
+                    ),
+                  ),
+                ),
+
+                // Zentrierter Inhalt
+                Center(
+                  child: Transform.scale(
+                    scale: _scaleUp.value,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        // LF Logo
+                        Container(
+                          width: 96,
+                          height: 96,
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF1e3a5f),
+                            borderRadius: BorderRadius.circular(24),
+                            border: Border.all(
+                              color: const Color(0xFFE8813A).withOpacity(0.35),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'LF',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 36,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1,
+                                ),
+                              ),
+                              const SizedBox(height: 4),
+                              Container(
+                                width: 40,
+                                height: 3,
+                                decoration: BoxDecoration(
+                                  color: const Color(0xFFE8813A),
+                                  borderRadius: BorderRadius.circular(2),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+
+                        // App-Name
+                        const Text(
+                          'Learn-Factory',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.5,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+
+                        // Tagline
+                        Text(
+                          'AP1 Bestanden. Nicht zufällig.',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.55),
+                            fontSize: 14,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 48),
+
+                        // IHK AP1 Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 6),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFFE8813A).withOpacity(0.12),
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(
+                              color: const Color(0xFFE8813A).withOpacity(0.3),
+                            ),
+                          ),
+                          child: const Text(
+                            'IHK AP1 · 7 Berufsbilder',
+                            style: TextStyle(
+                              color: Color(0xFFE8813A),
+                              fontSize: 12,
+                              fontWeight: FontWeight.w600,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+
+                // Kleiner Footer
+                Positioned(
+                  bottom: 40,
+                  left: 0,
+                  right: 0,
+                  child: Center(
+                    child: Text(
+                      'BBQ Düsseldorf · Abt. IT-Ausbildung',
+                      style: TextStyle(
+                        color: Colors.white.withOpacity(0.2),
+                        fontSize: 11,
                       ),
-                )
-              : null,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            (widget.bottomLoading!) ? const Spacer() : const SizedBox(),
-            widget.image,
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Text(
-                widget.title,
-                style: widget.titleTextStyle,
-              ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            (widget.bottomLoading!) ? const Spacer() : const SizedBox(),
-            Visibility(
-              visible: widget.showLoading!,
-              child: widget.loading ?? const RefreshProgressIndicator(),
-            ),
-            (widget.bottomLoading!)
-                ? const SizedBox(height: 20)
-                : const SizedBox(),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

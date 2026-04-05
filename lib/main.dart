@@ -83,7 +83,7 @@ class LearnFactoryApp extends StatelessWidget {
       
       // → /onboarding  (erster Start / nicht eingeloggt)
       // → /main        (eingeloggt)
-      home: const AuthWrapper(),
+      home: SplashScreen(nextScreen: const AuthWrapper()),
 
       // ── Routen ────────────────────────────────────────
       routes: {

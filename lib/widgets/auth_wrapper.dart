@@ -4,6 +4,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/onboarding_screen.dart';
+import 'package:ihk_ap1_prep/screens/splash_screen.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
 import 'package:ihk_ap1_prep/main.dart';
@@ -17,7 +18,7 @@ class AuthWrapper extends StatelessWidget {
       stream: AuthService().authStateChanges,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return const SplashScreen();
+          return const SplashScreen(nextScreen: SizedBox());
         }
 
         if (snapshot.hasData) {
@@ -29,7 +30,7 @@ class AuthWrapper extends StatelessWidget {
             builder: (context, premiumSnapshot) {
               // Während Premium-Status geladen wird: Splash zeigen
               if (premiumSnapshot.connectionState == ConnectionState.waiting) {
-                return const SplashScreen();
+                return const SplashScreen(nextScreen: SizedBox());
               }
 
               // NEU: Fehlerfall — trotzdem zur App navigieren
@@ -52,16 +53,3 @@ class AuthWrapper extends StatelessWidget {
   }
 }
 
-class SplashScreen extends StatelessWidget {
-  const SplashScreen({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Scaffold(
-      backgroundColor: Color(0xFF162447),
-      body: Center(
-        child: CircularProgressIndicator(color: Color(0xFFE8813A)),
-      ),
-    );
-  }
-}
