@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/premium_service.dart';
 import 'decks_screen.dart';
+import 'settings_screen.dart';
 
 const _bgColor     = Color(0xFF162447);
 const _accentColor = Color(0xFFE8813A);
@@ -120,7 +121,10 @@ class _HomeScreenState extends State<HomeScreen> {
                         streak: _streak,
                         dueToday: _dueToday,
                         onSettingsTap: () =>
-                            Navigator.of(context).pushNamed('/settings'),
+                            Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(
+                                  builder: (_) => const SettingsScreen()),
+                            ),
                       ),
                       const SizedBox(height: 20),
 
@@ -147,7 +151,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (!_isPremium) ...[
                         _UpgradeBanner(
                           onTap: () =>
-                              Navigator.of(context).pushNamed('/purchase'),
+                              Navigator.of(context, rootNavigator: true)
+                                  .pushNamed('/purchase'),
                         ),
                         const SizedBox(height: 20),
                       ],
