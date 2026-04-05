@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen>
     super.initState();
 
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 2400),
+      duration: const Duration(milliseconds: 3500),
       vsync: this,
     );
 
@@ -72,8 +72,9 @@ class _SplashScreenState extends State<SplashScreen>
       body: AnimatedBuilder(
         animation: _controller,
         builder: (context, _) {
-          final opacity =
-              _controller.value < 0.75 ? _fadeIn.value : _fadeOut.value;
+          final opacity = _controller.value < 0.75
+              ? _fadeIn.value
+              : _fadeOut.value;
           return Opacity(
             opacity: opacity,
             child: Stack(
@@ -175,7 +176,9 @@ class _SplashScreenState extends State<SplashScreen>
                         // IHK AP1 Badge
                         Container(
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 6),
+                            horizontal: 16,
+                            vertical: 6,
+                          ),
                           decoration: BoxDecoration(
                             color: const Color(0xFFE8813A).withOpacity(0.12),
                             borderRadius: BorderRadius.circular(20),
