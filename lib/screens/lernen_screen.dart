@@ -1,3 +1,6 @@
+// lib/screens/lernen_screen.dart
+// Screen 02 — Lernkarten-Decks (Wireframe Dark Navy + bestehende Logik)
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/data/ap1_karten.dart';
@@ -6,6 +9,7 @@ import 'package:ihk_ap1_prep/screens/lern_session_screen.dart';
 import 'package:ihk_ap1_prep/screens/statistik_screen.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
 import 'package:ihk_ap1_prep/screens/upgrade_screen.dart';
+import 'package:ihk_ap1_prep/main.dart';
 
 class LernkartenDecksScreen extends StatefulWidget {
   const LernkartenDecksScreen({super.key});
@@ -35,26 +39,16 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
     });
   }
 
-  void _startDeck(BuildContext context, List<CardModel> cards) {
+  void _startDeck(BuildContext context, List<CardModel> cards, String name) {
     if (cards.isEmpty) return;
-    Navigator.of(context).push(
+    Navigator.of(context, rootNavigator: true).push(
       MaterialPageRoute(
         builder: (_) => LernSessionScreen(
           cards: cards,
-          deckName: 'Lernsitzung',
+          deckName: name,
         ),
       ),
     );
-  }
-
-  Color _deckColor(String name) {
-    if (name.contains('Netzwerk')) return const Color(0xFFDBEAFE);
-    if (name.contains('Hardware')) return const Color(0xFFDCFCE7);
-    if (name.contains('Sicherheit')) return const Color(0xFFFEE2E2);
-    if (name.contains('Datenschutz')) return const Color(0xFFFEF3C7);
-    if (name.contains('Projekt')) return const Color(0xFFF3E8FF);
-    if (name.contains('Software')) return const Color(0xFFE0F2FE);
-    return const Color(0xFFF1F5F9);
   }
 
   @override
@@ -63,175 +57,171 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
         0, (sum, deck) => sum + (deck['karten'] as List).length);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5),
-      appBar: AppBar(
-        backgroundColor: const Color(0xFF162447),
-        elevation: 0,
-        title: const Text('IHK AP1 Vorbereitung',
-            style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 17)),
-        centerTitle: true,
-        actions: [
-          Container(
-            margin: const EdgeInsets.only(right: 12),
-            width: 34,
-            height: 34,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.white.withValues(alpha: 0.15),
-            ),
-            child: const Icon(Icons.settings_outlined,
-                color: Colors.white, size: 18),
-          ),
-        ],
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Card(
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(12)),
-              color: const Color(0xFF162447),
-              elevation: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 3),
-                      decoration: BoxDecoration(
-                          color: Colors.white.withValues(alpha: 0.18),
-                          borderRadius: BorderRadius.circular(4)),
-                      child: const Text('AKTUELLER FORTSCHRITT',
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 9,
-                              fontWeight: FontWeight.w700,
-                              letterSpacing: 0.5)),
-                    ),
-                    const SizedBox(height: 8),
-                    const Text(
-                        'Meistere die IHK\nAP1 Prüfung\nKarte für Karte.',
-                        style: TextStyle(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                            height: 1.25)),
-                    const SizedBox(height: 12),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: OutlinedButton(
-                            onPressed: () {
-                              final allCards = alleAP1Decks
-                                  .expand((deck) =>
-                                      deck['karten'] as List<CardModel>)
-                                  .toList();
-                              _startDeck(context, allCards);
-                            },
-                            style: OutlinedButton.styleFrom(
-                              foregroundColor: Colors.white,
-                              side: BorderSide(
-                                  color: Colors.white.withValues(alpha: 0.35)),
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
-                            ),
-                            child: const Text('Tägliche Wiederholung',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600)),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (_) => const StatistikScreen(),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFE8813A),
-                              foregroundColor: Colors.white,
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(6)),
-                              elevation: 0,
-                            ),
-                            child: const Text('Statistik ansehen',
-                                style: TextStyle(
-                                    fontSize: 11,
-                                    fontWeight: FontWeight.w600)),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        _statItem('$totalCards', 'DUE'),
-                        _divider(),
-                        _statItem('${alleAP1Decks.length}', 'DECKS'),
-                        _divider(),
-                        _statItem('0', 'FÄLLIG'),
-                        _divider(),
-                        _statItem('14 🔥', 'STREAK'),
-                      ],
-                    ),
-                  ],
+      backgroundColor: kBgColor,
+      body: SafeArea(
+        child: _loading
+            ? const Center(child: CircularProgressIndicator(color: kAccentColor))
+            : RefreshIndicator(
+                color: kAccentColor,
+                backgroundColor: kCardColor,
+                onRefresh: () async => _checkPremium(),
+                child: SingleChildScrollView(
+                  physics: const AlwaysScrollableScrollPhysics(),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildAppBar(),
+                      _buildHeroBanner(totalCards),
+                      const SizedBox(height: 16),
+                      _buildSectionHeader(),
+                      const SizedBox(height: 8),
+                      ...alleAP1Decks.asMap().entries.map((entry) {
+                        final i = entry.key;
+                        final deck = entry.value;
+                        final locked = i >= 5 && !_isPremium;
+                        return _buildDeckCard(
+                          deck: deck,
+                          locked: locked,
+                        );
+                      }),
+                      const SizedBox(height: 24),
+                    ],
+                  ),
                 ),
               ),
+      ),
+    );
+  }
+
+  // ══════════════════════════════════════════════════════
+  // APP BAR
+  // ══════════════════════════════════════════════════════
+  Widget _buildAppBar() {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Row(
+        children: [
+          Container(
+            width: 32, height: 32,
+            decoration: BoxDecoration(color: kAccentColor, borderRadius: BorderRadius.circular(8)),
+            child: const Center(
+              child: Text('LF', style: TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold)),
             ),
+          ),
+          const SizedBox(width: 8),
+          const Text('IHK AP1 Vorbereitung',
+              style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
+          const Spacer(),
+          Icon(Icons.settings_outlined, color: Colors.white.withOpacity(0.4), size: 22),
+        ],
+      ),
+    );
+  }
+
+  // ══════════════════════════════════════════════════════
+  // HERO BANNER
+  // ══════════════════════════════════════════════════════
+  Widget _buildHeroBanner(int totalCards) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: kCardColor,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.white.withOpacity(0.06)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Badge
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              decoration: BoxDecoration(
+                color: kAccentColor.withOpacity(0.12),
+                borderRadius: BorderRadius.circular(6),
+              ),
+              child: const Text('AKTUELLER FORTSCHRITT',
+                  style: TextStyle(color: kAccentColor, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+            ),
+            const SizedBox(height: 12),
+
+            // Headline
+            RichText(
+              text: const TextSpan(children: [
+                TextSpan(text: 'Meistere die IHK\nAP1 Prüfung\n',
+                    style: TextStyle(color: Colors.white, fontSize: 22, fontWeight: FontWeight.bold, height: 1.3)),
+                TextSpan(text: 'Karte für Karte.',
+                    style: TextStyle(color: kAccentColor, fontSize: 22, fontWeight: FontWeight.bold, height: 1.3)),
+              ]),
+            ),
+            const SizedBox(height: 4),
+            Text('Strukturierte Vorbereitung nach dem offiziellen Prüfungsrahmenplan.',
+                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
             const SizedBox(height: 16),
 
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Lernkarten-Decks',
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 15,
-                        color: Color(0xFF111827))),
-                Text('${alleAP1Decks.length} Decks',
-                    style: TextStyle(
-                        fontSize: 12, color: Colors.grey[500])),
-              ],
-            ),
-            const SizedBox(height: 10),
-
-            ...alleAP1Decks.asMap().entries.map((entry) {
-              final i = entry.key;
-              final deck = entry.value;
-              final locked = i >= 5 && !_isPremium;
-              return Padding(
-                padding: const EdgeInsets.only(bottom: 8),
-                child: _deckCard(
-                  context: context,
-                  icon: deck['icon'] as String,
-                  iconBg: _deckColor(deck['name'] as String),
-                  title: deck['name'] as String,
-                  subtitle: '${(deck['karten'] as List).length} Karten',
-                  due: (deck['karten'] as List).length,
-                  learning: 0,
-                  cards: deck['karten'] as List<CardModel>,
-                  locked: locked,
+            // Action Buttons
+            Row(children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () {
+                    final allCards = alleAP1Decks
+                        .expand((deck) => deck['karten'] as List<CardModel>)
+                        .toList();
+                    _startDeck(context, allCards, 'Tägliche Wiederholung');
+                  },
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: Colors.white,
+                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                  ),
+                  child: const Text('Tägliche Wiederholung',
+                      style: TextStyle(fontSize: 11, fontWeight: FontWeight.w600)),
                 ),
-              );
-            }),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(builder: (_) => const StatistikScreen()),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kAccentColor,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    elevation: 0,
+                  ),
+                  child: const Text('Statistik ansehen',
+                      style: TextStyle(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                ),
+              ),
+            ]),
+            const SizedBox(height: 16),
+
+            // 4 Stats Row
+            Container(
+              padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
+              decoration: BoxDecoration(
+                color: kBgColor.withOpacity(0.5),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _statItem('$totalCards', 'DUE'),
+                  _divider(),
+                  _statItem('${alleAP1Decks.length}', 'DECKS'),
+                  _divider(),
+                  _statItem('0', 'FÄLLIG'),
+                  _divider(),
+                  _statItem('14 🔥', 'STREAK'),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -239,119 +229,136 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   }
 
   Widget _statItem(String value, String label) {
-    return Column(
-      children: [
-        Text(value,
-            style: const TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: Colors.white)),
-        const SizedBox(height: 2),
-        Text(label,
-            style: TextStyle(
-                fontSize: 9,
-                color: Colors.white.withValues(alpha: 0.55),
-                letterSpacing: 0.5)),
-      ],
-    );
+    final isStreak = label.contains('STREAK');
+    return Column(children: [
+      Text(value,
+          style: TextStyle(
+              color: isStreak ? kAccentColor : Colors.white,
+              fontSize: 18,
+              fontWeight: FontWeight.bold)),
+      const SizedBox(height: 2),
+      Text(label,
+          style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 9, letterSpacing: 0.5, fontWeight: FontWeight.w500)),
+    ]);
   }
 
   Widget _divider() {
-    return Container(
-        width: 1,
-        height: 28,
-        color: Colors.white.withOpacity(0.15));
+    return Container(width: 1, height: 28, color: Colors.white.withOpacity(0.1));
   }
 
-  Widget _deckCard({
-    required BuildContext context,
-    required String icon,
-    required Color iconBg,
-    required String title,
-    required String subtitle,
-    required int due,
-    required int learning,
-    required List<CardModel> cards,
+  // ══════════════════════════════════════════════════════
+  // SECTION HEADER
+  // ══════════════════════════════════════════════════════
+  Widget _buildSectionHeader() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          const Text('Lernkarten-Decks',
+              style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+          Text('${alleAP1Decks.length} Decks',
+              style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
+        ],
+      ),
+    );
+  }
+
+  // ══════════════════════════════════════════════════════
+  // DECK CARD
+  // ══════════════════════════════════════════════════════
+  Widget _buildDeckCard({
+    required Map<String, dynamic> deck,
     bool locked = false,
   }) {
-    return Card(
-      margin: EdgeInsets.zero,
-      shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10)),
-      color: Colors.white,
-      elevation: 1,
-      child: Padding(
-        padding: const EdgeInsets.all(12),
+    final name = deck['name'] as String;
+    final icon = deck['icon'] as String;
+    final cards = deck['karten'] as List<CardModel>;
+    final cardCount = cards.length;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: kCardColor,
+          borderRadius: BorderRadius.circular(14),
+          border: Border.all(color: Colors.white.withOpacity(0.06)),
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // Top: Icon + Name
             Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Container(
-                  width: 36,
-                  height: 36,
+                  width: 40, height: 40,
                   decoration: BoxDecoration(
-                      color: iconBg,
-                      borderRadius: BorderRadius.circular(8)),
-                  child: Center(
-                      child: Text(icon,
-                          style: const TextStyle(fontSize: 18))),
+                    color: kAccentColor.withOpacity(0.12),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Center(child: Text(icon, style: const TextStyle(fontSize: 20))),
                 ),
-                const SizedBox(width: 10),
+                const SizedBox(width: 12),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(title,
-                          style: const TextStyle(
-                              fontSize: 13,
-                              fontWeight: FontWeight.w700,
-                              color: Color(0xFF111827))),
-                      Text(subtitle,
-                          style: const TextStyle(
-                              fontSize: 11,
-                              color: Color(0xFF6B7280))),
+                      Row(children: [
+                        // NEU Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF3B82F6).withOpacity(0.15),
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                          child: const Text('NEU',
+                              style: TextStyle(color: Color(0xFF3B82F6), fontSize: 9, fontWeight: FontWeight.w800)),
+                        ),
+                        const SizedBox(width: 6),
+                        Flexible(
+                          child: Text(name,
+                              style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
+                              overflow: TextOverflow.ellipsis),
+                        ),
+                      ]),
                     ],
                   ),
                 ),
+                if (locked)
+                  Icon(Icons.lock_outline, color: Colors.white.withOpacity(0.3), size: 18),
               ],
             ),
-            const SizedBox(height: 10),
+            const SizedBox(height: 14),
+
+            // Bottom: Stats + Button
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Row(
-                  children: [
-                    _miniStat(due.toString(), 'Karten'),
-                    const SizedBox(width: 16),
-                    _miniStat(learning.toString(), 'Gelernt'),
-                  ],
-                ),
+                _deckStat('$cardCount', 'Karten'),
+                const SizedBox(width: 16),
+                _deckStat('0', 'Gelernt'),
+                const Spacer(),
+
+                // Jetzt lernen / Upgraden Button
                 ElevatedButton.icon(
                   onPressed: locked
-                      ? () => Navigator.push(context,
-                            MaterialPageRoute(builder: (_) => const UpgradeScreen()))
+                      ? () => Navigator.of(context, rootNavigator: true).push(
+                            MaterialPageRoute(builder: (_) => const UpgradeScreen()),
+                          )
                       : (cards.isNotEmpty
-                          ? () => _startDeck(context, cards)
+                          ? () => _startDeck(context, cards, name)
                           : null),
                   icon: locked
                       ? const Icon(Icons.lock_outline, size: 14)
                       : const SizedBox.shrink(),
                   label: Text(locked ? 'Upgraden' : 'Jetzt lernen',
-                      style: const TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.w600)),
+                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: locked
-                        ? const Color(0xFFE8813A)
-                        : const Color(0xFF162447),
-                    disabledBackgroundColor: const Color(0xFFCBD5E1),
+                    backgroundColor: locked ? kAccentColor : kAccentColor,
+                    disabledBackgroundColor: kCardColor,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14, vertical: 6),
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(6)),
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                     elevation: 0,
                     minimumSize: Size.zero,
                     tapTargetSize: MaterialTapTargetSize.shrinkWrap,
@@ -365,19 +372,13 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
     );
   }
 
-  Widget _miniStat(String value, String label) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(value,
-            style: const TextStyle(
-                fontSize: 15,
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF111827))),
-        Text(label,
-            style: const TextStyle(
-                fontSize: 10, color: Color(0xFF9CA3AF))),
-      ],
-    );
+  Widget _deckStat(String value, String label) {
+    return Row(children: [
+      Text(value,
+          style: const TextStyle(color: kAccentColor, fontSize: 16, fontWeight: FontWeight.bold)),
+      const SizedBox(width: 4),
+      Text(label,
+          style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 11)),
+    ]);
   }
 }
