@@ -20,12 +20,13 @@
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
-  <meta name="description" content="A new Flutter project.">
+  <meta name="description" content="IHK AP1 Prüfungsvorbereitung — Learn-Factory">
 
   <!-- iOS meta tags & icons -->
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="ihk_ap1_prep">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Learn-Factory">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
   <link rel="apple-touch-icon" sizes="192x192" href="icons/Icon-192.png">
   <link rel="apple-touch-icon" sizes="512x512" href="icons/Icon-512.png">
@@ -33,10 +34,21 @@
   <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png"/>
 
-  <title>ihk_ap1_prep</title>
+  <title>Learn-Factory — IHK AP1</title>
   <link rel="manifest" href="manifest.json">
+
+  <style>
+    /* Kein weißer Flash beim Start — Navy vor Flutter-Load */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body {
+      background-color: #162447;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+    }
+  </style>
 </head>
-<body>
+<body style="background-color: #162447;">
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register(
