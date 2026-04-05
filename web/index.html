@@ -1,19 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
@@ -38,7 +25,6 @@
   <link rel="manifest" href="manifest.json">
 
   <style>
-    /* Kein weißer Flash beim Start — Navy vor Flutter-Load */
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html, body {
       background-color: #162447;
@@ -50,14 +36,44 @@
 </head>
 <body style="background-color: #162447;">
   <script>
+    // ── Service Worker: Auto-Update bei neuem Deploy ──────
     if ('serviceWorker' in navigator) {
+      // Firebase Messaging SW (Push-Notifications)
       navigator.serviceWorker.register(
         'firebase-messaging-sw.js',
-        {scope: '/'}
-      ).then(function(registration) {
-        console.log('SW registered:', registration.scope);
-      }).catch(function(error) {
-        console.log('SW registration failed:', error);
+        {scope: '/firebase-cloud-messaging-push-scope'}
+      ).then(function(reg) {
+        console.log('Firebase SW registered:', reg.scope);
+      }).catch(function(err) {
+        console.log('Firebase SW failed:', err);
+      });
+
+      // Flutter SW — auf Updates prüfen und sofort aktivieren
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        registrations.forEach(function(reg) {
+          // Prüfe alle 60 Sekunden auf neue Version
+          reg.update();
+          setInterval(function() { reg.update(); }, 60000);
+
+          // Neue Version gefunden? Sofort aktivieren!
+          reg.addEventListener('updatefound', function() {
+            var newWorker = reg.installing;
+            if (newWorker) {
+              newWorker.addEventListener('statechange', function() {
+                if (newWorker.state === 'activated') {
+                  console.log('Neue App-Version aktiv — lade neu...');
+                  window.location.reload();
+                }
+              });
+            }
+          });
+        });
+      });
+
+      // Wenn ein neuer SW die Kontrolle übernimmt → Reload
+      navigator.serviceWorker.addEventListener('controllerchange', function() {
+        console.log('Neuer Service Worker aktiv — Seite wird neu geladen');
+        window.location.reload();
       });
     }
   </script>
