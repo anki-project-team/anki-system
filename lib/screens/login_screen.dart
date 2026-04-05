@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/services/auth_service.dart';
 import 'package:ihk_ap1_prep/screens/register_screen.dart';
-import 'package:ihk_ap1_prep/widgets/auth_wrapper.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -27,10 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
         _passwordController.text.trim(),
       );
       if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const AuthWrapper()),
-          (route) => false,
-        );
+        Navigator.of(context).pushReplacementNamed('/');
       }
     } catch (e) {
       if (mounted) {
@@ -51,10 +47,7 @@ class _LoginScreenState extends State<LoginScreen> {
     try {
       await AuthService().signInWithGoogle();
       if (mounted) {
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(builder: (_) => const AuthWrapper()),
-          (route) => false,
-        );
+        Navigator.of(context).pushReplacementNamed('/');
       }
     } catch (e) {
       if (mounted) {
