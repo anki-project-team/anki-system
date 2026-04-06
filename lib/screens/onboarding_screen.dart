@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
 import 'package:ihk_ap1_prep/screens/login_screen.dart';
+import '../theme/design_tokens.dart';
 import 'purchase_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -164,20 +165,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // ── Seite 1 ──────────────────────────────────────────
   Widget _page1() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+      padding: const EdgeInsets.fromLTRB(DS.spacingLg, DS.spacingSm, DS.spacingLg, 0),
       child: Column(children: [
         Container(
-          width: 60, height: 60,
+          width: 56, height: 56,
           decoration: const BoxDecoration(
             color: Color(0xFF1e3a5f),
             shape: BoxShape.circle,
           ),
           child: const Center(
-              child: Text('🎯', style: TextStyle(fontSize: 28))),
+              child: Text('🎯', style: TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: DS.spacingSm),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFFE8813A), width: 1.5),
             borderRadius: BorderRadius.circular(20),
@@ -187,19 +188,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontSize: 11, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: DS.spacingSm),
         const Text('Deine AP1-Prüfung.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white,
-                fontSize: 24, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
+                fontSize: DS.headline, fontWeight: FontWeight.bold)),
+        const SizedBox(height: DS.spacingSm),
         Container(
-          width: 300,
           decoration: BoxDecoration(
             color: const Color(0xFF1e3a5f),
             borderRadius: BorderRadius.circular(14),
           ),
-          padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
+          padding: const EdgeInsets.all(DS.spacingMd),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -306,18 +306,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     required String title, required Widget child,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+      padding: const EdgeInsets.fromLTRB(DS.spacingLg, DS.spacingSm, DS.spacingLg, 0),
       child: Column(children: [
         Container(
-          width: 60, height: 60,
+          width: 56, height: 56,
           decoration: const BoxDecoration(
               color: Color(0xFF1e3a5f), shape: BoxShape.circle),
           child: Center(child: Text(emoji,
-              style: const TextStyle(fontSize: 28))),
+              style: const TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: DS.spacingSm),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFFE8813A), width: 1.5),
             borderRadius: BorderRadius.circular(20),
@@ -326,7 +326,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Color(0xFFE8813A), fontSize: 11,
               fontWeight: FontWeight.w700, letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: DS.spacingSm),
         Text(title, textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white,
                 fontSize: 22, fontWeight: FontWeight.bold, height: 1.25)),
@@ -336,7 +336,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _infoRow(String emoji, String title, String sub) => Container(
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
     decoration: BoxDecoration(
       color: const Color(0xFF1e3a5f),
       borderRadius: BorderRadius.circular(12),
@@ -355,26 +355,28 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   );
 
   Widget _step(String nr, String title, String sub, Color color) =>
-      Row(children: [
-    Container(
-      width: 26, height: 26,
-      decoration: BoxDecoration(
-          color: color.withOpacity(0.15),
-          borderRadius: BorderRadius.circular(7)),
-      child: Center(child: Text(nr, style: TextStyle(
-          color: color, fontSize: 12, fontWeight: FontWeight.bold))),
-    ),
-    const SizedBox(width: 12),
-    Expanded(child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(title, style: const TextStyle(color: Colors.white,
-            fontSize: 13, fontWeight: FontWeight.w600)),
-        Text(sub, style: TextStyle(
-            color: Colors.white.withOpacity(0.4), fontSize: 11)),
-      ],
-    )),
-  ]);
+      Padding(
+        padding: const EdgeInsets.symmetric(vertical: 12),
+        child: Row(children: [
+      Container(
+        width: 26, height: 26,
+        decoration: BoxDecoration(
+            color: color.withOpacity(0.15),
+            borderRadius: BorderRadius.circular(7)),
+        child: Center(child: Text(nr, style: TextStyle(
+            color: color, fontSize: 12, fontWeight: FontWeight.bold))),
+      ),
+      const SizedBox(width: 12),
+      Expanded(child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(title, style: const TextStyle(color: Colors.white,
+              fontSize: 13, fontWeight: FontWeight.w600)),
+          Text(sub, style: TextStyle(
+              color: Colors.white.withOpacity(0.4), fontSize: 11)),
+        ],
+      )),
+    ]));
 
   Widget _chip(String label, String value, Color color) => Container(
     padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
