@@ -2,7 +2,9 @@
 // Alles in einem Screen — kein Push/Pop zwischen Frage und Antwort
 
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../models/card_model.dart';
+import '../services/fsrs_service.dart';
 
 const _bg      = Color(0xFF162447);
 const _accent  = Color(0xFFE8813A);
@@ -27,16 +29,31 @@ class LernSessionScreen extends StatefulWidget {
 class _LernSessionScreenState extends State<LernSessionScreen> {
   int _index = 0;
   bool _showAnswer = false;
+  final _fsrs = FSRSService();
 
   CardModel get _card => widget.cards[_index];
   bool get _isLast => _index >= widget.cards.length - 1;
 
-  void _rate(int rating) {
+  Future<void> _rate(int rating) async {
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await _fsrs.reviewCard(
+          userId: user.uid,
+          deckId: 'default',
+          card: _card,
+          rating: FSRSRating.values[rating - 1],
+        );
+      }
+    } catch (_) {}
+
+    if (!mounted) return;
+
     if (_isLast) {
       Navigator.of(context).pop();
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Lernsitzung abgeschlossen! 🎉'),
+          content: Text('Lernsitzung abgeschlossen!'),
           backgroundColor: Color(0xFFE8813A),
         ),
       );
@@ -290,28 +307,28 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                           children: [
                             _RatingBtn(
                               label: 'Nochmal',
-                              sub: '<1 Min',
+                              sub: _fsrs.getIntervalLabel(_card, FSRSRating.again),
                               color: const Color(0xFFE84C3C),
                               onTap: () => _rate(1),
                             ),
                             const SizedBox(width: 6),
                             _RatingBtn(
                               label: 'Schwer',
-                              sub: '10 Min',
+                              sub: _fsrs.getIntervalLabel(_card, FSRSRating.hard),
                               color: const Color(0xFFF0C030),
                               onTap: () => _rate(2),
                             ),
                             const SizedBox(width: 6),
                             _RatingBtn(
                               label: 'Gut',
-                              sub: '4 Tage',
+                              sub: _fsrs.getIntervalLabel(_card, FSRSRating.good),
                               color: const Color(0xFF32CD32),
                               onTap: () => _rate(3),
                             ),
                             const SizedBox(width: 6),
                             _RatingBtn(
                               label: 'Einfach',
-                              sub: '14 Tage',
+                              sub: _fsrs.getIntervalLabel(_card, FSRSRating.easy),
                               color: _accent,
                               onTap: () => _rate(4),
                             ),
