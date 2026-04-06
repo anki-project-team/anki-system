@@ -25,8 +25,10 @@ class _LoginScreenState extends State<LoginScreen> {
         _emailController.text.trim(),
         _passwordController.text.trim(),
       );
+      // Login erfolgreich → zurück poppen, AuthWrapper erkennt
+      // den neuen Auth-State automatisch via StreamBuilder
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/');
+        Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
@@ -46,8 +48,9 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() => _loading = true);
     try {
       await AuthService().signInWithGoogle();
+      // Login erfolgreich → zurück poppen
       if (mounted) {
-        Navigator.of(context).pushReplacementNamed('/');
+        Navigator.of(context).pop();
       }
     } catch (e) {
       if (mounted) {
@@ -136,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               const SizedBox(height: 28),
 
-              // Formular Card — kompakter
+              // Formular Card
               Card(
                 margin: EdgeInsets.zero,
                 shape: RoundedRectangleBorder(
@@ -149,7 +152,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
-                      // E-Mail
                       _inputLabel('E-Mail'),
                       const SizedBox(height: 5),
                       _inputField(
@@ -160,7 +162,6 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 10),
 
-                      // Passwort
                       _inputLabel('Passwort'),
                       const SizedBox(height: 5),
                       _inputField(

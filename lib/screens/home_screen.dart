@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../services/premium_service.dart';
+import '../data/ap1_karten.dart';
+import '../models/card_model.dart';
 import '../main.dart';
 import 'settings_screen.dart';
+import 'lern_session_screen.dart';
 
 // ════════════════════════════════════════════════════════
 class HomeScreen extends StatefulWidget {
@@ -291,7 +294,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   ]),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final allCards = alleAP1Decks
+                        .expand((deck) => deck['karten'] as List<CardModel>)
+                        .toList();
+                    if (allCards.isNotEmpty) {
+                      Navigator.of(context, rootNavigator: true).push(
+                        MaterialPageRoute(
+                          builder: (_) => LernSessionScreen(
+                            cards: allCards,
+                            deckName: _currentModule,
+                          ),
+                        ),
+                      );
+                    }
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kAccentColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
@@ -371,7 +388,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 8),
             GestureDetector(
-              onTap: () {},
+              onTap: () {
+                // TODO: Switch to Statistik tab
+              },
               child: const Text('Alle Statistiken ansehen →',
                   style: TextStyle(color: kAccentColor, fontSize: 12, fontWeight: FontWeight.w600)),
             ),
@@ -453,7 +472,21 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(width: 8),
           GestureDetector(
-            onTap: () {},
+            onTap: () {
+              final allCards = alleAP1Decks
+                  .expand((d) => d['karten'] as List<CardModel>)
+                  .toList();
+              if (allCards.isNotEmpty) {
+                Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(
+                    builder: (_) => LernSessionScreen(
+                      cards: allCards,
+                      deckName: deck['name'] ?? 'Lernsitzung',
+                    ),
+                  ),
+                );
+              }
+            },
             child: const Text('Jetzt lernen →', style: TextStyle(color: kAccentColor, fontSize: 11, fontWeight: FontWeight.w700)),
           ),
         ],
