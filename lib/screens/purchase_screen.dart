@@ -60,30 +60,22 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _bgColor,
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ── Header ────────────────────────────
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back_ios,
-                        color: Colors.white70, size: 18),
-                    onPressed: () => Navigator.of(context).pop(),
-                  ),
-                  const Text('Vollversion freischalten',
-                    style: TextStyle(
-                      color: _WHITE,
-                      fontSize: 18,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 24),
+      appBar: AppBar(
+        backgroundColor: const Color(0xFF162447),
+        elevation: 0,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.white),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
+        title: const Text('Vollversion',
+            style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
 
               // ── Hero ──────────────────────────────
               Center(
@@ -220,13 +212,14 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-            ],
-          ),
+          ],
         ),
       ),
     );
   }
 }
+
+
 
 // ════════════════════════════════════════════════════════
 // FEATURE LISTE
