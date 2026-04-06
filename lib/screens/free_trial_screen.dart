@@ -199,15 +199,35 @@ class _FreeTrialScreenState extends State<FreeTrialScreen> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(bottom: 16),
+          padding: const EdgeInsets.only(bottom: 16, left: 16, right: 16),
           child: GestureDetector(
             onTap: () => Navigator.push(context,
                 MaterialPageRoute(builder: (_) => const LoginScreen())),
-            child: Text('Schon registriert? Einloggen →',
-                style: TextStyle(
-                    color: Colors.grey[400], fontSize: 12,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.grey[300])),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1e3a5f),
+                borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: const Color(0xFFE8813A).withOpacity(0.4),
+                ),
+              ),
+              child: Column(
+                children: [
+                  const Text('Einloggen',
+                      style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white)),
+                  const SizedBox(height: 2),
+                  Text('(Vollversion bereits gekauft)',
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: Colors.white70)),
+                ],
+              ),
+            ),
           ),
         ),
       ],
