@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
 import 'package:ihk_ap1_prep/screens/login_screen.dart';
+import '../theme/design_tokens.dart';
 import 'purchase_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -23,23 +24,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(children: [
           // ── Header ──────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
             child: Row(children: [
               Container(
-                width: 32, height: 32,
+                width: 30, height: 30,
                 decoration: BoxDecoration(
                   color: const Color(0xFFE8813A),
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(7),
                 ),
                 child: const Center(
                   child: Text('LF', style: TextStyle(
-                      color: Colors.white, fontSize: 13,
+                      color: Colors.white, fontSize: 12,
                       fontWeight: FontWeight.bold)),
                 ),
               ),
               const SizedBox(width: 8),
               const Text('Learn-Factory', style: TextStyle(
-                  color: Colors.white, fontSize: 15,
+                  color: Colors.white, fontSize: 14,
                   fontWeight: FontWeight.w600)),
               const Spacer(),
               if (!_isLast)
@@ -47,8 +48,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onTap: () => _controller.animateToPage(_total - 1,
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeInOut),
-                  child: const Text('Überspringen', style: TextStyle(
-                      color: Colors.white70, fontSize: 14,
+                  child: Text('Überspringen', style: TextStyle(
+                      color: Colors.white.withOpacity(0.75), fontSize: 14,
                       fontWeight: FontWeight.w500)),
                 ),
             ]),
@@ -65,7 +66,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
           // ── Footer ───────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+            padding: const EdgeInsets.fromLTRB(16, 6, 16, 16),
             child: Column(children: [
               // Dots
               Row(mainAxisAlignment: MainAxisAlignment.center,
@@ -73,33 +74,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 250),
                       margin: const EdgeInsets.symmetric(horizontal: 3),
-                      width: i == _currentPage ? 22 : 8,
-                      height: 8,
+                      width: i == _currentPage ? 20 : 7,
+                      height: 7,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
                         color: i == _currentPage
                             ? const Color(0xFFE8813A)
-                            : Colors.white24,
+                            : Colors.white.withOpacity(0.25),
                       ),
                     ))),
-              const SizedBox(height: 12),
+              const SizedBox(height: 10),
 
               // Haupt-Button
-              SizedBox(
-                width: double.infinity, height: 50,
-                child: ElevatedButton(
-                  onPressed: _isLast ? _startTrial : _nextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE8813A),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(14)),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    _isLast ? '10 AP1-Karten gratis starten' : 'Weiter →',
-                    style: const TextStyle(
-                        fontSize: 16, fontWeight: FontWeight.w700),
+              Center(
+                child: SizedBox(
+                  width: 280, height: 46,
+                  child: ElevatedButton(
+                    onPressed: _isLast ? _startTrial : _nextPage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE8813A),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      _isLast ? '10 AP1-Karten gratis starten' : 'Weiter →',
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w700),
+                    ),
                   ),
                 ),
               ),
@@ -120,7 +123,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     child: GestureDetector(
                       onTap: () => Navigator.push(context,
                           MaterialPageRoute(builder: (_) => const PurchaseScreen())),
-                      child: _chip('Vollversion', '29,99 € einmalig',
+                      child: _chip('Vollversion', '29,99 \u20AC einmalig',
                           const Color(0xFFE8813A)),
                     ),
                   ),
@@ -134,23 +137,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     MaterialPageRoute(builder: (_) => const LoginScreen())),
                 child: Container(
                   width: double.infinity,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
+                  padding: const EdgeInsets.symmetric(vertical: 10),
                   decoration: BoxDecoration(
                     color: const Color(0xFF1e3a5f).withOpacity(0.6),
-                    borderRadius: BorderRadius.circular(12),
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: const Row(
+                  child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                    Icon(Icons.arrow_forward,
-                        size: 15, color: Colors.white),
-                    SizedBox(width: 6),
-                    Text('Einloggen  ',
+                    const Icon(Icons.arrow_forward,
+                        size: 14, color: Colors.white),
+                    const SizedBox(width: 6),
+                    const Text('Einloggen  ',
                         style: TextStyle(color: Colors.white,
-                            fontSize: 14, fontWeight: FontWeight.w600)),
+                            fontSize: 13, fontWeight: FontWeight.w600)),
                     Text('(Vollversion bereits gekauft)',
                         style: TextStyle(
-                            color: Colors.white54,
+                            color: Colors.white.withOpacity(0.5),
                             fontSize: 12)),
                   ]),
                 ),
@@ -165,23 +168,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // ── Seite 1 ──────────────────────────────────────────
   Widget _page1() {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const Spacer(flex: 2),
-
-        // Icon Circle — wie Figma: 72px, hellblau
+        const Spacer(),
         Container(
-          width: 72, height: 72,
+          width: 64, height: 64,
           decoration: const BoxDecoration(
             color: Color(0xFF2a4a6f),
             shape: BoxShape.circle,
           ),
           child: const Center(
-              child: Text('🎯', style: TextStyle(fontSize: 32))),
+              child: Text('🎯', style: TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 10),
-
-        // Badge
+        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
@@ -193,23 +192,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontSize: 11, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 10),
-
-        // Titel
+        const SizedBox(height: 8),
         const Text('Deine AP1-Prüfung.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white,
                 fontSize: 24, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 14),
-
-        // Berufsbilder Box
+        const SizedBox(height: 12),
         Container(
-          width: double.infinity,
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: const Color(0xFF1e3a5f),
             borderRadius: BorderRadius.circular(14),
           ),
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          padding: const EdgeInsets.all(14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -236,18 +231,17 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             ],
           ),
         ),
-
-        const Spacer(flex: 3),
+        const Spacer(),
       ]),
     );
   }
 
   Widget _berufRow(String kuerzel, String name) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
+      padding: const EdgeInsets.only(bottom: 5),
       child: Row(children: [
         SizedBox(
-          width: 56,
+          width: 54,
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 4),
             decoration: BoxDecoration(
@@ -295,7 +289,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ]),
   );
 
-  // ── Seite 4 — Vollversion 29,99 € ────────────────────
+  // ── Seite 4 — nur noch Vollversion 29,99 € ────────────
   Widget _page4() => _pageShell(
     emoji: '🚀', badge: 'KOSTENLOS STARTEN',
     title: 'Jetzt testen.\nKein Risiko.',
@@ -313,25 +307,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ]),
   );
 
-  // ── Page Shell (Seite 2-4) ────────────────────────────
   Widget _pageShell({
     required String emoji, required String badge,
     required String title, required Widget child,
   }) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const Spacer(flex: 2),
-
+        const Spacer(),
         Container(
-          width: 72, height: 72,
+          width: 64, height: 64,
           decoration: const BoxDecoration(
               color: Color(0xFF2a4a6f), shape: BoxShape.circle),
           child: Center(child: Text(emoji,
-              style: const TextStyle(fontSize: 32))),
+              style: const TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 10),
-
+        const SizedBox(height: 8),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
@@ -342,14 +333,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Color(0xFFE8813A), fontSize: 11,
               fontWeight: FontWeight.w700, letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 10),
-
+        const SizedBox(height: 8),
         Text(title, textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white,
-                fontSize: 24, fontWeight: FontWeight.bold, height: 1.25)),
+                fontSize: 22, fontWeight: FontWeight.bold, height: 1.25)),
         child,
-
-        const Spacer(flex: 3),
+        const Spacer(),
       ]),
     );
   }
@@ -375,38 +364,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _step(String nr, String title, String sub, Color color) =>
       Padding(
-        padding: const EdgeInsets.symmetric(vertical: 4),
+        padding: const EdgeInsets.symmetric(vertical: 12),
         child: Row(children: [
       Container(
-        width: 28, height: 28,
+        width: 26, height: 26,
         decoration: BoxDecoration(
             color: color.withOpacity(0.15),
-            borderRadius: BorderRadius.circular(8)),
+            borderRadius: BorderRadius.circular(7)),
         child: Center(child: Text(nr, style: TextStyle(
-            color: color, fontSize: 13, fontWeight: FontWeight.bold))),
+            color: color, fontSize: 12, fontWeight: FontWeight.bold))),
       ),
       const SizedBox(width: 12),
       Expanded(child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(title, style: const TextStyle(color: Colors.white,
-              fontSize: 14, fontWeight: FontWeight.w600)),
+              fontSize: 13, fontWeight: FontWeight.w600)),
           Text(sub, style: TextStyle(
-              color: Colors.white.withOpacity(0.4), fontSize: 12)),
+              color: Colors.white.withOpacity(0.4), fontSize: 11)),
         ],
       )),
     ]));
 
   Widget _chip(String label, String value, Color color) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 8),
+    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
     decoration: BoxDecoration(
       color: color.withOpacity(0.08),
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(9),
       border: Border.all(color: color.withOpacity(0.25)),
     ),
     child: Column(children: [
       Text(label, style: TextStyle(color: color,
-          fontSize: 12, fontWeight: FontWeight.w700)),
+          fontSize: 11, fontWeight: FontWeight.w700)),
       Text(value, style: TextStyle(
           color: color.withOpacity(0.65), fontSize: 10)),
     ]),
