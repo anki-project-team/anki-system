@@ -4,6 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:ihk_ap1_prep/data/ap1_karten.dart';
+import 'package:ihk_ap1_prep/models/card_model.dart';
+import 'package:ihk_ap1_prep/screens/lern_session_screen.dart';
 import '../services/premium_service.dart';
 import '../main.dart';
 import 'settings_screen.dart';
@@ -291,7 +294,19 @@ class _HomeScreenState extends State<HomeScreen> {
                   ]),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    final allCards = alleAP1Decks
+                        .expand((deck) => deck['karten'] as List<CardModel>)
+                        .toList();
+                    Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(
+                        builder: (_) => LernSessionScreen(
+                          cards: allCards,
+                          deckName: 'Systemintegration',
+                        ),
+                      ),
+                    );
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kAccentColor,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
