@@ -3,6 +3,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../models/card_model.dart';
 import '../services/fsrs_service.dart';
 
@@ -201,45 +202,136 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                       if (_card.longAnswer.isNotEmpty) ...[
                         const SizedBox(height: 12),
                         Container(
-                          padding: const EdgeInsets.all(14),
+                          margin: const EdgeInsets.only(bottom: 8),
+                          clipBehavior: Clip.antiAlias,
                           decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
+                            borderRadius: BorderRadius.circular(12),
                           ),
-                          child: Text(
-                            _card.longAnswer,
-                            style: TextStyle(
-                              color: Colors.grey.shade700,
-                              fontSize: 13,
-                              height: 1.6,
+                          child: ExpansionTile(
+                            initiallyExpanded: false,
+                            title: const Text('ERKLÄRUNG',
+                              style: TextStyle(
+                                color: Color(0xFFE8813A),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
                             ),
+                            collapsedIconColor: Colors.white54,
+                            iconColor: const Color(0xFFE8813A),
+                            backgroundColor: const Color(0xFF1a2744),
+                            collapsedBackgroundColor: const Color(0xFF1a2744),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                child: Text(
+                                  _card.longAnswer,
+                                  style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 13,
+                                    height: 1.6,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+
+                      if (_card.url.isNotEmpty) ...[
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ExpansionTile(
+                            initiallyExpanded: false,
+                            title: const Text('WEITERFÜHRENDE LINKS 🔗',
+                              style: TextStyle(
+                                color: Color(0xFFE8813A),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
+                              ),
+                            ),
+                            collapsedIconColor: Colors.white54,
+                            iconColor: const Color(0xFFE8813A),
+                            backgroundColor: const Color(0xFF1a2744),
+                            collapsedBackgroundColor: const Color(0xFF1a2744),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                child: GestureDetector(
+                                  onTap: () => launchUrl(
+                                    Uri.parse(_card.url),
+                                    mode: LaunchMode.externalApplication,
+                                  ),
+                                  child: Text(
+                                    _card.url,
+                                    style: const TextStyle(
+                                      color: Colors.lightBlueAccent,
+                                      fontSize: 13,
+                                      decoration: TextDecoration.underline,
+                                      decorationColor: Colors.lightBlueAccent,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
 
                       if (_card.hashtags.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        Wrap(
-                          spacing: 6, runSpacing: 6,
-                          children: _card.hashtags.map((tag) =>
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 10, vertical: 4),
-                              decoration: BoxDecoration(
-                                color: _accent.withValues(alpha: 0.12),
-                                borderRadius: BorderRadius.circular(12),
-                                border: Border.all(
-                                    color: _accent.withValues(alpha: 0.4)),
-                              ),
-                              child: Text(
-                                tag.startsWith('#') ? tag : '#$tag',
-                                style: const TextStyle(
-                                  color: _accent,
-                                  fontSize: 11,
-                                ),
+                        Container(
+                          margin: const EdgeInsets.only(bottom: 8),
+                          clipBehavior: Clip.antiAlias,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: ExpansionTile(
+                            initiallyExpanded: false,
+                            title: const Text('HASHTAGS #',
+                              style: TextStyle(
+                                color: Color(0xFFE8813A),
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1,
                               ),
                             ),
-                          ).toList(),
+                            collapsedIconColor: Colors.white54,
+                            iconColor: const Color(0xFFE8813A),
+                            backgroundColor: const Color(0xFF1a2744),
+                            collapsedBackgroundColor: const Color(0xFF1a2744),
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                                child: Wrap(
+                                  spacing: 6, runSpacing: 6,
+                                  children: _card.hashtags.map((tag) =>
+                                    Container(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 10, vertical: 4),
+                                      decoration: BoxDecoration(
+                                        color: _accent.withValues(alpha: 0.12),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                            color: _accent.withValues(alpha: 0.4)),
+                                      ),
+                                      child: Text(
+                                        tag.startsWith('#') ? tag : '#$tag',
+                                        style: const TextStyle(
+                                          color: _accent,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                    ),
+                                  ).toList(),
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ],
