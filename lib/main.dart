@@ -234,12 +234,12 @@ class _BottomNav extends StatelessWidget {
       child: SafeArea(
         top: false,
         child: SizedBox(
-          height: 60,
+          height: 70,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               _NavItem(icon: '🏠', label: 'Home',      index: 0, current: currentIndex, onTap: onTap),
-              _NavItem(icon: '📚', label: 'Lernen',    index: 1, current: currentIndex, onTap: onTap),
+              _NavItem(icon: '📚', label: 'Module',    index: 1, current: currentIndex, onTap: onTap),
               _NavItem(icon: '📊', label: 'Statistik', index: 2, current: currentIndex, onTap: onTap),
             ],
           ),
@@ -273,7 +273,7 @@ class _NavItem extends StatelessWidget {
       onTap: () => onTap(index),
       behavior: HitTestBehavior.opaque,
       child: SizedBox(
-        width: 80,
+        width: 100,
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -288,13 +288,13 @@ class _NavItem extends StatelessWidget {
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
-            Text(icon, style: const TextStyle(fontSize: 20)),
+            Text(icon, style: const TextStyle(fontSize: 24)),
             const SizedBox(height: 2),
             Text(
               label,
               style: TextStyle(
                 color: color,
-                fontSize: 11,
+                fontSize: 12,
                 fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
               ),
             ),

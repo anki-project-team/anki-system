@@ -137,18 +137,6 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                     ),
                     const SizedBox(height: 16),
 
-                    // Frage
-                    Text(
-                      _card.question,
-                      style: const TextStyle(
-                        color: Color(0xFF1a1a2e),
-                        fontSize: 18,
-                        fontWeight: FontWeight.bold,
-                        height: 1.4,
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-
                     // Frage-Karte (dunkel)
                     if (!_showAnswer)
                       Container(
