@@ -8,8 +8,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:webview_flutter/webview_flutter.dart';
-import '../services/premium_service.dart';
 
 // ─── Digistore24 Konfiguration ───────────────────────────
 
@@ -34,89 +32,16 @@ class PurchaseScreen extends StatefulWidget {
 }
 
 class _PurchaseScreenState extends State<PurchaseScreen> {
-  final PremiumService _premiumService = PremiumService();
-  bool _isLoading = false;
-  bool _showWebView = false;
-  late WebViewController _webViewController;
-
   String get _checkoutUrl {
     final user = FirebaseAuth.instance.currentUser;
     final uid = user?.uid ?? 'guest';
-    // Digistore24 Checkout URL mit User-ID für Zuordnung nach Kauf
     return 'https://www.digistore24.com/product/$_kDigistoreProductId'
         '?uid=$uid'
         '&return_url=${Uri.encodeComponent('$_kAppBaseUrl$_kSuccessPath?uid=$uid')}'
         '&cancel_url=${Uri.encodeComponent('$_kAppBaseUrl$_kCancelPath')}';
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _initWebViewController();
-  }
-
-  void _initWebViewController() {
-    _webViewController = WebViewController()
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onPageStarted: (url) {
-            // Erfolg: Digistore24 leitet zur Success-URL weiter
-            if (url.contains(_kSuccessPath)) {
-              _onPurchaseSuccess();
-            }
-            // Abbruch
-            if (url.contains(_kCancelPath)) {
-              _onPurchaseCancel();
-            }
-          },
-          onWebResourceError: (error) {
-            // Bei WebView-Fehler → Fallback auf Browser
-            _openInBrowser();
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse(_checkoutUrl));
-  }
-
-  // ── Kauf erfolgreich ─────────────────────────────────
-  Future<void> _onPurchaseSuccess() async {
-    setState(() => _isLoading = true);
-
-    // Kurz warten bis Firebase Function den Status gesetzt hat
-    await Future.delayed(const Duration(seconds: 2));
-
-    // Premium-Status prüfen
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      final isPremium = await _premiumService.checkPremiumStatus(user.uid);
-      if (!mounted) return;
-
-      if (isPremium) {
-        _showSuccessDialog();
-      } else {
-        // Nochmal prüfen nach weiterer Verzögerung (IPN kann langsam sein)
-        await Future.delayed(const Duration(seconds: 3));
-        final retryPremium = await _premiumService.checkPremiumStatus(user.uid);
-        if (!mounted) return;
-        if (retryPremium) {
-          _showSuccessDialog();
-        } else {
-          _showPendingDialog();
-        }
-      }
-    }
-    setState(() => _isLoading = false);
-  }
-
-  void _onPurchaseCancel() {
-    if (_showWebView) {
-      setState(() => _showWebView = false);
-    }
-  }
-
-  // ── Im Browser öffnen (Fallback) ─────────────────────
-  Future<void> _openInBrowser() async {
+  Future<void> _openCheckout() async {
     final uri = Uri.parse(_checkoutUrl);
     if (await canLaunchUrl(uri)) {
       await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -124,106 +49,15 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Browser konnte nicht geöffnet werden.'),
+          content: Text('Browser konnte nicht geoeffnet werden.'),
           backgroundColor: Colors.red,
         ),
       );
     }
   }
 
-  // ── WebView öffnen (in-app) ──────────────────────────
-  void _openCheckout() {
-    setState(() => _showWebView = true);
-  }
-
-  void _showSuccessDialog() {
-    showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (_) => AlertDialog(
-        backgroundColor: _cardColor,
-        title: const Text('🎉 Willkommen!',
-          style: TextStyle(color: _WHITE)),
-        content: const Text(
-          'Vollversion freigeschaltet!\nAlle 200+ Karten stehen dir jetzt zur Verfügung.',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.of(context).pop(); // Dialog
-              Navigator.of(context).pushReplacementNamed('/main');
-            },
-            child: const Text('Jetzt lernen →',
-              style: TextStyle(color: _accentColor)),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _showPendingDialog() {
-    showDialog(
-      context: context,
-      builder: (_) => AlertDialog(
-        backgroundColor: _cardColor,
-        title: const Text('⏳ Zahlung wird verarbeitet',
-          style: TextStyle(color: _WHITE)),
-        content: const Text(
-          'Deine Zahlung wird gerade verarbeitet.\n'
-          'Die Vollversion wird in wenigen Minuten freigeschaltet.\n\n'
-          'Starte die App danach neu.',
-          style: TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(),
-            child: const Text('OK', style: TextStyle(color: _accentColor)),
-          ),
-        ],
-      ),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    // WebView-Modus: Checkout direkt anzeigen
-    if (_showWebView) {
-      return Scaffold(
-        backgroundColor: _bgColor,
-        appBar: AppBar(
-          backgroundColor: _bgColor,
-          leading: IconButton(
-            icon: const Icon(Icons.close, color: _WHITE),
-            onPressed: () => setState(() => _showWebView = false),
-          ),
-          title: const Text('Vollversion kaufen',
-            style: TextStyle(color: _WHITE, fontSize: 16)),
-          actions: [
-            // Browser-Fallback Button
-            IconButton(
-              icon: const Icon(Icons.open_in_browser, color: Colors.white60),
-              tooltip: 'Im Browser öffnen',
-              onPressed: _openInBrowser,
-            ),
-          ],
-        ),
-        body: Stack(
-          children: [
-            WebViewWidget(controller: _webViewController),
-            if (_isLoading)
-              Container(
-                color: Colors.black54,
-                child: const Center(
-                  child: CircularProgressIndicator(color: _accentColor),
-                ),
-              ),
-          ],
-        ),
-      );
-    }
-
-    // Normal-Modus: Upgrade-Screen
     return Scaffold(
       backgroundColor: _bgColor,
       body: SafeArea(
@@ -340,19 +174,6 @@ class _PurchaseScreenState extends State<PurchaseScreen> {
                       Icon(Icons.lock_open, color: _WHITE, size: 20),
                     ],
                   ),
-                ),
-              ),
-              const SizedBox(height: 12),
-
-              // ── Browser-Fallback ──────────────────
-              SizedBox(
-                width: double.infinity,
-                child: TextButton.icon(
-                  onPressed: _openInBrowser,
-                  icon: const Icon(Icons.open_in_browser,
-                      color: Colors.white38, size: 16),
-                  label: const Text('Im Browser öffnen',
-                    style: TextStyle(color: Colors.white38, fontSize: 12)),
                 ),
               ),
               const SizedBox(height: 16),
