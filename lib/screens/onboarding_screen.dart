@@ -165,8 +165,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // ── Seite 1 ──────────────────────────────────────────
   Widget _page1() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(DS.spacingLg, DS.spacingSm, DS.spacingLg, 0),
-      child: Column(children: [
+      padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
           width: 56, height: 56,
           decoration: const BoxDecoration(
@@ -306,8 +306,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     required String title, required Widget child,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(DS.spacingLg, DS.spacingSm, DS.spacingLg, 0),
-      child: Column(children: [
+      padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
+      child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
           width: 56, height: 56,
           decoration: const BoxDecoration(
