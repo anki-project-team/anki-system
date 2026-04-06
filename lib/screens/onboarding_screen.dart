@@ -49,7 +49,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeInOut),
                   child: Text('Überspringen', style: TextStyle(
-                      color: Colors.white.withOpacity(0.5), fontSize: 13)),
+                      color: Colors.white.withOpacity(0.75), fontSize: 14,
+                      fontWeight: FontWeight.w500)),
                 ),
             ]),
           ),
@@ -168,9 +169,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
-          width: 56, height: 56,
-          decoration: const BoxDecoration(
-            color: Color(0xFF1e3a5f),
+          width: 48, height: 48,
+          decoration: BoxDecoration(
+            color: const Color(0xFF1e3a5f).withOpacity(0.6),
             shape: BoxShape.circle,
           ),
           child: const Center(
@@ -194,7 +195,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             style: TextStyle(color: Colors.white,
                 fontSize: DS.headline, fontWeight: FontWeight.bold)),
         const SizedBox(height: DS.spacingSm),
-        Container(
+        Center(
+          child: Container(
+          constraints: const BoxConstraints(maxWidth: 340),
           decoration: BoxDecoration(
             color: const Color(0xFF1e3a5f),
             borderRadius: BorderRadius.circular(14),
@@ -225,7 +228,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               _berufRow('KDM', 'Digitalisierungsmanagement'),
             ],
           ),
-        ),
+        )),
       ]),
     );
   }
