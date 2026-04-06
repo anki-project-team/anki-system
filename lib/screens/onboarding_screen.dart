@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
 import 'package:ihk_ap1_prep/screens/login_screen.dart';
+import 'purchase_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -106,11 +107,22 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               // Preis-Chips — nur letzte Seite
               if (_isLast) ...[
                 Row(children: [
-                  _chip('Gratis', '10 Karten testen',
-                      const Color(0xFF22C55E)),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: _startTrial,
+                      child: _chip('Gratis', '10 Karten testen',
+                          const Color(0xFF22C55E)),
+                    ),
+                  ),
                   const SizedBox(width: 8),
-                  _chip('Vollversion', '29,99 € einmalig',
-                      const Color(0xFFE8813A)),
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.push(context,
+                          MaterialPageRoute(builder: (_) => const PurchaseScreen())),
+                      child: _chip('Vollversion', '29,99 \u20AC einmalig',
+                          const Color(0xFFE8813A)),
+                    ),
+                  ),
                 ]),
                 const SizedBox(height: 8),
               ],
@@ -364,21 +376,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     )),
   ]);
 
-  Widget _chip(String label, String value, Color color) => Expanded(
-    child: Container(
-      padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
-      decoration: BoxDecoration(
-        color: color.withOpacity(0.08),
-        borderRadius: BorderRadius.circular(9),
-        border: Border.all(color: color.withOpacity(0.25)),
-      ),
-      child: Column(children: [
-        Text(label, style: TextStyle(color: color,
-            fontSize: 11, fontWeight: FontWeight.w700)),
-        Text(value, style: TextStyle(
-            color: color.withOpacity(0.65), fontSize: 10)),
-      ]),
+  Widget _chip(String label, String value, Color color) => Container(
+    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
+    decoration: BoxDecoration(
+      color: color.withOpacity(0.08),
+      borderRadius: BorderRadius.circular(9),
+      border: Border.all(color: color.withOpacity(0.25)),
     ),
+    child: Column(children: [
+      Text(label, style: TextStyle(color: color,
+          fontSize: 11, fontWeight: FontWeight.w700)),
+      Text(value, style: TextStyle(
+          color: color.withOpacity(0.65), fontSize: 10)),
+    ]),
   );
 
   void _nextPage() => _controller.nextPage(
