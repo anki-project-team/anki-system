@@ -9,9 +9,8 @@ import '../services/fsrs_service.dart';
 
 const _bg      = Color(0xFF162447);
 const _accent  = Color(0xFFE8813A);
-const _card    = Color(0xFF1e3a5f);
 const _dark    = Color(0xFF1a2744);
-const _light   = Color(0xFFF5F5F5);
+
 
 class LernSessionScreen extends StatefulWidget {
   final List<CardModel> cards;
@@ -69,7 +68,7 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: _light,
+      backgroundColor: _bg,
       body: SafeArea(
         child: Column(
           children: [
@@ -107,13 +106,67 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
             // ── Fortschrittsbalken ──────────────────────
             LinearProgressIndicator(
               value: (_index + 1) / widget.cards.length,
-              backgroundColor: Colors.grey.shade300,
+              backgroundColor: Colors.white24,
               valueColor:
                   const AlwaysStoppedAnimation<Color>(_accent),
               minHeight: 4,
             ),
 
             // ── Inhalt ──────────────────────────────────
+            if (!_showAnswer)
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Row(
+                        children: List.generate(
+                          widget.cards.length.clamp(0, 10),
+                          (i) => Container(
+                            margin: const EdgeInsets.only(right: 4),
+                            width: 8, height: 8,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: i <= _index
+                                  ? _accent
+                                  : Colors.white24,
+                            ),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(32),
+                        decoration: BoxDecoration(
+                          color: _dark,
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Column(
+                          children: [
+                            const Icon(Icons.help_outline,
+                                color: _accent, size: 36),
+                            const SizedBox(height: 16),
+                            Text(
+                              _card.question,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold,
+                                height: 1.4,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+            if (_showAnswer)
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.all(20),
@@ -131,44 +184,15 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                             shape: BoxShape.circle,
                             color: i <= _index
                                 ? _accent
-                                : Colors.grey.shade300,
+                                : Colors.white24,
                           ),
                         ),
                       ),
                     ),
                     const SizedBox(height: 16),
 
-                    // Frage-Karte (dunkel)
-                    if (!_showAnswer)
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(28),
-                        decoration: BoxDecoration(
-                          color: _bg,
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Column(
-                          children: [
-                            const Icon(Icons.help_outline,
-                                color: _accent, size: 36),
-                            const SizedBox(height: 16),
-                            Text(
-                              _card.question,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                                height: 1.4,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-
-                    // KERNANTWORT (nach Aufdecken)
-                    if (_showAnswer) ...[
-                      Container(
+                    // KERNANTWORT
+                    Container(
                         width: double.infinity,
                         padding: const EdgeInsets.all(16),
                         decoration: BoxDecoration(
@@ -334,7 +358,6 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                           ),
                         ),
                       ],
-                    ],
 
                     const SizedBox(height: 24),
                   ],
@@ -344,7 +367,7 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
 
             // ── Buttons (immer am unteren Rand) ────────
             Container(
-              color: Colors.white,
+              color: const Color(0xFF1e3a5f),
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 20),
               child: !_showAnswer
                   // Antwort zeigen Button
@@ -377,7 +400,7 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                         const Text(
                           'Wie gut kennst du diese Karte?',
                           style: TextStyle(
-                            color: Color(0xFF162447),
+                            color: Colors.white70,
                             fontSize: 13,
                             fontWeight: FontWeight.w500,
                           ),

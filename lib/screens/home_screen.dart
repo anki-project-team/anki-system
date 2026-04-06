@@ -244,14 +244,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 Container(
                   padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                   decoration: BoxDecoration(
-                    color: kAccentColor.withOpacity(0.12),
+                    color: kAccentColor.withOpacity(_streak > 0 ? 0.12 : 0.08),
                     borderRadius: BorderRadius.circular(20),
-                    border: Border.all(color: kAccentColor.withOpacity(0.4)),
+                    border: _streak > 0 ? Border.all(color: kAccentColor.withOpacity(0.4)) : null,
                   ),
                   child: Row(mainAxisSize: MainAxisSize.min, children: [
                     const Text('⚡', style: TextStyle(fontSize: 12)),
                     const SizedBox(width: 4),
-                    Text(_streak > 0 ? 'AKTIVE SERIE · $_streak Tage Folge' : 'Serie starten!',
+                    Text(_streak > 0 ? 'AKTIVE SERIE · $_streak Tage Folge' : 'Starte deine erste Serie',
                         style: const TextStyle(color: kAccentColor, fontSize: 10, fontWeight: FontWeight.w700)),
                   ]),
                 ),
@@ -387,8 +387,11 @@ class _HomeScreenState extends State<HomeScreen> {
             const SizedBox(height: 8),
             GestureDetector(
               onTap: () {},
-              child: const Text('Alle Statistiken ansehen →',
-                  style: TextStyle(color: kAccentColor, fontSize: 12, fontWeight: FontWeight.w600)),
+              child: const Padding(
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                child: Text('Alle Statistiken ansehen →',
+                    style: TextStyle(color: kAccentColor, fontSize: 12, fontWeight: FontWeight.w600)),
+              ),
             ),
           ],
         ),
@@ -408,8 +411,14 @@ class _HomeScreenState extends State<HomeScreen> {
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             const Text('Zuletzt gelernte Decks',
                 style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold)),
-            Text('ALLE SAMMLUNGEN',
-                style: TextStyle(color: kAccentColor.withOpacity(0.8), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+            GestureDetector(
+              onTap: () {},
+              child: Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+                child: Text('ALLE SAMMLUNGEN',
+                    style: TextStyle(color: kAccentColor.withOpacity(0.8), fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
+              ),
+            ),
           ]),
           const SizedBox(height: 12),
           ..._recentDecks.map(_buildDeckRow),
@@ -469,7 +478,10 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(width: 8),
           GestureDetector(
             onTap: () {},
-            child: const Text('Jetzt lernen →', style: TextStyle(color: kAccentColor, fontSize: 11, fontWeight: FontWeight.w700)),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Text('Jetzt lernen →', style: TextStyle(color: kAccentColor, fontSize: 11, fontWeight: FontWeight.w700)),
+            ),
           ),
         ],
       ),

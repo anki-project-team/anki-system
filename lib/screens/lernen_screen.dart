@@ -344,7 +344,8 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                   children: [
                     _deckStat('$cardCount', 'Karten'),
                     const SizedBox(width: 16),
-                    _deckStat('0', 'Gelernt'),
+                    Text('Bereit zum Lernen',
+                        style: const TextStyle(color: Colors.white38, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 10),
