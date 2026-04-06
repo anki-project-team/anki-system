@@ -10,6 +10,7 @@ import 'package:ihk_ap1_prep/screens/statistik_screen.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
 import 'package:ihk_ap1_prep/screens/upgrade_screen.dart';
 import 'package:ihk_ap1_prep/main.dart';
+import 'settings_screen.dart';
 
 class LernkartenDecksScreen extends StatefulWidget {
   const LernkartenDecksScreen({super.key});
@@ -112,7 +113,12 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
           const Text('IHK AP1 Vorbereitung',
               style: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w600)),
           const Spacer(),
-          Icon(Icons.settings_outlined, color: Colors.white.withOpacity(0.4), size: 22),
+          GestureDetector(
+            onTap: () => Navigator.of(context, rootNavigator: true).push(
+              MaterialPageRoute(builder: (_) => const SettingsScreen()),
+            ),
+            child: Icon(Icons.settings_outlined, color: Colors.white.withOpacity(0.5), size: 22),
+          ),
         ],
       ),
     );

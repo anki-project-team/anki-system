@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../main.dart';
+import 'settings_screen.dart';
 
 class StatisticsScreen extends StatelessWidget {
   const StatisticsScreen({super.key});
@@ -15,13 +16,24 @@ class StatisticsScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               // Header
-              const Text(
-                'Akademische Leistung',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    'Akademische Leistung',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () => Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(builder: (_) => const SettingsScreen()),
+                    ),
+                    child: Icon(Icons.settings_outlined, color: Colors.white.withOpacity(0.5), size: 22),
+                  ),
+                ],
               ),
               const SizedBox(height: 4),
               const Text(
