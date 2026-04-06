@@ -23,7 +23,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(children: [
           // ── Header ──────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
             child: Row(children: [
               Container(
                 width: 30, height: 30,
@@ -164,18 +164,18 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   // ── Seite 1 ──────────────────────────────────────────
   Widget _page1() {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
       child: Column(children: [
         Container(
-          width: 72, height: 72,
+          width: 60, height: 60,
           decoration: const BoxDecoration(
             color: Color(0xFF1e3a5f),
             shape: BoxShape.circle,
           ),
           child: const Center(
-              child: Text('🎯', style: TextStyle(fontSize: 34))),
+              child: Text('🎯', style: TextStyle(fontSize: 28))),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 6),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
@@ -187,19 +187,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontSize: 11, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         const Text('Deine AP1-Prüfung.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white,
-                fontSize: 22, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 10),
+                fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
         Container(
           width: 300,
           decoration: BoxDecoration(
             color: const Color(0xFF1e3a5f),
             borderRadius: BorderRadius.circular(14),
           ),
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          padding: const EdgeInsets.fromLTRB(14, 10, 14, 10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -213,7 +213,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               _berufRow('FIDV',  'Digitale Vernetzung'),
               _berufRow('ITSE',  'IT-System-Elektroniker'),
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8),
+                padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Divider(
                     color: Colors.white.withOpacity(0.1), height: 1),
               ),
@@ -232,7 +232,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _berufRow(String kuerzel, String name) {
     return Padding(
-      padding: const EdgeInsets.only(bottom: 7),
+      padding: const EdgeInsets.only(bottom: 5),
       child: Row(children: [
         SizedBox(
           width: 54,
@@ -306,16 +306,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     required String title, required Widget child,
   }) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+      padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
       child: Column(children: [
         Container(
-          width: 72, height: 72,
+          width: 60, height: 60,
           decoration: const BoxDecoration(
               color: Color(0xFF1e3a5f), shape: BoxShape.circle),
           child: Center(child: Text(emoji,
-              style: const TextStyle(fontSize: 34))),
+              style: const TextStyle(fontSize: 28))),
         ),
-        const SizedBox(height: 10),
+        const SizedBox(height: 6),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
@@ -326,7 +326,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Color(0xFFE8813A), fontSize: 11,
               fontWeight: FontWeight.w700, letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 6),
         Text(title, textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white,
                 fontSize: 22, fontWeight: FontWeight.bold, height: 1.25)),
