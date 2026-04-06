@@ -169,15 +169,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
-          width: 48, height: 48,
-          decoration: BoxDecoration(
-            color: const Color(0xFF1e3a5f).withOpacity(0.6),
+          width: 64, height: 64,
+          decoration: const BoxDecoration(
+            color: Color(0xFF2a4a6f),
             shape: BoxShape.circle,
           ),
           child: const Center(
               child: Text('🎯', style: TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: DS.spacingSm),
+        const SizedBox(height: 6),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
@@ -189,12 +189,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontSize: 11, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5)),
         ),
-        const SizedBox(height: DS.spacingSm),
+        const SizedBox(height: 6),
         const Text('Deine AP1-Prüfung.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white,
                 fontSize: DS.headline, fontWeight: FontWeight.bold)),
-        const SizedBox(height: DS.spacingSm),
+        const SizedBox(height: 6),
         Center(
           child: Container(
           constraints: const BoxConstraints(maxWidth: 340),
@@ -312,13 +312,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
         Container(
-          width: 56, height: 56,
+          width: 64, height: 64,
           decoration: const BoxDecoration(
-              color: Color(0xFF1e3a5f), shape: BoxShape.circle),
+              color: Color(0xFF2a4a6f), shape: BoxShape.circle),
           child: Center(child: Text(emoji,
               style: const TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: DS.spacingSm),
+        const SizedBox(height: 6),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
           decoration: BoxDecoration(
@@ -329,7 +329,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Color(0xFFE8813A), fontSize: 11,
               fontWeight: FontWeight.w700, letterSpacing: 0.5)),
         ),
-        const SizedBox(height: DS.spacingSm),
+        const SizedBox(height: 6),
         Text(title, textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white,
                 fontSize: 22, fontWeight: FontWeight.bold, height: 1.25)),
