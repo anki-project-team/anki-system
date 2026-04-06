@@ -86,21 +86,23 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               const SizedBox(height: 10),
 
               // Haupt-Button
-              SizedBox(
-                width: double.infinity, height: 46,
-                child: ElevatedButton(
-                  onPressed: _isLast ? _startTrial : _nextPage,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE8813A),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12)),
-                    elevation: 0,
-                  ),
-                  child: Text(
-                    _isLast ? '10 AP1-Karten gratis starten' : 'Weiter →',
-                    style: const TextStyle(
-                        fontSize: 15, fontWeight: FontWeight.w700),
+              Center(
+                child: SizedBox(
+                  width: 280, height: 46,
+                  child: ElevatedButton(
+                    onPressed: _isLast ? _startTrial : _nextPage,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFFE8813A),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(25)),
+                      elevation: 0,
+                    ),
+                    child: Text(
+                      _isLast ? '10 AP1-Karten gratis starten' : 'Weiter →',
+                      style: const TextStyle(
+                          fontSize: 15, fontWeight: FontWeight.w700),
+                    ),
                   ),
                 ),
               ),
@@ -177,9 +179,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: const Center(
               child: Text('🎯', style: TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFFE8813A), width: 1.5),
             borderRadius: BorderRadius.circular(20),
@@ -189,20 +191,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontSize: 11, fontWeight: FontWeight.w700,
                   letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
         const Text('Deine AP1-Prüfung.',
             textAlign: TextAlign.center,
             style: TextStyle(color: Colors.white,
-                fontSize: DS.headline, fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
-        Center(
-          child: Container(
-          constraints: const BoxConstraints(maxWidth: 340),
+                fontSize: 24, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 12),
+        Container(
+          margin: const EdgeInsets.symmetric(horizontal: 8),
           decoration: BoxDecoration(
             color: const Color(0xFF1e3a5f),
             borderRadius: BorderRadius.circular(14),
           ),
-          padding: const EdgeInsets.all(DS.spacingMd),
+          padding: const EdgeInsets.all(14),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -228,7 +229,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               _berufRow('KDM', 'Digitalisierungsmanagement'),
             ],
           ),
-        )),
+        ),
       ]),
     );
   }
@@ -253,7 +254,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
         ),
         const SizedBox(width: 10),
-        Text(name, style: const TextStyle(color: Colors.white, fontSize: 13)),
+        Text(name, style: const TextStyle(color: Colors.white, fontSize: 14)),
       ]),
     );
   }
@@ -318,9 +319,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Center(child: Text(emoji,
               style: const TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
         Container(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
             border: Border.all(color: const Color(0xFFE8813A), width: 1.5),
             borderRadius: BorderRadius.circular(20),
@@ -329,7 +330,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               color: Color(0xFFE8813A), fontSize: 11,
               fontWeight: FontWeight.w700, letterSpacing: 0.5)),
         ),
-        const SizedBox(height: 6),
+        const SizedBox(height: 8),
         Text(title, textAlign: TextAlign.center,
             style: const TextStyle(color: Colors.white,
                 fontSize: 22, fontWeight: FontWeight.bold, height: 1.25)),
