@@ -324,12 +324,6 @@ class _HomeScreenState extends State<HomeScreen> {
               const SizedBox(width: 4),
               Text('$_sessionMinutes Min. Sitzung',
                   style: TextStyle(color: Colors.white.withOpacity(0.35), fontSize: 11)),
-              const Spacer(),
-              GestureDetector(
-                onTap: () {}, // TODO: Tab wechseln
-                child: const Text('Alle Module ansehen \u2192',
-                    style: TextStyle(color: kAccentColor, fontSize: 12, fontWeight: FontWeight.w600)),
-              ),
             ]),
           ],
         ),

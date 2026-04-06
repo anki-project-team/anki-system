@@ -338,36 +338,40 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             const SizedBox(height: 14),
 
             // Bottom: Stats + Button
-            Row(
+            Column(
               children: [
-                _deckStat('$cardCount', 'Karten'),
-                const SizedBox(width: 16),
-                _deckStat('0', 'Gelernt'),
-                const Spacer(),
-
-                // Jetzt lernen / Upgraden Button
-                ElevatedButton.icon(
-                  onPressed: locked
-                      ? () => Navigator.of(context, rootNavigator: true).push(
-                            MaterialPageRoute(builder: (_) => const UpgradeScreen()),
-                          )
-                      : (cards.isNotEmpty
-                          ? () => _startDeck(context, cards, name)
-                          : null),
-                  icon: locked
-                      ? const Icon(Icons.lock_outline, size: 14)
-                      : const SizedBox.shrink(),
-                  label: Text(locked ? 'Upgraden' : 'Jetzt lernen',
-                      style: const TextStyle(fontSize: 11, fontWeight: FontWeight.w700)),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: locked ? kAccentColor : kAccentColor,
-                    disabledBackgroundColor: kCardColor,
-                    foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                    elevation: 0,
-                    minimumSize: Size.zero,
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                Row(
+                  children: [
+                    _deckStat('$cardCount', 'Karten'),
+                    const SizedBox(width: 16),
+                    _deckStat('0', 'Gelernt'),
+                  ],
+                ),
+                const SizedBox(height: 10),
+                SizedBox(
+                  width: double.infinity,
+                  child: ElevatedButton.icon(
+                    onPressed: locked
+                        ? () => Navigator.of(context, rootNavigator: true).push(
+                              MaterialPageRoute(builder: (_) => const UpgradeScreen()),
+                            )
+                        : (cards.isNotEmpty
+                            ? () => _startDeck(context, cards, name)
+                            : null),
+                    icon: locked
+                        ? const Icon(Icons.lock_outline, size: 14)
+                        : const SizedBox.shrink(),
+                    label: Text(locked ? 'Upgraden' : 'Jetzt lernen',
+                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kAccentColor,
+                      disabledBackgroundColor: kCardColor,
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      elevation: 0,
+                      minimumSize: const Size(120, 42),
+                    ),
                   ),
                 ),
               ],
