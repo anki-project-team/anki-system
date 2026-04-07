@@ -268,7 +268,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
           ),
-          const SizedBox(height: 16),
+          const SizedBox(height: 24),
           const Text(
             'Deine AP1-Prüfung.',
             textAlign: TextAlign.center,
