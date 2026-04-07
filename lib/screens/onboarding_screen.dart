@@ -48,9 +48,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onTap: () => _controller.animateToPage(_total - 1,
                       duration: const Duration(milliseconds: 350),
                       curve: Curves.easeInOut),
-                  child: Text('Überspringen', style: TextStyle(
-                      color: Colors.white.withOpacity(0.75), fontSize: 14,
-                      fontWeight: FontWeight.w500)),
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFE8813A),
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: const Text('Überspringen', style: TextStyle(
+                        color: Colors.white, fontSize: 13,
+                        fontWeight: FontWeight.w600)),
+                  ),
                 ),
             ]),
           ),
