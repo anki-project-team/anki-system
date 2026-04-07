@@ -177,7 +177,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const SizedBox(height: 40),
+        const SizedBox(height: 24),
         Container(
           width: 64, height: 64,
           decoration: const BoxDecoration(
@@ -187,7 +187,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: const Center(
               child: Text('🎯', style: TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 14),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
@@ -321,7 +321,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const SizedBox(height: 40),
+        const SizedBox(height: 24),
         Container(
           width: 64, height: 64,
           decoration: const BoxDecoration(
@@ -329,7 +329,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           child: Center(child: Text(emoji,
               style: const TextStyle(fontSize: 26))),
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 14),
         Container(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 5),
           decoration: BoxDecoration(
