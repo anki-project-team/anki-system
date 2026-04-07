@@ -177,7 +177,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const SizedBox(height: 50),
+        const SizedBox(height: 40),
         Container(
           width: 64, height: 64,
           decoration: const BoxDecoration(
@@ -321,7 +321,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const SizedBox(height: 50),
+        const SizedBox(height: 40),
         Container(
           width: 64, height: 64,
           decoration: const BoxDecoration(
