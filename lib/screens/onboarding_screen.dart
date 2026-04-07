@@ -384,7 +384,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         const SizedBox(height: 8),
         _infoRow('🔁', 'FSRS 4.5 Algorithmus', 'Wissenschaftlich bewährt.'),
         const SizedBox(height: 8),
-        _infoRow('📱', 'Tägliche Erinnerungen', 'Push-Notification um 07:30 Uhr.'),
+        _infoRow(
+          '📱',
+          'Tägliche Erinnerungen',
+          'Push-Notification um 07:30 Uhr.',
+        ),
       ],
     ),
   );
@@ -505,6 +509,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   Widget _infoRow(String emoji, String title, String sub) => Container(
+    margin: const EdgeInsets.symmetric(horizontal: 32),
     padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
     decoration: BoxDecoration(
       color: const Color(0xFF1e3a5f),
