@@ -114,7 +114,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           borderRadius: BorderRadius.circular(4),
                           color: i == _currentPage
                               ? const Color(0xFFE8813A)
-                              : Colors.white.withValues(alpha:0.25),
+                              : Colors.white.withValues(alpha: 0.25),
                         ),
                       ),
                     ),
@@ -193,7 +193,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       width: double.infinity,
                       padding: const EdgeInsets.symmetric(vertical: 10),
                       decoration: BoxDecoration(
-                        color: const Color(0xFF1e3a5f).withValues(alpha:0.6),
+                        color: const Color(0xFF1e3a5f).withValues(alpha: 0.6),
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Row(
@@ -216,7 +216,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           Text(
                             '(Vollversion bereits gekauft)',
                             style: TextStyle(
-                              color: Colors.white.withValues(alpha:0.5),
+                              color: Colors.white.withValues(alpha: 0.5),
                               fontSize: 12,
                             ),
                           ),
@@ -278,7 +278,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 18),
+          const SizedBox(height: 24),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 32),
             decoration: BoxDecoration(
@@ -294,7 +294,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Text(
                       'IT-Berufe',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha:0.45),
+                        color: Colors.white.withValues(alpha: 0.45),
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -308,14 +308,14 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 6),
                       child: Divider(
-                        color: Colors.white.withValues(alpha:0.1),
+                        color: Colors.white.withValues(alpha: 0.1),
                         height: 1,
                       ),
                     ),
                     Text(
                       'Kaufmännisch',
                       style: TextStyle(
-                        color: Colors.white.withValues(alpha:0.45),
+                        color: Colors.white.withValues(alpha: 0.45),
                         fontSize: 11,
                         fontWeight: FontWeight.w500,
                       ),
@@ -526,7 +526,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Text(
                 sub,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha:0.5),
+                  color: Colors.white.withValues(alpha: 0.5),
                   fontSize: 11,
                 ),
               ),
@@ -545,7 +545,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           width: 26,
           height: 26,
           decoration: BoxDecoration(
-            color: color.withValues(alpha:0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius: BorderRadius.circular(7),
           ),
           child: Center(
@@ -575,7 +575,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               Text(
                 sub,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha:0.4),
+                  color: Colors.white.withValues(alpha: 0.4),
                   fontSize: 11,
                 ),
               ),
@@ -589,9 +589,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _chip(String label, String value, Color color) => Container(
     padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
     decoration: BoxDecoration(
-      color: color.withValues(alpha:0.08),
+      color: color.withValues(alpha: 0.08),
       borderRadius: BorderRadius.circular(9),
-      border: Border.all(color: color.withValues(alpha:0.25)),
+      border: Border.all(color: color.withValues(alpha: 0.25)),
     ),
     child: Column(
       children: [
@@ -605,7 +605,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ),
         Text(
           value,
-          style: TextStyle(color: color.withValues(alpha:0.65), fontSize: 10),
+          style: TextStyle(color: color.withValues(alpha: 0.65), fontSize: 10),
         ),
       ],
     ),
