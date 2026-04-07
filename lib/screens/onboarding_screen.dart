@@ -385,8 +385,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         _infoRow('🔁', 'FSRS 4.5 Algorithmus', 'Wissenschaftlich bewährt.'),
         const SizedBox(height: 8),
         _infoRow('📱', 'Tägliche Erinnerungen', 'Push-Notification um 07:30 Uhr.'),
-        const SizedBox(height: 8),
-        _infoRow('🎯', 'Alle 7 Berufsbilder', 'FIAE, FISI, FIADA, FIDV & mehr.'),
       ],
     ),
   );
