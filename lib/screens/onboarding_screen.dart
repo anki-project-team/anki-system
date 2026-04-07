@@ -24,7 +24,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         child: Column(children: [
           // ── Header ──────────────────────────────────
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 6, 16, 0),
+            padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
             child: Row(children: [
               Container(
                 width: 30, height: 30,
@@ -177,7 +177,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const Spacer(),
+        const SizedBox(height: 100),
         Container(
           width: 64, height: 64,
           decoration: const BoxDecoration(
@@ -321,7 +321,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: DS.spacingLg),
       child: Column(children: [
-        const Spacer(),
+        const SizedBox(height: 100),
         Container(
           width: 64, height: 64,
           decoration: const BoxDecoration(
