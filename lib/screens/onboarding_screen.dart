@@ -375,15 +375,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       children: [
         const SizedBox(height: 14),
         _infoRow('⏱', 'Richtiger Zeitpunkt', 'Nicht zu früh. Nicht zu spät.'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         _infoRow(
           '📉',
           '40% weniger Lernzeit',
           'Mehr Ergebnis, weniger Aufwand.',
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         _infoRow('🔁', 'FSRS 4.5 Algorithmus', 'Wissenschaftlich bewährt.'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         _infoRow(
           '📱',
           'Tägliche Erinnerungen',
