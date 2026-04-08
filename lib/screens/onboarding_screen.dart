@@ -297,42 +297,64 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   // ── Seite 2 — Features kombiniert ──────────────────────
-  Widget _page2() => _pageShell(
-    emoji: '🏆',
-    badge: 'BESTNOTEN-VORBEREITUNG',
-    title: 'Bestens vorbereitet.',
-    child: Column(
-      children: [
-        _infoRow(
-          '⏱',
-          'FSRS 4.5 Algorithmus',
-          '40% weniger Lernzeit, wissenschaftlich bewährt.',
-        ),
-        const SizedBox(height: 8),
-        _infoRow(
-          '🃏',
-          '450+ echte IHK-Fragen',
-          'Kernantwort · Erklärung · Links',
-        ),
-        const SizedBox(height: 8),
-        _infoRow('🎮', 'Prüfungssimulator', 'Teste wie in der echten Prüfung.'),
-        const SizedBox(height: 8),
-        _infoRow(
-          '📊',
-          'Statistik & Sicherheitsgrad',
-          'Sieh wo deine Lücken sind.',
-        ),
-        const SizedBox(height: 8),
-        _infoRow(
-          '📱',
-          'Tägliche Erinnerungen',
-          'Push-Notification um 07:30 Uhr.',
-        ),
-        const SizedBox(height: 8),
-        _infoRow('📅', 'Lernkalender', 'Deine Fälligkeiten im Überblick.'),
-      ],
-    ),
-  );
+  Widget _page2() {
+    Widget featureRow(String title, String subtitle) => Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          Container(
+            width: 6, height: 6,
+            decoration: const BoxDecoration(
+              shape: BoxShape.circle,
+              color: Color(0xFFE8813A),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(title, style: const TextStyle(
+                    color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+                Text(subtitle, style: const TextStyle(
+                    color: Colors.white54, fontSize: 11)),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return _pageShell(
+      emoji: '🏆',
+      badge: 'BESTNOTEN-VORBEREITUNG',
+      title: 'Bestens vorbereitet.',
+      child: Column(
+        children: [
+          const SizedBox(height: 14),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 16),
+            padding: const EdgeInsets.all(18),
+            decoration: BoxDecoration(
+              color: const Color(0xFF1e3a5f),
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                featureRow('⏱  FSRS 4.5 Algorithmus', '40% weniger Lernzeit'),
+                featureRow('🃏  450+ echte IHK-Fragen', 'Kernantwort · Erklärung · Links'),
+                featureRow('🎮  Prüfungssimulator', 'Teste wie in der echten Prüfung'),
+                featureRow('📊  Statistik & Sicherheitsgrad', 'Sieh wo deine Lücken sind'),
+                featureRow('📱  Tägliche Erinnerungen', 'Push-Notification um 07:30 Uhr'),
+                featureRow('📅  Lernkalender', 'Deine Fälligkeiten im Überblick'),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
 
   // ── Seite 3 — Lernpfad wählen ──────────────────────────
   Widget _page3() {
@@ -697,43 +719,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       ),
     );
   }
-
-  Widget _infoRow(String emoji, String title, String sub) => Container(
-    margin: const EdgeInsets.symmetric(horizontal: 32),
-    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-    decoration: BoxDecoration(
-      color: const Color(0xFF1e3a5f),
-      borderRadius: BorderRadius.circular(12),
-    ),
-    child: Row(
-      children: [
-        Text(emoji, style: const TextStyle(fontSize: 20)),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                sub,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.5),
-                  fontSize: 11,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
 
   void _nextPage() => _controller.nextPage(
     duration: const Duration(milliseconds: 320),
