@@ -128,8 +128,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       height: 46,
                       child: ElevatedButton(
                         onPressed: _isLast
-                            ? () => Navigator.push(context,
-                                MaterialPageRoute(builder: (_) => const RegisterScreen()))
+                            ? () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => const RegisterScreen(),
+                                ),
+                              )
                             : _nextPage,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE8813A),
@@ -297,20 +301,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     emoji: '🏆',
     badge: 'BESTNOTEN-VORBEREITUNG',
     title: 'Bestens vorbereitet.',
-    child: Column(children: [
-      const SizedBox(height: 14),
-      _infoRow('⏱', 'FSRS 4.5 Algorithmus', '40% weniger Lernzeit, wissenschaftlich bewährt.'),
-      const SizedBox(height: 8),
-      _infoRow('🃏', '450+ echte IHK-Fragen', 'Kernantwort · Erklärung · Links'),
-      const SizedBox(height: 8),
-      _infoRow('🎮', 'Prüfungssimulator', 'Teste wie in der echten Prüfung.'),
-      const SizedBox(height: 8),
-      _infoRow('📊', 'Statistik & Sicherheitsgrad', 'Sieh wo deine Lücken sind.'),
-      const SizedBox(height: 8),
-      _infoRow('📱', 'Tägliche Erinnerungen', 'Push-Notification um 07:30 Uhr.'),
-      const SizedBox(height: 8),
-      _infoRow('📅', 'Lernkalender', 'Deine Fälligkeiten im Überblick.'),
-    ]),
+    child: Column(
+      children: [
+        const SizedBox(height: 10),
+        _infoRow(
+          '⏱',
+          'FSRS 4.5 Algorithmus',
+          '40% weniger Lernzeit, wissenschaftlich bewährt.',
+        ),
+        const SizedBox(height: 8),
+        _infoRow(
+          '🃏',
+          '450+ echte IHK-Fragen',
+          'Kernantwort · Erklärung · Links',
+        ),
+        const SizedBox(height: 8),
+        _infoRow('🎮', 'Prüfungssimulator', 'Teste wie in der echten Prüfung.'),
+        const SizedBox(height: 8),
+        _infoRow(
+          '📊',
+          'Statistik & Sicherheitsgrad',
+          'Sieh wo deine Lücken sind.',
+        ),
+        const SizedBox(height: 8),
+        _infoRow(
+          '📱',
+          'Tägliche Erinnerungen',
+          'Push-Notification um 07:30 Uhr.',
+        ),
+        const SizedBox(height: 8),
+        _infoRow('📅', 'Lernkalender', 'Deine Fälligkeiten im Überblick.'),
+      ],
+    ),
   );
 
   // ── Seite 3 — Lernpfad wählen ──────────────────────────
@@ -321,193 +343,301 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
     Widget featureDot(Color color, String text) => Padding(
       padding: const EdgeInsets.only(bottom: 6),
-      child: Row(children: [
-        Container(width: 6, height: 6,
-            decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
-        const SizedBox(width: 10),
-        Text(text, style: const TextStyle(color: Colors.white, fontSize: 13)),
-      ]),
+      child: Row(
+        children: [
+          Container(
+            width: 6,
+            height: 6,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+          ),
+          const SizedBox(width: 10),
+          Text(text, style: const TextStyle(color: Colors.white, fontSize: 13)),
+        ],
+      ),
     );
 
     return SingleChildScrollView(
       padding: const EdgeInsets.symmetric(horizontal: 16),
-      child: Column(children: [
-        const SizedBox(height: 24),
-        const Text('Wähle deinen\nLernpfad',
+      child: Column(
+        children: [
+          const SizedBox(height: 24),
+          const Text(
+            'Wähle deinen\nLernpfad',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 24,
-                fontWeight: FontWeight.bold)),
-        const SizedBox(height: 8),
-        const Text(
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Text(
             'Starte ohne Risiko oder schalte das volle Potenzial frei.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white54, fontSize: 13)),
-        const SizedBox(height: 24),
-
-        // ── Card 1: Kostenloses Modul ──────────────
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: kCard,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: kGreen.withValues(alpha: 0.4)),
+            style: TextStyle(color: Colors.white54, fontSize: 13),
           ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: kGreen.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: const Text('STARTPAKET', style: TextStyle(
-                    color: kGreen, fontSize: 10, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 12),
-              const Text('Kostenloses Modul', style: TextStyle(
-                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              const Text('Sofort lernen — kein Abo, kein Login nötig.',
-                  style: TextStyle(color: Colors.white54, fontSize: 12)),
-              const SizedBox(height: 14),
-              featureDot(kGreen, '1 vollständiges Lernmodul'),
-              featureDot(kGreen, 'Basis-Statistiken'),
-              featureDot(kGreen, 'Anfängerfreundlich'),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity, height: 44,
-                child: ElevatedButton(
-                  onPressed: _startTrial,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kGreen,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 0,
+          const SizedBox(height: 24),
+
+          // ── Card 1: Kostenloses Modul ──────────────
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: kCard,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: kGreen.withValues(alpha: 0.4)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
                   ),
-                  child: const Text('Kostenlos starten',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  decoration: BoxDecoration(
+                    color: kGreen.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Text(
+                    'STARTPAKET',
+                    style: TextStyle(
+                      color: kGreen,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-              ),
-            ],
+                const SizedBox(height: 12),
+                const Text(
+                  'Kostenloses Modul',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
+                  'Sofort lernen — kein Abo, kein Login nötig.',
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
+                ),
+                const SizedBox(height: 14),
+                featureDot(kGreen, '1 vollständiges Lernmodul'),
+                featureDot(kGreen, 'Basis-Statistiken'),
+                featureDot(kGreen, 'Anfängerfreundlich'),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: _startTrial,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kGreen,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Kostenlos starten',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 16),
+          const SizedBox(height: 16),
 
-        // ── Card 2: Vollversion ────────────────────
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(20),
-          decoration: BoxDecoration(
-            color: kCard,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: kOrange.withValues(alpha: 0.4)),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: kOrange.withValues(alpha: 0.15),
-                  borderRadius: BorderRadius.circular(6),
+          // ── Card 2: Vollversion ────────────────────
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(20),
+            decoration: BoxDecoration(
+              color: kCard,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: kOrange.withValues(alpha: 0.4)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 4,
+                  ),
+                  decoration: BoxDecoration(
+                    color: kOrange.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(6),
+                  ),
+                  child: const Text(
+                    'BELIEBT',
+                    style: TextStyle(
+                      color: kOrange,
+                      fontSize: 10,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
                 ),
-                child: const Text('BELIEBT', style: TextStyle(
-                    color: kOrange, fontSize: 10, fontWeight: FontWeight.bold)),
-              ),
-              const SizedBox(height: 12),
-              const Text('Vollversion 29,99\u20AC', style: TextStyle(
-                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
-              const SizedBox(height: 4),
-              const Text(
+                const SizedBox(height: 12),
+                const Text(
+                  'Vollversion 29,99\u20AC',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                const Text(
                   'Das ultimative Paket für deinen Lernerfolg. Schalte alle Barrieren frei.',
-                  style: TextStyle(color: Colors.white54, fontSize: 12)),
-              const SizedBox(height: 14),
-              featureDot(kOrange, 'Alle 24 Lernmodule'),
-              featureDot(kOrange, 'Professioneller Simulator'),
-              featureDot(kOrange, 'Detaillierte AI-Statistiken'),
-              featureDot(kOrange, 'Zertifikat bei Abschluss'),
-              const SizedBox(height: 16),
-              SizedBox(
-                width: double.infinity, height: 44,
-                child: ElevatedButton(
-                  onPressed: () => Navigator.push(context,
-                      MaterialPageRoute(builder: (_) => const PurchaseScreen())),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: kOrange,
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10)),
-                    elevation: 0,
-                  ),
-                  child: const Text('Jetzt Kaufen',
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                  style: TextStyle(color: Colors.white54, fontSize: 12),
                 ),
-              ),
-            ],
+                const SizedBox(height: 14),
+                featureDot(kOrange, 'Alle 24 Lernmodule'),
+                featureDot(kOrange, 'Professioneller Simulator'),
+                featureDot(kOrange, 'Detaillierte AI-Statistiken'),
+                featureDot(kOrange, 'Zertifikat bei Abschluss'),
+                const SizedBox(height: 16),
+                SizedBox(
+                  width: double.infinity,
+                  height: 44,
+                  child: ElevatedButton(
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (_) => const PurchaseScreen()),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: kOrange,
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      elevation: 0,
+                    ),
+                    child: const Text(
+                      'Jetzt Kaufen',
+                      style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
-        ),
-        const SizedBox(height: 24),
+          const SizedBox(height: 24),
 
-        // ── Trust-Sektion ──────────────────────────
-        const Text('Wissenschaftlich fundiert',
+          // ── Trust-Sektion ──────────────────────────
+          const Text(
+            'Wissenschaftlich fundiert',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white, fontSize: 16,
-                fontWeight: FontWeight.bold)),
-        const SizedBox(height: 6),
-        const Text(
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 6),
+          const Text(
             'Unser Curriculum basiert auf neuesten Erkenntnissen der Neurowissenschaft für maximale Wiederholungsleistung.',
             textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.white54, fontSize: 11)),
-        const SizedBox(height: 16),
-        Container(
-          width: double.infinity,
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: kCard,
-            borderRadius: BorderRadius.circular(12),
+            style: TextStyle(color: Colors.white54, fontSize: 11),
           ),
-          child: const Column(children: [
-            Text('98%', style: TextStyle(color: kOrange, fontSize: 28,
-                fontWeight: FontWeight.bold)),
-            Text('ERFOLGSQUOTE', style: TextStyle(color: kOrange,
-                fontSize: 10, fontWeight: FontWeight.bold)),
-          ]),
-        ),
-        const SizedBox(height: 16),
-        Row(children: [
-          Expanded(child: Container(
-            padding: const EdgeInsets.all(12),
+          const SizedBox(height: 16),
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: kCard,
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12),
             ),
-            child: const Column(children: [
-              Text('↩ Geld zurück', style: TextStyle(
-                  color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-              Text('14 Tage Garantie', style: TextStyle(
-                  color: Colors.white54, fontSize: 11)),
-            ]),
-          )),
-          const SizedBox(width: 10),
-          Expanded(child: Container(
-            padding: const EdgeInsets.all(12),
-            decoration: BoxDecoration(
-              color: kCard,
-              borderRadius: BorderRadius.circular(10),
+            child: const Column(
+              children: [
+                Text(
+                  '98%',
+                  style: TextStyle(
+                    color: kOrange,
+                    fontSize: 28,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'ERFOLGSQUOTE',
+                  style: TextStyle(
+                    color: kOrange,
+                    fontSize: 10,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
             ),
-            child: const Column(children: [
-              Text('👥 Bereits 15.000+', style: TextStyle(
-                  color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
-              Text('Lerne gemeinsam', style: TextStyle(
-                  color: Colors.white54, fontSize: 11)),
-            ]),
-          )),
-        ]),
-        const SizedBox(height: 24),
-      ]),
+          ),
+          const SizedBox(height: 16),
+          Row(
+            children: [
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: kCard,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Column(
+                    children: [
+                      Text(
+                        '↩ Geld zurück',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        '14 Tage Garantie',
+                        style: TextStyle(color: Colors.white54, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: kCard,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: const Column(
+                    children: [
+                      Text(
+                        '👥 Bereits 15.000+',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Text(
+                        'Lerne gemeinsam',
+                        style: TextStyle(color: Colors.white54, fontSize: 11),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 24),
+        ],
+      ),
     );
   }
 
