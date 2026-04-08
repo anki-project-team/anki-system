@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
 import 'package:ihk_ap1_prep/screens/login_screen.dart';
+import 'package:ihk_ap1_prep/screens/register_screen.dart';
 import '../theme/design_tokens.dart';
 import 'purchase_screen.dart';
 
@@ -127,7 +128,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                       width: 280,
                       height: 46,
                       child: ElevatedButton(
-                        onPressed: _isLast ? _startTrial : _nextPage,
+                        onPressed: _isLast
+                            ? () => Navigator.push(context,
+                                MaterialPageRoute(builder: (_) => const RegisterScreen()))
+                            : _nextPage,
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFE8813A),
                           foregroundColor: Colors.white,
@@ -137,7 +141,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           elevation: 0,
                         ),
                         child: Text(
-                          _isLast ? '10 AP1-Karten gratis starten' : 'Weiter →',
+                          _isLast ? 'Kostenlos registrieren →' : 'Weiter →',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -147,83 +151,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     ),
                   ),
                   const SizedBox(height: 8),
-
-                  // Preis-Chips — nur letzte Seite
-                  if (_isLast) ...[
-                    Row(
-                      children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: _startTrial,
-                            child: _chip(
-                              'Gratis',
-                              '10 Karten testen',
-                              const Color(0xFF22C55E),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 8),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (_) => const PurchaseScreen(),
-                              ),
-                            ),
-                            child: _chip(
-                              'Vollversion',
-                              '29,99 \u20AC einmalig',
-                              const Color(0xFFE8813A),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                  ],
-
-                  // Login Button
-                  GestureDetector(
-                    onTap: () => Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const LoginScreen()),
-                    ),
-                    child: Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF1e3a5f).withValues(alpha: 0.6),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Icon(
-                            Icons.arrow_forward,
-                            size: 14,
-                            color: Colors.white,
-                          ),
-                          const SizedBox(width: 6),
-                          const Text(
-                            'Einloggen  ',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 13,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Text(
-                            '(Vollversion bereits gekauft)',
-                            style: TextStyle(
-                              color: Colors.white.withValues(alpha: 0.5),
-                              fontSize: 12,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
                 ],
               ),
             ),
@@ -400,55 +327,119 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     title: 'Nicht bestehen.\nGlänzen.',
     child: Column(
       children: [
-        const SizedBox(height: 14),
+        const SizedBox(height: 12),
         _infoRow(
           '🃏',
           '450+ echte IHK-Fragen',
           'Kernantwort · Erklärung · Links',
         ),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         _infoRow('🎮', 'Prüfungssimulator', 'Teste wie in der echten Prüfung.'),
-        const SizedBox(height: 8),
+        const SizedBox(height: 12),
         _infoRow(
           '📊',
           'Statistik & Sicherheitsgrad',
           'Sieh wo deine Lücken sind.',
         ),
+        const SizedBox(height: 12),
+        _infoRow('📅', 'Lernkalender', 'Deine Fälligkeiten im Überblick.'),
       ],
     ),
   );
 
-  // ── Seite 4 — nur noch Vollversion 29,99 € ────────────
+  // ── Seite 4 — Einstieg wählen ──────────────────────────
   Widget _page4() => _pageShell(
     emoji: '🚀',
-    badge: 'KOSTENLOS STARTEN',
-    title: 'Jetzt testen.\nKein Risiko.',
+    badge: 'JETZT STARTEN',
+    title: 'Wähle deinen\nEinstieg.',
     child: Column(
       children: [
         const SizedBox(height: 14),
-        _step(
-          '1',
-          '10 AP1-Karten gratis',
-          'Kein Login',
-          const Color(0xFF22C55E),
+        _ctaRow(
+          borderColor: const Color(0xFF22C55E),
+          icon: '🃏',
+          title: 'Sofort testen',
+          subtitle: '10 Karten ohne Login',
+          onTap: _startTrial,
         ),
-        const SizedBox(height: 8),
-        _step(
-          '2',
-          'Kostenlos registrieren',
-          '+20 weitere Karten',
-          const Color(0xFF22C55E),
+        _ctaRow(
+          borderColor: const Color(0xFF22C55E),
+          icon: '✅',
+          title: 'Kostenlos registrieren',
+          subtitle: '1 komplettes Modul gratis',
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const RegisterScreen())),
         ),
-        const SizedBox(height: 8),
-        _step(
-          '3',
-          'Vollversion — 29,99 €',
-          '450+ Karten · Simulator · Statistik',
-          const Color(0xFFE8813A),
+        _ctaRow(
+          borderColor: const Color(0xFFE8813A),
+          icon: '⭐',
+          title: 'Vollversion — 29,99 €',
+          subtitle: 'Alle Module · Simulator · Statistik',
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const PurchaseScreen())),
+        ),
+        _ctaRow(
+          borderColor: Colors.white.withValues(alpha: 0.3),
+          icon: '→',
+          title: 'Einloggen',
+          subtitle: 'Bereits ein Konto?',
+          onTap: () => Navigator.push(context,
+              MaterialPageRoute(builder: (_) => const LoginScreen())),
         ),
       ],
     ),
   );
+
+  Widget _ctaRow({
+    required Color borderColor,
+    required String icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.only(bottom: 10, left: 16, right: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
+        decoration: BoxDecoration(
+          color: const Color(0xFF1e3a5f),
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 3,
+              height: 36,
+              decoration: BoxDecoration(
+                color: borderColor,
+                borderRadius: BorderRadius.circular(2),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(icon, style: const TextStyle(fontSize: 20)),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(title, style: const TextStyle(
+                      color: Colors.white, fontSize: 13,
+                      fontWeight: FontWeight.w600)),
+                  Text(subtitle, style: TextStyle(
+                      color: Colors.white.withValues(alpha: 0.5),
+                      fontSize: 11)),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right,
+                color: Colors.white.withValues(alpha: 0.3), size: 20),
+          ],
+        ),
+      ),
+    );
+  }
 
   Widget _pageShell({
     required String emoji,
@@ -540,80 +531,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ],
           ),
-        ),
-      ],
-    ),
-  );
-
-  Widget _step(String nr, String title, String sub, Color color) => Padding(
-    padding: const EdgeInsets.symmetric(vertical: 12),
-    child: Row(
-      children: [
-        Container(
-          width: 26,
-          height: 26,
-          decoration: BoxDecoration(
-            color: color.withValues(alpha: 0.15),
-            borderRadius: BorderRadius.circular(7),
-          ),
-          child: Center(
-            child: Text(
-              nr,
-              style: TextStyle(
-                color: color,
-                fontSize: 12,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  color: Colors.white,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              Text(
-                sub,
-                style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.4),
-                  fontSize: 11,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    ),
-  );
-
-  Widget _chip(String label, String value, Color color) => Container(
-    padding: const EdgeInsets.symmetric(vertical: 7, horizontal: 6),
-    decoration: BoxDecoration(
-      color: color.withValues(alpha: 0.08),
-      borderRadius: BorderRadius.circular(9),
-      border: Border.all(color: color.withValues(alpha: 0.25)),
-    ),
-    child: Column(
-      children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: color,
-            fontSize: 11,
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        Text(
-          value,
-          style: TextStyle(color: color.withValues(alpha: 0.65), fontSize: 10),
         ),
       ],
     ),
