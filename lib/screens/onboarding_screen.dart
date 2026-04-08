@@ -296,7 +296,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Widget _page2() => _pageShell(
     emoji: '🏆',
     badge: 'BESTNOTEN-VORBEREITUNG',
-    title: 'Nicht bestehen.\nGlänzen.',
+    title: 'Bestens vorbereitet.',
     child: Column(children: [
       const SizedBox(height: 14),
       _infoRow('⏱', 'FSRS 4.5 Algorithmus', '40% weniger Lernzeit, wissenschaftlich bewährt.'),
