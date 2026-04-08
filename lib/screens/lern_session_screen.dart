@@ -173,191 +173,185 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Fortschrittspunkte
-                    Row(
-                      children: List.generate(
-                        widget.cards.length.clamp(0, 10),
-                        (i) => Container(
-                          margin: const EdgeInsets.only(right: 4),
-                          width: 8, height: 8,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: i <= _index
-                                ? _accent
-                                : Colors.white24,
-                          ),
-                        ),
+                    // Label
+                    const Text('AKTUELLE KARTE',
+                      style: TextStyle(
+                        color: _accent, fontSize: 10,
+                        fontWeight: FontWeight.bold, letterSpacing: 1,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+
+                    // Frage
+                    Text(_card.question,
+                      style: const TextStyle(
+                        color: Colors.white, fontSize: 20,
+                        fontWeight: FontWeight.bold,
                       ),
                     ),
                     const SizedBox(height: 16),
 
-                    // KERNANTWORT
+                    // KERNANTWORT mit linkem orangenen Rand
                     Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: _dark,
-                          borderRadius: BorderRadius.circular(12),
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF1e3a5f),
+                        borderRadius: BorderRadius.circular(12),
+                        border: const Border(
+                          left: BorderSide(color: _accent, width: 3),
                         ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
+                      ),
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(children: [
+                            const Icon(Icons.star, color: _accent, size: 16),
+                            const SizedBox(width: 8),
                             const Text('KERNANTWORT',
                               style: TextStyle(
-                                color: _accent,
-                                fontSize: 11,
+                                color: _accent, fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                letterSpacing: 1.2,
+                                letterSpacing: 1,
                               ),
                             ),
-                            const SizedBox(height: 8),
-                            Text(
-                              _card.shortAnswer,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 15,
-                                height: 1.5,
+                          ]),
+                          const SizedBox(height: 10),
+                          Text(_card.shortAnswer,
+                            style: const TextStyle(
+                              color: Colors.white, fontSize: 15, height: 1.5,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 12),
+
+                    // Erklärung Accordion
+                    if (_card.longAnswer.isNotEmpty) ...[
+                      Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1e3a5f),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ExpansionTile(
+                          tilePadding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 4),
+                          leading: const Icon(Icons.menu_book,
+                              color: Colors.white54, size: 20),
+                          title: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Erklärungen', style: TextStyle(
+                                  color: Colors.white, fontSize: 14,
+                                  fontWeight: FontWeight.w600)),
+                              Text('Ausführliche Erklärung', style: TextStyle(
+                                  color: Colors.white54, fontSize: 11)),
+                            ],
+                          ),
+                          trailing: const Icon(Icons.expand_more,
+                              color: Colors.white54),
+                          backgroundColor: const Color(0xFF1e3a5f),
+                          collapsedBackgroundColor: const Color(0xFF1e3a5f),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          collapsedShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              child: Text(_card.longAnswer,
+                                style: const TextStyle(
+                                  color: Colors.white70, fontSize: 13,
+                                  height: 1.6,
+                                ),
                               ),
                             ),
                           ],
                         ),
                       ),
+                      const SizedBox(height: 8),
+                    ],
 
-                      if (_card.longAnswer.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ExpansionTile(
-                            initiallyExpanded: false,
-                            title: const Text('ERKLÄRUNG',
-                              style: TextStyle(
-                                color: Color(0xFFE8813A),
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
-                              ),
-                            ),
-                            collapsedIconColor: Colors.white54,
-                            iconColor: const Color(0xFFE8813A),
-                            backgroundColor: const Color(0xFF1a2744),
-                            collapsedBackgroundColor: const Color(0xFF1a2744),
+                    // Weiterlernen Accordion
+                    if (_card.url.isNotEmpty) ...[
+                      Container(
+                        clipBehavior: Clip.antiAlias,
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF1e3a5f),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: ExpansionTile(
+                          tilePadding: const EdgeInsets.symmetric(
+                              horizontal: 14, vertical: 4),
+                          leading: const Icon(Icons.open_in_new,
+                              color: Colors.white54, size: 20),
+                          title: const Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                                child: Text(
-                                  _card.longAnswer,
+                              Text('Weiterlernen', style: TextStyle(
+                                  color: Colors.white, fontSize: 14,
+                                  fontWeight: FontWeight.w600)),
+                              Text('1 Link', style: TextStyle(
+                                  color: Colors.white54, fontSize: 11)),
+                            ],
+                          ),
+                          trailing: const Icon(Icons.expand_more,
+                              color: Colors.white54),
+                          backgroundColor: const Color(0xFF1e3a5f),
+                          collapsedBackgroundColor: const Color(0xFF1e3a5f),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          collapsedShape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12)),
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                              child: GestureDetector(
+                                onTap: () => launchUrl(
+                                  Uri.parse(_card.url),
+                                  mode: LaunchMode.externalApplication,
+                                ),
+                                child: Text(_card.url,
                                   style: const TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 13,
-                                    height: 1.6,
+                                    color: _accent, fontSize: 13,
+                                    decoration: TextDecoration.underline,
+                                    decorationColor: _accent,
                                   ),
                                 ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-
-                      if (_card.url.isNotEmpty) ...[
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ExpansionTile(
-                            initiallyExpanded: false,
-                            title: const Text('WEITERFÜHRENDE LINKS 🔗',
-                              style: TextStyle(
-                                color: Color(0xFFE8813A),
-                                fontSize: 12,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
                               ),
                             ),
-                            collapsedIconColor: Colors.white54,
-                            iconColor: const Color(0xFFE8813A),
-                            backgroundColor: const Color(0xFF1a2744),
-                            collapsedBackgroundColor: const Color(0xFF1a2744),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                                child: GestureDetector(
-                                  onTap: () => launchUrl(
-                                    Uri.parse(_card.url),
-                                    mode: LaunchMode.externalApplication,
-                                  ),
-                                  child: Text(
-                                    _card.url,
-                                    style: const TextStyle(
-                                      color: Colors.lightBlueAccent,
-                                      fontSize: 13,
-                                      decoration: TextDecoration.underline,
-                                      decorationColor: Colors.lightBlueAccent,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
+                          ],
                         ),
-                      ],
+                      ),
+                      const SizedBox(height: 8),
+                    ],
 
-                      if (_card.hashtags.isNotEmpty) ...[
-                        Container(
-                          margin: const EdgeInsets.only(bottom: 8),
-                          clipBehavior: Clip.antiAlias,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: ExpansionTile(
-                            initiallyExpanded: false,
-                            title: const Text('HASHTAGS #',
-                              style: TextStyle(
-                                color: Color(0xFFE8813A),
-                                fontSize: 12,
+                    // Hashtags
+                    if (_card.hashtags.isNotEmpty) ...[
+                      const SizedBox(height: 4),
+                      Wrap(
+                        spacing: 6, runSpacing: 6,
+                        children: _card.hashtags.map((tag) =>
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 10, vertical: 5),
+                            decoration: BoxDecoration(
+                              color: _accent.withValues(alpha: 0.12),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Text(
+                              tag.startsWith('#') ? tag : '#$tag',
+                              style: const TextStyle(
+                                color: _accent, fontSize: 11,
                                 fontWeight: FontWeight.bold,
-                                letterSpacing: 1,
                               ),
                             ),
-                            collapsedIconColor: Colors.white54,
-                            iconColor: const Color(0xFFE8813A),
-                            backgroundColor: const Color(0xFF1a2744),
-                            collapsedBackgroundColor: const Color(0xFF1a2744),
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                                child: Wrap(
-                                  spacing: 6, runSpacing: 6,
-                                  children: _card.hashtags.map((tag) =>
-                                    Container(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 10, vertical: 4),
-                                      decoration: BoxDecoration(
-                                        color: _accent.withValues(alpha: 0.12),
-                                        borderRadius: BorderRadius.circular(12),
-                                        border: Border.all(
-                                            color: _accent.withValues(alpha: 0.4)),
-                                      ),
-                                      child: Text(
-                                        tag.startsWith('#') ? tag : '#$tag',
-                                        style: const TextStyle(
-                                          color: _accent,
-                                          fontSize: 11,
-                                        ),
-                                      ),
-                                    ),
-                                  ).toList(),
-                                ),
-                              ),
-                            ],
                           ),
-                        ),
-                      ],
+                        ).toList(),
+                      ),
+                    ],
 
                     const SizedBox(height: 24),
                   ],
@@ -394,7 +388,7 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                         ),
                       ),
                     )
-                  // 4 Bewertungsbuttons
+                  // 2x2 Bewertungsbuttons
                   : Column(
                       children: [
                         const Text(
@@ -421,7 +415,11 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
                               color: const Color(0xFFF0C030),
                               onTap: () => _rate(2),
                             ),
-                            const SizedBox(width: 6),
+                          ],
+                        ),
+                        const SizedBox(height: 6),
+                        Row(
+                          children: [
                             _RatingBtn(
                               label: 'Gut',
                               sub: _fsrs.getIntervalLabel(_card, FSRSRating.good),
@@ -466,18 +464,19 @@ class _RatingBtn extends StatelessWidget {
       child: GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
+          height: 52,
           decoration: BoxDecoration(
             color: color.withValues(alpha: 0.12),
             borderRadius: BorderRadius.circular(8),
             border: Border.all(color: color),
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(label,
                 style: TextStyle(
                   color: color,
-                  fontSize: 12,
+                  fontSize: 13,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -485,7 +484,7 @@ class _RatingBtn extends StatelessWidget {
               Text(sub,
                 style: TextStyle(
                   color: color.withValues(alpha: 0.8),
-                  fontSize: 10,
+                  fontSize: 11,
                 ),
               ),
             ],
