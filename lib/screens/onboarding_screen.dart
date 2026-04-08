@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
-import 'package:ihk_ap1_prep/screens/login_screen.dart';
 import 'package:ihk_ap1_prep/screens/register_screen.dart';
 import '../theme/design_tokens.dart';
 import 'purchase_screen.dart';
@@ -347,97 +346,201 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     ),
   );
 
-  // ── Seite 4 — Einstieg wählen ──────────────────────────
-  Widget _page4() => _pageShell(
-    emoji: '🚀',
-    badge: 'JETZT STARTEN',
-    title: 'Wähle deinen\nEinstieg.',
-    child: Column(
-      children: [
-        const SizedBox(height: 14),
-        _ctaRow(
-          borderColor: const Color(0xFF22C55E),
-          icon: '🃏',
-          title: 'Sofort testen',
-          subtitle: '10 Karten ohne Login',
-          onTap: _startTrial,
-        ),
-        _ctaRow(
-          borderColor: const Color(0xFF22C55E),
-          icon: '✅',
-          title: 'Kostenlos registrieren',
-          subtitle: '1 komplettes Modul gratis',
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const RegisterScreen())),
-        ),
-        _ctaRow(
-          borderColor: const Color(0xFFE8813A),
-          icon: '⭐',
-          title: 'Vollversion — 29,99 €',
-          subtitle: 'Alle Module · Simulator · Statistik',
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const PurchaseScreen())),
-        ),
-        _ctaRow(
-          borderColor: Colors.white.withValues(alpha: 0.3),
-          icon: '→',
-          title: 'Einloggen',
-          subtitle: 'Bereits ein Konto?',
-          onTap: () => Navigator.push(context,
-              MaterialPageRoute(builder: (_) => const LoginScreen())),
-        ),
-      ],
-    ),
-  );
+  // ── Seite 4 — Lernpfad wählen ──────────────────────────
+  Widget _page4() {
+    const kCard = Color(0xFF1e3a5f);
+    const kGreen = Color(0xFF22C55E);
+    const kOrange = Color(0xFFE8813A);
 
-  Widget _ctaRow({
-    required Color borderColor,
-    required String icon,
-    required String title,
-    required String subtitle,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: const EdgeInsets.only(bottom: 10, left: 16, right: 16),
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
-        decoration: BoxDecoration(
-          color: const Color(0xFF1e3a5f),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: Colors.white.withValues(alpha: 0.08)),
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 3,
-              height: 36,
-              decoration: BoxDecoration(
-                color: borderColor,
-                borderRadius: BorderRadius.circular(2),
+    Widget featureDot(Color color, String text) => Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Row(children: [
+        Container(width: 6, height: 6,
+            decoration: BoxDecoration(shape: BoxShape.circle, color: color)),
+        const SizedBox(width: 10),
+        Text(text, style: const TextStyle(color: Colors.white, fontSize: 13)),
+      ]),
+    );
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(children: [
+        const SizedBox(height: 24),
+        const Text('Wähle deinen\nLernpfad',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontSize: 24,
+                fontWeight: FontWeight.bold)),
+        const SizedBox(height: 8),
+        const Text(
+            'Starte ohne Risiko oder schalte das volle Potenzial frei.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white54, fontSize: 13)),
+        const SizedBox(height: 24),
+
+        // ── Card 1: Kostenloses Modul ──────────────
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: kCard,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: kGreen.withValues(alpha: 0.4)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: kGreen.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Text('STARTPAKET', style: TextStyle(
+                    color: kGreen, fontSize: 10, fontWeight: FontWeight.bold)),
               ),
-            ),
-            const SizedBox(width: 12),
-            Text(icon, style: const TextStyle(fontSize: 20)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(title, style: const TextStyle(
-                      color: Colors.white, fontSize: 13,
-                      fontWeight: FontWeight.w600)),
-                  Text(subtitle, style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.5),
-                      fontSize: 11)),
-                ],
+              const SizedBox(height: 12),
+              const Text('Kostenloses Modul', style: TextStyle(
+                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              const Text('Sofort lernen — kein Abo, kein Login nötig.',
+                  style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const SizedBox(height: 14),
+              featureDot(kGreen, '1 vollständiges Lernmodul'),
+              featureDot(kGreen, 'Basis-Statistiken'),
+              featureDot(kGreen, 'Anfängerfreundlich'),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity, height: 44,
+                child: ElevatedButton(
+                  onPressed: _startTrial,
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kGreen,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    elevation: 0,
+                  ),
+                  child: const Text('Kostenlos starten',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                ),
               ),
-            ),
-            Icon(Icons.chevron_right,
-                color: Colors.white.withValues(alpha: 0.3), size: 20),
-          ],
+            ],
+          ),
         ),
-      ),
+        const SizedBox(height: 16),
+
+        // ── Card 2: Vollversion ────────────────────
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: kCard,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: kOrange.withValues(alpha: 0.4)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: kOrange.withValues(alpha: 0.15),
+                  borderRadius: BorderRadius.circular(6),
+                ),
+                child: const Text('BELIEBT', style: TextStyle(
+                    color: kOrange, fontSize: 10, fontWeight: FontWeight.bold)),
+              ),
+              const SizedBox(height: 12),
+              const Text('Vollversion 29,99\u20AC', style: TextStyle(
+                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold)),
+              const SizedBox(height: 4),
+              const Text(
+                  'Das ultimative Paket für deinen Lernerfolg. Schalte alle Barrieren frei.',
+                  style: TextStyle(color: Colors.white54, fontSize: 12)),
+              const SizedBox(height: 14),
+              featureDot(kOrange, 'Alle 24 Lernmodule'),
+              featureDot(kOrange, 'Professioneller Simulator'),
+              featureDot(kOrange, 'Detaillierte AI-Statistiken'),
+              featureDot(kOrange, 'Zertifikat bei Abschluss'),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity, height: 44,
+                child: ElevatedButton(
+                  onPressed: () => Navigator.push(context,
+                      MaterialPageRoute(builder: (_) => const PurchaseScreen())),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: kOrange,
+                    foregroundColor: Colors.white,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)),
+                    elevation: 0,
+                  ),
+                  child: const Text('Jetzt Kaufen',
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.w600)),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+
+        // ── Trust-Sektion ──────────────────────────
+        const Text('Wissenschaftlich fundiert',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white, fontSize: 16,
+                fontWeight: FontWeight.bold)),
+        const SizedBox(height: 6),
+        const Text(
+            'Unser Curriculum basiert auf neuesten Erkenntnissen der Neurowissenschaft für maximale Wiederholungsleistung.',
+            textAlign: TextAlign.center,
+            style: TextStyle(color: Colors.white54, fontSize: 11)),
+        const SizedBox(height: 16),
+        Container(
+          width: double.infinity,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: kCard,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: const Column(children: [
+            Text('98%', style: TextStyle(color: kOrange, fontSize: 28,
+                fontWeight: FontWeight.bold)),
+            Text('ERFOLGSQUOTE', style: TextStyle(color: kOrange,
+                fontSize: 10, fontWeight: FontWeight.bold)),
+          ]),
+        ),
+        const SizedBox(height: 16),
+        Row(children: [
+          Expanded(child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: kCard,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Column(children: [
+              Text('↩ Geld zurück', style: TextStyle(
+                  color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+              Text('14 Tage Garantie', style: TextStyle(
+                  color: Colors.white54, fontSize: 11)),
+            ]),
+          )),
+          const SizedBox(width: 10),
+          Expanded(child: Container(
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              color: kCard,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: const Column(children: [
+              Text('👥 Bereits 15.000+', style: TextStyle(
+                  color: Colors.white, fontSize: 13, fontWeight: FontWeight.w600)),
+              Text('Lerne gemeinsam', style: TextStyle(
+                  color: Colors.white54, fontSize: 11)),
+            ]),
+          )),
+        ]),
+        const SizedBox(height: 24),
+      ]),
     );
   }
 
