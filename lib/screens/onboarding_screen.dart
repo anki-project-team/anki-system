@@ -303,7 +303,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     title: 'Bestens vorbereitet.',
     child: Column(
       children: [
-        const SizedBox(height: 4),
         _infoRow(
           '⏱',
           'FSRS 4.5 Algorithmus',
