@@ -13,7 +13,7 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _controller = PageController();
   int _currentPage = 0;
-  static const int _total = 4;
+  static const int _total = 3;
   bool get _isLast => _currentPage == _total - 1;
 
   @override
@@ -91,7 +91,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               child: PageView(
                 controller: _controller,
                 onPageChanged: (i) => setState(() => _currentPage = i),
-                children: [_page1(), _page2(), _page3(), _page4()],
+                children: [_page1(), _page2(), _page3()],
               ),
             ),
 
@@ -292,62 +292,29 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     );
   }
 
-  // ── Seite 2 ───────────────────────────────────────────
+  // ── Seite 2 — Features kombiniert ──────────────────────
   Widget _page2() => _pageShell(
-    emoji: '🧠',
-    badge: 'LERNEN DER ZUKUNFT',
-    title: 'Der Algorithmus\nlernt mit dir.',
-    child: Column(
-      children: [
-        const SizedBox(height: 14),
-        _infoRow('⏱', 'Richtiger Zeitpunkt', 'Nicht zu früh. Nicht zu spät.'),
-        const SizedBox(height: 12),
-        _infoRow(
-          '📉',
-          '40% weniger Lernzeit',
-          'Mehr Ergebnis, weniger Aufwand.',
-        ),
-        const SizedBox(height: 12),
-        _infoRow('🔁', 'FSRS 4.5 Algorithmus', 'Wissenschaftlich bewährt.'),
-        const SizedBox(height: 12),
-        _infoRow(
-          '📱',
-          'Tägliche Erinnerungen',
-          'Push-Notification um 07:30 Uhr.',
-        ),
-      ],
-    ),
-  );
-
-  // ── Seite 3 ───────────────────────────────────────────
-  Widget _page3() => _pageShell(
     emoji: '🏆',
     badge: 'BESTNOTEN-VORBEREITUNG',
     title: 'Nicht bestehen.\nGlänzen.',
-    child: Column(
-      children: [
-        const SizedBox(height: 12),
-        _infoRow(
-          '🃏',
-          '450+ echte IHK-Fragen',
-          'Kernantwort · Erklärung · Links',
-        ),
-        const SizedBox(height: 12),
-        _infoRow('🎮', 'Prüfungssimulator', 'Teste wie in der echten Prüfung.'),
-        const SizedBox(height: 12),
-        _infoRow(
-          '📊',
-          'Statistik & Sicherheitsgrad',
-          'Sieh wo deine Lücken sind.',
-        ),
-        const SizedBox(height: 12),
-        _infoRow('📅', 'Lernkalender', 'Deine Fälligkeiten im Überblick.'),
-      ],
-    ),
+    child: Column(children: [
+      const SizedBox(height: 14),
+      _infoRow('⏱', 'FSRS 4.5 Algorithmus', '40% weniger Lernzeit, wissenschaftlich bewährt.'),
+      const SizedBox(height: 8),
+      _infoRow('🃏', '450+ echte IHK-Fragen', 'Kernantwort · Erklärung · Links'),
+      const SizedBox(height: 8),
+      _infoRow('🎮', 'Prüfungssimulator', 'Teste wie in der echten Prüfung.'),
+      const SizedBox(height: 8),
+      _infoRow('📊', 'Statistik & Sicherheitsgrad', 'Sieh wo deine Lücken sind.'),
+      const SizedBox(height: 8),
+      _infoRow('📱', 'Tägliche Erinnerungen', 'Push-Notification um 07:30 Uhr.'),
+      const SizedBox(height: 8),
+      _infoRow('📅', 'Lernkalender', 'Deine Fälligkeiten im Überblick.'),
+    ]),
   );
 
-  // ── Seite 4 — Lernpfad wählen ──────────────────────────
-  Widget _page4() {
+  // ── Seite 3 — Lernpfad wählen ──────────────────────────
+  Widget _page3() {
     const kCard = Color(0xFF1e3a5f);
     const kGreen = Color(0xFF22C55E);
     const kOrange = Color(0xFFE8813A);
