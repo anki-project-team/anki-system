@@ -59,10 +59,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   const Spacer(),
                   if (!_isLast)
                     GestureDetector(
-                      onTap: () => _controller.animateToPage(
-                        _total - 1,
-                        duration: const Duration(milliseconds: 350),
-                        curve: Curves.easeInOut,
+                      onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => const LoginScreen()),
                       ),
                       child: Container(
                         padding: const EdgeInsets.symmetric(
@@ -74,7 +73,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Text(
-                          'Überspringen',
+                          'Einloggen',
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 13,
