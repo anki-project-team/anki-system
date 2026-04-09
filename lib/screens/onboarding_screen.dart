@@ -121,6 +121,19 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                   const SizedBox(height: 10),
 
+                  // Hinweis "Bereits gekauft?" nur auf letzter Seite
+                  if (_isLast) ...[
+                    const Text(
+                      'Bereits gekauft?',
+                      style: TextStyle(
+                        color: Colors.white54,
+                        fontSize: 13,
+                        fontStyle: FontStyle.italic,
+                      ),
+                    ),
+                    const SizedBox(height: 6),
+                  ],
+
                   // Haupt-Button
                   Center(
                     child: SizedBox(
@@ -144,7 +157,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           elevation: 0,
                         ),
                         child: Text(
-                          _isLast ? 'Bereits gekauft? Einloggen →' : 'Weiter →',
+                          _isLast ? 'Einloggen' : 'Weiter →',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
