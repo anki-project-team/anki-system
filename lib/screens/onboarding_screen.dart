@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/free_trial_screen.dart';
+import 'package:ihk_ap1_prep/screens/login_screen.dart';
 import 'package:ihk_ap1_prep/screens/register_screen.dart';
 import '../theme/design_tokens.dart';
 import 'purchase_screen.dart';
@@ -331,7 +332,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       title: 'Bestens vorbereitet.',
       child: Column(
         children: [
-          const SizedBox(height: 14),
           Container(
             margin: const EdgeInsets.symmetric(horizontal: 16),
             padding: const EdgeInsets.all(18),
@@ -655,6 +655,38 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ),
             ],
+          ),
+          const SizedBox(height: 20),
+
+          // ── Login-Link für Bestandskunden ──────────
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            ),
+            child: Container(
+              width: double.infinity,
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                color: kCard.withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.login, size: 16, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    'Bereits gekauft? Einloggen →',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
           const SizedBox(height: 24),
         ],
