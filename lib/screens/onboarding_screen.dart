@@ -145,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           elevation: 0,
                         ),
                         child: Text(
-                          _isLast ? 'Einloggen →' : 'Weiter →',
+                          _isLast ? 'Bereits gekauft? Einloggen →' : 'Weiter →',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -598,38 +598,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ),
               ],
-            ),
-          ),
-          const SizedBox(height: 20),
-
-          // ── Login-Link für Bestandskunden ──────────
-          GestureDetector(
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(builder: (_) => const LoginScreen()),
-            ),
-            child: Container(
-              width: double.infinity,
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              decoration: BoxDecoration(
-                color: kCard.withValues(alpha: 0.6),
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: const Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.login, size: 16, color: Colors.white),
-                  SizedBox(width: 8),
-                  Text(
-                    'Bereits gekauft? Einloggen →',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
             ),
           ),
           const SizedBox(height: 24),
