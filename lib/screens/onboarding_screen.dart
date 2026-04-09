@@ -132,7 +132,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                             ? () => Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const RegisterScreen(),
+                                  builder: (_) => const LoginScreen(),
                                 ),
                               )
                             : _nextPage,
@@ -145,7 +145,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           elevation: 0,
                         ),
                         child: Text(
-                          _isLast ? 'Kostenlos registrieren →' : 'Weiter →',
+                          _isLast ? 'Einloggen →' : 'Weiter →',
                           style: const TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w700,
@@ -599,62 +599,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: 16),
-          Row(
-            children: [
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: kCard,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Column(
-                    children: [
-                      Text(
-                        '↩ Geld zurück',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        '14 Tage Garantie',
-                        style: TextStyle(color: Colors.white54, fontSize: 11),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(width: 10),
-              Expanded(
-                child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: kCard,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: const Column(
-                    children: [
-                      Text(
-                        '👥 Bereits 15.000+',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        'Lerne gemeinsam',
-                        style: TextStyle(color: Colors.white54, fontSize: 11),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ],
           ),
           const SizedBox(height: 20),
 
