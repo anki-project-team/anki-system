@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:ihk_ap1_prep/screens/login_screen.dart';
 import 'package:ihk_ap1_prep/screens/register_screen.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
+import '../services/module_service.dart';
 import 'purchase_screen.dart';
 
 const _bg = Color(0xFF162447);
@@ -9,108 +10,6 @@ const _accent = Color(0xFFE8813A);
 const _card = Color(0xFF1e3a5f);
 const _green = Color(0xFF22C55E);
 
-final List<CardModel> _freeCards = [
-  CardModel(
-    id: 'free-001',
-    question: 'Was sind die 7 Schichten des OSI-Modells?',
-    shortAnswer:
-        'Physical, Data Link, Network, Transport, Session, Presentation, Application (Schicht 1–7).',
-    longAnswer:
-        'Merkhilfe: "Pls Do Not Throw Sausage Pizza Away"\n\nSchicht 1 — Physical: Kabel, Signale\nSchicht 2 — Data Link: MAC-Adressen, Switch\nSchicht 3 — Network: IP-Adressen, Router\nSchicht 4 — Transport: TCP/UDP, Ports\nSchicht 5 — Session: Verbindungsaufbau\nSchicht 6 — Presentation: Verschlüsselung, Kodierung\nSchicht 7 — Application: HTTP, FTP, DNS',
-    url: 'https://de.wikipedia.org/wiki/OSI-Modell',
-    hashtags: ['#Netzwerk', '#OSI', '#Protokolle', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-002',
-    question: 'Was ist der Unterschied zwischen TCP und UDP?',
-    shortAnswer:
-        'TCP: verbindungsorientiert, zuverlässig, langsamer. UDP: verbindungslos, schneller, kein Empfangsbestätigung.',
-    longAnswer:
-        'TCP (Transmission Control Protocol):\n• 3-Wege-Handshake (SYN, SYN-ACK, ACK)\n• Fehlerkorrektur und Wiederholung\n• Reihenfolgegarantie\n• Geeignet: HTTP, E-Mail, Dateiübertragung\n\nUDP (User Datagram Protocol):\n• Kein Verbindungsaufbau\n• Kein Fehler-Handling\n• Geeignet: Streaming, DNS, VoIP',
-    url: 'https://de.wikipedia.org/wiki/Transmission_Control_Protocol',
-    hashtags: ['#Netzwerk', '#TCP', '#UDP', '#Protokolle', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-003',
-    question: 'Was ist DHCP und wie funktioniert es (DORA)?',
-    shortAnswer:
-        'DHCP verteilt IP-Adressen automatisch. DORA: Discover → Offer → Request → Acknowledge.',
-    longAnswer:
-        'DORA-Prozess:\n1. Discover: Client sucht DHCP-Server (Broadcast)\n2. Offer: Server bietet IP-Adresse an\n3. Request: Client fordert die IP an\n4. Acknowledge: Server bestätigt die Vergabe\n\nPort 67 (Server) / Port 68 (Client)\nLeasetime: Adresse ist nur temporär vergeben',
-    url: 'https://de.wikipedia.org/wiki/Dynamic_Host_Configuration_Protocol',
-    hashtags: ['#Netzwerk', '#DHCP', '#IP-Adressierung', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-004',
-    question: 'Was sind private IPv4-Adressbereiche?',
-    shortAnswer:
-        '10.0.0.0/8 | 172.16.0.0/12 | 192.168.0.0/16 — nicht im Internet geroutet (RFC 1918).',
-    longAnswer:
-        'Private Adressbereiche (RFC 1918):\n• 10.0.0.0 – 10.255.255.255 (/8) → Klasse A\n• 172.16.0.0 – 172.31.255.255 (/12) → Klasse B\n• 192.168.0.0 – 192.168.255.255 (/16) → Klasse C\n\nWichtig: Diese Adressen werden nicht ins Internet geroutet.\nNAT übersetzt zwischen privaten und öffentlichen Adressen.',
-    url: 'https://de.wikipedia.org/wiki/Private_IP-Adresse',
-    hashtags: ['#Netzwerk', '#IPv4', '#IP-Adressierung', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-005',
-    question: 'Was ist DNS und welche Eintragstypen gibt es?',
-    shortAnswer:
-        'DNS löst Domainnamen in IPs auf. A (IPv4), AAAA (IPv6), MX (Mail), CNAME (Alias), NS (Nameserver).',
-    longAnswer:
-        'DNS = Domain Name System (Port 53)\n\nEintragstypen:\n• A-Record: Domain → IPv4 (www → 93.184.216.34)\n• AAAA-Record: Domain → IPv6\n• MX-Record: Mailserver für Domain\n• CNAME: Alias (www → myapp.hosting.com)\n• NS-Record: Zuständiger Nameserver\n• TXT-Record: Textinformationen (SPF, DKIM)',
-    url: 'https://de.wikipedia.org/wiki/Domain_Name_System',
-    hashtags: ['#Netzwerk', '#DNS', '#Protokolle', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-006',
-    question: 'Was ist der Unterschied zwischen Hub, Switch und Router?',
-    shortAnswer:
-        'Hub: alle Ports (L1). Switch: MAC-basiert (L2). Router: IP-basiert (L3), verbindet Netzwerke.',
-    longAnswer:
-        'Hub (Schicht 1):\n• Leitet Pakete an ALLE Ports weiter\n• Kollisionsdomäne für alle Geräte\n\nSwitch (Schicht 2):\n• Lernt MAC-Adressen\n• Sendet nur an Zielport (MAC-Table)\n• Eigene Kollisionsdomäne pro Port\n\nRouter (Schicht 3):\n• Verbindet verschiedene Netzwerke\n• Wertet IP-Adressen aus\n• Routing-Tabelle für Wegentscheidung',
-    url: 'https://de.wikipedia.org/wiki/Router',
-    hashtags: ['#Netzwerk', '#Hardware', '#Switch', '#Router', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-007',
-    question: 'Was ist VPN und welche Arten gibt es?',
-    shortAnswer:
-        'Virtual Private Network — verschlüsselter Tunnel über das Internet. Arten: Site-to-Site, Remote-Access, SSL-VPN.',
-    longAnswer:
-        'VPN-Arten:\n• Site-to-Site VPN: Verbindet zwei Standorte (Firmennetz)\n• Remote-Access VPN: Einzelner Nutzer ins Firmennetz\n• SSL-VPN: Browserbasiert, kein Client nötig\n\nProtokolle:\n• IPsec: Sicher, komplex, für Site-to-Site\n• OpenVPN: Open Source, flexibel\n• WireGuard: Modern, schnell, einfach',
-    url: 'https://de.wikipedia.org/wiki/Virtual_Private_Network',
-    hashtags: ['#Netzwerk', '#VPN', '#IT-Sicherheit', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-008',
-    question: 'Was sind wichtige Ports für Standard-Protokolle?',
-    shortAnswer:
-        'HTTP:80 | HTTPS:443 | FTP:21 | SSH:22 | SMTP:25 | DNS:53 | DHCP:67/68 | RDP:3389',
-    longAnswer:
-        'Wichtige Ports für die AP1-Prüfung:\n\nWeb: HTTP 80 | HTTPS 443\nMail: SMTP 25/587 | POP3 110 | IMAP 143\nDatei: FTP 21 | SFTP 22\nVerwaltung: SSH 22 | Telnet 23 | RDP 3389\nDienste: DNS 53 | DHCP 67/68 | SNMP 161\n\nMerke: Port < 1024 = Well-Known Ports',
-    url: 'https://de.wikipedia.org/wiki/Liste_der_Portnummern',
-    hashtags: ['#Netzwerk', '#Protokolle', '#Ports', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-009',
-    question: 'Was ist der Unterschied zwischen IPv4 und IPv6?',
-    shortAnswer:
-        'IPv4: 32 Bit, 4,3 Mrd. Adressen. IPv6: 128 Bit, praktisch unbegrenzt, kein NAT nötig.',
-    longAnswer:
-        'IPv4:\n• 32 Bit = 4.294.967.296 Adressen\n• Adressknappheit → NAT als Lösung\n• Notation: 192.168.1.1\n\nIPv6:\n• 128 Bit = 340 Sextillionen Adressen\n• Kein NAT nötig\n• Notation: 2001:0db8:85a3::8a2e:0370:7334\n• Automatische Konfiguration (SLAAC)\n• Integriertes IPsec',
-    url: 'https://de.wikipedia.org/wiki/IPv6',
-    hashtags: ['#Netzwerk', '#IPv6', '#IPv4', '#IP-Adressierung', '#AP1'],
-  ),
-  CardModel(
-    id: 'free-010',
-    question: 'Was ist Cloud Computing und was sind SaaS, IaaS, PaaS?',
-    shortAnswer:
-        'SaaS: fertige Software. IaaS: gemietete Infrastruktur. PaaS: Entwicklungsplattform in der Cloud.',
-    longAnswer:
-        'Cloud-Servicemodelle:\n\nSaaS (Software as a Service):\n→ Fertige Anwendungen | Beispiel: Gmail, Office 365\n\nPaaS (Platform as a Service):\n→ Entwicklungsumgebung | Beispiel: Heroku, Firebase\n\nIaaS (Infrastructure as a Service):\n→ Virtuelle Server/Speicher | Beispiel: AWS EC2, Azure\n\nDeployment-Modelle: Public, Private, Hybrid Cloud',
-    url: 'https://de.wikipedia.org/wiki/Cloud_Computing',
-    hashtags: ['#Netzwerk', '#Cloud', '#SaaS', '#IaaS', '#PaaS', '#AP1'],
-  ),
-];
 
 class FreeTrialScreen extends StatefulWidget {
   const FreeTrialScreen({super.key});
@@ -125,6 +24,26 @@ class _FreeTrialScreenState extends State<FreeTrialScreen> {
   bool _showAnswer = false;
   bool _erklaerungOpen = false;
   bool _weiterlernOpen = false;
+
+  List<CardModel> _freeCards = [];
+  bool _cardsLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadFreeCards();
+  }
+
+  Future<void> _loadFreeCards() async {
+    final modules = await ModuleService().getFreeModules();
+    final cards = modules.expand((m) => m.cards).toList();
+    if (mounted) {
+      setState(() {
+        _freeCards = cards;
+        _cardsLoading = false;
+      });
+    }
+  }
 
   void _startLearning() {
     setState(() {
@@ -176,6 +95,25 @@ class _FreeTrialScreenState extends State<FreeTrialScreen> {
 
   @override
   Widget build(BuildContext context) {
+    if (_cardsLoading) {
+      return const Scaffold(
+        backgroundColor: _bg,
+        body: Center(
+          child: CircularProgressIndicator(color: _accent),
+        ),
+      );
+    }
+    if (_freeCards.isEmpty) {
+      return const Scaffold(
+        backgroundColor: _bg,
+        body: Center(
+          child: Text(
+            'Keine Karten verfügbar',
+            style: TextStyle(color: Colors.white70, fontSize: 14),
+          ),
+        ),
+      );
+    }
     if (_showOverview) return _buildOverview();
     final card = _freeCards[_currentIndex];
     return Scaffold(
