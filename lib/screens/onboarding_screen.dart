@@ -612,6 +612,36 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ],
             ),
           ),
+          const SizedBox(height: 16),
+          GestureDetector(
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(builder: (_) => const LoginScreen()),
+            ),
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 14),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1e3a5f).withValues(alpha: 0.6),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.login, size: 16, color: Colors.white),
+                  SizedBox(width: 8),
+                  Text(
+                    'Bereits gekauft? Einloggen →',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           const SizedBox(height: 24),
         ],
       ),
@@ -680,7 +710,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     duration: const Duration(milliseconds: 320),
     curve: Curves.easeInOut,
   );
-  void _startTrial() => Navigator.pushReplacement(
+  void _startTrial() => Navigator.push(
     context,
     MaterialPageRoute(builder: (_) => const FreeTrialScreen()),
   );
