@@ -1,13 +1,13 @@
 // lib/screens/lernen_screen.dart
-// Screen 02 — Lernkarten-Decks (Wireframe Dark Navy + bestehende Logik)
+// Screen 02 — Lernkarten-Decks (Firestore-basiert)
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/screens/lern_session_screen.dart';
 import 'package:ihk_ap1_prep/screens/statistik_screen.dart';
 import 'package:ihk_ap1_prep/services/premium_service.dart';
+import 'package:ihk_ap1_prep/services/module_service.dart';
 import 'package:ihk_ap1_prep/screens/upgrade_screen.dart';
 import 'package:ihk_ap1_prep/main.dart';
 import 'settings_screen.dart';
@@ -22,22 +22,30 @@ class LernkartenDecksScreen extends StatefulWidget {
 class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   bool _isPremium = false;
   bool _loading = true;
+  List<ModuleData> _modules = [];
+  final _moduleService = ModuleService();
 
   @override
   void initState() {
     super.initState();
-    _checkPremium();
+    _loadData();
   }
 
-  Future<void> _checkPremium() async {
+  Future<void> _loadData() async {
     final user = FirebaseAuth.instance.currentUser;
     final premium = user != null
         ? await PremiumService().checkPremiumStatus(user.uid)
         : false;
-    setState(() {
-      _isPremium = premium;
-      _loading = false;
-    });
+
+    final modules = await _moduleService.getModulesWithCards();
+
+    if (mounted) {
+      setState(() {
+        _isPremium = premium;
+        _modules = modules;
+        _loading = false;
+      });
+    }
   }
 
   void _startDeck(BuildContext context, List<CardModel> cards, String name) {
@@ -54,8 +62,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final totalCards = alleAP1Decks.fold(
-        0, (sum, deck) => sum + (deck['karten'] as List).length);
+    final totalCards = _modules.fold(0, (sum, m) => sum + m.cards.length);
 
     return Scaffold(
       backgroundColor: kBgColor,
@@ -65,7 +72,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             : RefreshIndicator(
                 color: kAccentColor,
                 backgroundColor: kCardColor,
-                onRefresh: () async => _checkPremium(),
+                onRefresh: _loadData,
                 child: SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
@@ -76,15 +83,10 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                       const SizedBox(height: 16),
                       _buildSectionHeader(),
                       const SizedBox(height: 8),
-                      ...alleAP1Decks.asMap().entries.map((entry) {
-                        final i = entry.key;
-                        final deck = entry.value;
-                        final locked = i >= 5 && !_isPremium;
-                        return _buildDeckCard(
-                          deck: deck,
-                          locked: locked,
-                        );
-                      }),
+                      if (_modules.isEmpty)
+                        _buildEmptyState()
+                      else
+                        ..._modules.map((module) => _buildDeckCard(module: module)),
                       const SizedBox(height: 24),
                     ],
                   ),
@@ -117,7 +119,8 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             onTap: () => Navigator.of(context, rootNavigator: true).push(
               MaterialPageRoute(builder: (_) => const SettingsScreen()),
             ),
-            child: Icon(Icons.settings_outlined, color: Colors.white.withOpacity(0.5), size: 22),
+            child: Icon(Icons.settings_outlined,
+                color: Colors.white.withValues(alpha: 0.5), size: 22),
           ),
         ],
       ),
@@ -136,24 +139,21 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
         decoration: BoxDecoration(
           color: kCardColor,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Badge
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
               decoration: BoxDecoration(
-                color: kAccentColor.withOpacity(0.12),
+                color: kAccentColor.withValues(alpha: 0.12),
                 borderRadius: BorderRadius.circular(6),
               ),
               child: const Text('AKTUELLER FORTSCHRITT',
                   style: TextStyle(color: kAccentColor, fontSize: 10, fontWeight: FontWeight.w700, letterSpacing: 0.5)),
             ),
             const SizedBox(height: 12),
-
-            // Headline
             RichText(
               text: const TextSpan(children: [
                 TextSpan(text: 'Meistere die IHK\nAP1 Prüfung\n',
@@ -164,22 +164,18 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
             ),
             const SizedBox(height: 4),
             Text('Strukturierte Vorbereitung nach dem offiziellen Prüfungsrahmenplan.',
-                style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 11)),
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11)),
             const SizedBox(height: 16),
-
-            // Action Buttons
             Row(children: [
               Expanded(
                 child: OutlinedButton(
                   onPressed: () {
-                    final allCards = alleAP1Decks
-                        .expand((deck) => deck['karten'] as List<CardModel>)
-                        .toList();
+                    final allCards = _modules.expand((m) => m.cards).toList();
                     _startDeck(context, allCards, 'Tägliche Wiederholung');
                   },
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    side: BorderSide(color: Colors.white.withOpacity(0.2)),
+                    side: BorderSide(color: Colors.white.withValues(alpha: 0.2)),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
@@ -207,24 +203,22 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
               ),
             ]),
             const SizedBox(height: 16),
-
-            // 4 Stats Row
             Container(
               padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 8),
               decoration: BoxDecoration(
-                color: kBgColor.withOpacity(0.5),
+                color: kBgColor.withValues(alpha: 0.5),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  _statItem('$totalCards', 'DUE'),
+                  _statItem('$totalCards', 'KARTEN'),
                   _divider(),
-                  _statItem('${alleAP1Decks.length}', 'DECKS'),
+                  _statItem('${_modules.length}', 'MODULE'),
                   _divider(),
                   _statItem('0', 'FÄLLIG'),
                   _divider(),
-                  _statItem('14 🔥', 'STREAK'),
+                  _statItem('0 🔥', 'STREAK'),
                 ],
               ),
             ),
@@ -244,12 +238,12 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
               fontWeight: FontWeight.bold)),
       const SizedBox(height: 2),
       Text(label,
-          style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 9, letterSpacing: 0.5, fontWeight: FontWeight.w500)),
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.45), fontSize: 9, letterSpacing: 0.5, fontWeight: FontWeight.w500)),
     ]);
   }
 
   Widget _divider() {
-    return Container(width: 1, height: 28, color: Colors.white.withOpacity(0.1));
+    return Container(width: 1, height: 28, color: Colors.white.withValues(alpha: 0.1));
   }
 
   // ══════════════════════════════════════════════════════
@@ -261,11 +255,33 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          const Text('Lernkarten-Decks',
+          const Text('Lernkarten-Module',
               style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-          Text('${alleAP1Decks.length} Decks',
-              style: TextStyle(color: Colors.white.withOpacity(0.4), fontSize: 12)),
+          Text('${_modules.length} Module',
+              style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 12)),
         ],
+      ),
+    );
+  }
+
+  // ══════════════════════════════════════════════════════
+  // EMPTY STATE
+  // ══════════════════════════════════════════════════════
+  Widget _buildEmptyState() {
+    return Padding(
+      padding: const EdgeInsets.all(32),
+      child: Center(
+        child: Column(
+          children: [
+            const Text('📚', style: TextStyle(fontSize: 40)),
+            const SizedBox(height: 12),
+            const Text('Keine Module geladen',
+                style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+            const SizedBox(height: 4),
+            Text('Ziehe nach unten um neu zu laden.',
+                style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 13)),
+          ],
+        ),
       ),
     );
   }
@@ -273,14 +289,9 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
   // ══════════════════════════════════════════════════════
   // DECK CARD
   // ══════════════════════════════════════════════════════
-  Widget _buildDeckCard({
-    required Map<String, dynamic> deck,
-    bool locked = false,
-  }) {
-    final name = deck['name'] as String;
-    final icon = deck['icon'] as String;
-    final cards = deck['karten'] as List<CardModel>;
-    final cardCount = cards.length;
+  Widget _buildDeckCard({required ModuleData module}) {
+    final locked = !module.isFree && !_isPremium;
+    final cards = module.cards;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 0, 16, 10),
@@ -289,7 +300,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
         decoration: BoxDecoration(
           color: kCardColor,
           borderRadius: BorderRadius.circular(14),
-          border: Border.all(color: Colors.white.withOpacity(0.06)),
+          border: Border.all(color: Colors.white.withValues(alpha: 0.06)),
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,10 +311,10 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                 Container(
                   width: 40, height: 40,
                   decoration: BoxDecoration(
-                    color: kAccentColor.withOpacity(0.12),
+                    color: kAccentColor.withValues(alpha: 0.12),
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Center(child: Text(icon, style: const TextStyle(fontSize: 20))),
+                  child: Center(child: Text(module.icon, style: const TextStyle(fontSize: 20))),
                 ),
                 const SizedBox(width: 12),
                 Expanded(
@@ -311,71 +322,82 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(children: [
-                        // NEU Badge
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF3B82F6).withOpacity(0.15),
-                            borderRadius: BorderRadius.circular(4),
+                        if (module.isFree) ...[
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF22C55E).withValues(alpha: 0.15),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text('GRATIS',
+                                style: TextStyle(color: Color(0xFF22C55E), fontSize: 9, fontWeight: FontWeight.w800)),
                           ),
-                          child: const Text('NEU',
-                              style: TextStyle(color: Color(0xFF3B82F6), fontSize: 9, fontWeight: FontWeight.w800)),
-                        ),
-                        const SizedBox(width: 6),
+                          const SizedBox(width: 6),
+                        ],
                         Flexible(
-                          child: Text(name,
+                          child: Text(module.name,
                               style: const TextStyle(color: Colors.white, fontSize: 14, fontWeight: FontWeight.w700),
                               overflow: TextOverflow.ellipsis),
                         ),
                       ]),
+                      if (module.description.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Text(module.description,
+                              style: TextStyle(color: Colors.white.withValues(alpha: 0.4), fontSize: 11),
+                              maxLines: 1, overflow: TextOverflow.ellipsis),
+                        ),
                     ],
                   ),
                 ),
                 if (locked)
-                  Icon(Icons.lock_outline, color: Colors.white.withOpacity(0.3), size: 18),
+                  Icon(Icons.lock_outline,
+                      color: Colors.white.withValues(alpha: 0.3), size: 18),
               ],
             ),
             const SizedBox(height: 14),
 
             // Bottom: Stats + Button
-            Column(
+            Row(
               children: [
-                Row(
-                  children: [
-                    _deckStat('$cardCount', 'Karten'),
-                    const SizedBox(width: 16),
-                    Text('Bereit zum Lernen',
-                        style: const TextStyle(color: Colors.white38, fontSize: 12)),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: locked
-                        ? () => Navigator.of(context, rootNavigator: true).push(
-                              MaterialPageRoute(builder: (_) => const UpgradeScreen()),
-                            )
-                        : (cards.isNotEmpty
-                            ? () => _startDeck(context, cards, name)
-                            : null),
-                    icon: locked
-                        ? const Icon(Icons.lock_outline, size: 14)
-                        : const SizedBox.shrink(),
-                    label: Text(locked ? 'Upgraden' : 'Jetzt lernen',
-                        style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: kAccentColor,
-                      disabledBackgroundColor: kCardColor,
-                      foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                      elevation: 0,
-                      minimumSize: const Size(120, 42),
-                    ),
-                  ),
-                ),
+                _deckStat('${cards.length}', 'Karten'),
+                const SizedBox(width: 16),
+                cards.isEmpty
+                    ? Text('Bereit zum Lernen',
+                        style: TextStyle(color: Colors.white.withValues(alpha: 0.38), fontSize: 11))
+                    : _deckStat('0', 'Gelernt'),
+                const Spacer(),
               ],
+            ),
+            const SizedBox(height: 10),
+
+            // Button volle Breite
+            SizedBox(
+              width: double.infinity,
+              height: 42,
+              child: ElevatedButton.icon(
+                onPressed: locked
+                    ? () => Navigator.of(context, rootNavigator: true).push(
+                          MaterialPageRoute(builder: (_) => const UpgradeScreen()),
+                        )
+                    : (cards.isNotEmpty
+                        ? () => _startDeck(context, cards, module.name)
+                        : null),
+                icon: locked
+                    ? const Icon(Icons.lock_outline, size: 14)
+                    : const SizedBox.shrink(),
+                label: Text(locked ? 'Upgraden' : 'Jetzt lernen',
+                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w700)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: locked ? kAccentColor : kAccentColor,
+                  disabledBackgroundColor: kCardColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                  elevation: 0,
+                  minimumSize: const Size(120, 42),
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+              ),
             ),
           ],
         ),
@@ -389,7 +411,7 @@ class _LernkartenDecksScreenState extends State<LernkartenDecksScreen> {
           style: const TextStyle(color: kAccentColor, fontSize: 16, fontWeight: FontWeight.bold)),
       const SizedBox(width: 4),
       Text(label,
-          style: TextStyle(color: Colors.white.withOpacity(0.45), fontSize: 11)),
+          style: TextStyle(color: Colors.white.withValues(alpha: 0.45), fontSize: 11)),
     ]);
   }
 }
