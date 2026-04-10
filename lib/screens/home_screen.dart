@@ -4,9 +4,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:ihk_ap1_prep/data/ap1_karten.dart';
 import 'package:ihk_ap1_prep/models/card_model.dart';
 import 'package:ihk_ap1_prep/screens/lern_session_screen.dart';
+import '../services/module_service.dart';
 import '../services/premium_service.dart';
 import '../main.dart';
 import 'settings_screen.dart';
@@ -23,6 +23,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final _db = FirebaseFirestore.instance;
   final _auth = FirebaseAuth.instance;
   final _premiumService = PremiumService();
+  final _moduleService = ModuleService();
+  List<ModuleData> _modules = [];
 
   String _userName = 'Kai';
   bool _isPremium = false;
@@ -58,6 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
       final data = userDoc.data() ?? {};
 
       final isPremium = await _premiumService.checkPremiumStatus(user.uid);
+
+      // Module mit Karten laden
+      final modules = await _moduleService.getModulesWithCards();
+      ModuleData? activeModule;
+      if (modules.isNotEmpty) {
+        activeModule = modules.firstWhere(
+          (m) => m.cards.isNotEmpty,
+          orElse: () => modules.first,
+        );
+      }
 
       // Decks laden
       int totalDue = 0;
@@ -116,12 +128,26 @@ class _HomeScreenState extends State<HomeScreen> {
           _totalLearned = data['totalCardsLearned'] ?? 0;
           _retention = (data['retention'] ?? 0.0).toDouble();
           _recentDecks = decks.take(3).toList();
+          _modules = modules;
+          if (activeModule != null) {
+            _currentModule = activeModule.name;
+            _currentModuleDesc = activeModule.description;
+          }
           _isLoading = false;
         });
       }
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
     }
+  }
+
+  void _startLearning(List<CardModel> cards, String name) {
+    if (cards.isEmpty) return;
+    Navigator.of(context, rootNavigator: true).push(
+      MaterialPageRoute(
+        builder: (_) => LernSessionScreen(cards: cards, deckName: name),
+      ),
+    );
   }
 
   String get _greeting {
@@ -295,17 +321,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 ElevatedButton(
                   onPressed: () {
-                    final allCards = alleAP1Decks
-                        .expand((deck) => deck['karten'] as List<CardModel>)
-                        .toList();
-                    Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(
-                        builder: (_) => LernSessionScreen(
-                          cards: allCards,
-                          deckName: 'Systemintegration',
-                        ),
-                      ),
+                    if (_modules.isEmpty) return;
+                    final activeModule = _modules.firstWhere(
+                      (m) => m.cards.isNotEmpty,
+                      orElse: () => _modules.first,
                     );
+                    _startLearning(activeModule.cards, activeModule.name);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: kAccentColor,
