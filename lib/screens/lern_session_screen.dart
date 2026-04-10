@@ -80,7 +80,7 @@ class _LernSessionScreenState extends State<LernSessionScreen> {
               child: Row(
                 children: [
                   GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
+                    onTap: () => Navigator.of(context, rootNavigator: true).pop(),
                     child: const Icon(Icons.close,
                         color: Colors.white70, size: 22),
                   ),

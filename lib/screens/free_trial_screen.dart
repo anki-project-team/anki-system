@@ -536,8 +536,12 @@ class _FreeTrialScreenState extends State<FreeTrialScreen> {
           child: Row(
             children: [
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => setState(() => _showOverview = true),
-                child: const Icon(Icons.close, color: Colors.white70, size: 22),
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.close, color: Colors.white70, size: 22),
+                ),
               ),
               const SizedBox(width: 12),
               const Expanded(
@@ -652,8 +656,12 @@ class _FreeTrialScreenState extends State<FreeTrialScreen> {
           child: Row(
             children: [
               GestureDetector(
+                behavior: HitTestBehavior.opaque,
                 onTap: () => setState(() => _showOverview = true),
-                child: const Icon(Icons.close, color: Colors.white70, size: 22),
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Icon(Icons.close, color: Colors.white70, size: 22),
+                ),
               ),
               const SizedBox(width: 12),
               const Expanded(
